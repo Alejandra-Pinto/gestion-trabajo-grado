@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>co.unicauca</groupId>
@@ -12,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <javafx.version>24</javafx.version>
+        <javafx.version>21.0.2</javafx.version> <!-- Versión estable recomendada -->
     </properties>
 
     <dependencies>
@@ -23,12 +22,7 @@
             <version>3.46.0.0</version>
         </dependency>
 
-        <!-- JavaFX -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
+        <!-- JavaFX Modules -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -36,19 +30,19 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
+            <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
+            <artifactId>javafx-graphics</artifactId>
             <version>${javafx.version}</version>
+            <classifier>win</classifier> <!-- Ajusta según tu SO: win, linux, mac -->
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Compilador -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -56,17 +50,24 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
-                    <showDeprecation>true</showDeprecation>
+                    <compilerArgs>
+                        <arg>--add-modules</arg>
+                        <arg>javafx.controls,javafx.fxml</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 
-            <!-- Plugin JavaFX -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>co.unicauca.workflow.App</mainClass>
+                    <executable>${java.home}/bin/java</executable>
+                    <options>
+                        <option>--add-modules</option>
+                        <option>javafx.controls,javafx.fxml</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>

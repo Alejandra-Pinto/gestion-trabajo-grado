@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="co.unicauca.workflow.LoginController"
+            prefWidth="400" prefHeight="600"
+            style="-fx-background-color: #004AAD;">
+    
+    <!-- Contenedor blanco -->
+    <VBox alignment="CENTER" spacing="20"
+          layoutX="50" layoutY="40"
+          prefWidth="300" prefHeight="520"
+          style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;">
+        
+        <!-- Logo de la universidad -->
+        <ImageView fitHeight="80" fitWidth="80"
+                   preserveRatio="true"
+                   image="@logo_unicauca.png" />
+        
+        <!-- Títulos -->
+        <VBox alignment="CENTER" spacing="5">
+            <Label text="Bienvenid@," 
+                   style="-fx-font-size: 18px; -fx-text-fill: #444;"/>
+            <Label text="Unicaucan@" 
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #B30000;"/>
+        </VBox>
+        
+        <!-- Campos de texto -->
+        <VBox spacing="5">
+            <Label text="CORREO *" 
+                   style="-fx-font-size: 12px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtCorreo" 
+                      promptText="Registralizando*" 
+                      prefWidth="250"/>
+        </VBox>
+        
+        <VBox spacing="5">
+            <Label text="CONTRASEÑA *" 
+                   style="-fx-font-size: 12px; -fx-text-fill: #444; -fx-font-weight: bold;"/>
+            <PasswordField fx:id="txtContrasena" 
+                           promptText="Registralizando gratuita*" 
+                           prefWidth="250"/>
+        </VBox>
+        
+        <!-- Selección de rol -->
+        <HBox alignment="CENTER" spacing="15">
+            <ToggleGroup fx:id="rolGroup"/>
+            <RadioButton fx:id="rbEstudiante" text="■ Soy Estudiante" toggleGroup="$rolGroup" selected="true"/>
+            <RadioButton fx:id="rbDocente" text="□ Soy Docente" toggleGroup="$rolGroup"/>
+        </HBox>
+        
+        <!-- Mensaje adicional -->
+        <Label text="¡Sin tener una correcta fotografía!" 
+               style="-fx-font-size: 10px; -fx-text-fill: #888; -fx-font-style: italic;"/>
+        
+        <!-- Botón iniciar sesión -->
+        <Button text="INICIAR SESIÓN"
+                prefWidth="200"
+                onAction="#handleLogin"
+                style="-fx-background-color: #001F54; -fx-text-fill: white; -fx-font-weight: bold;" />
+    </VBox>
+</AnchorPane>
