@@ -1,5 +1,6 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.SQLiteRepository;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.service.UserService;
@@ -28,7 +29,6 @@ public class LoginController implements Initializable {
     @FXML
     private Hyperlink hpl_register;
 
-    // ✅ Evento de login
     @FXML
     private void evenBtnIngresar(ActionEvent event) {
         String usuario = txt_email.getText().trim();
@@ -39,8 +39,8 @@ public class LoginController implements Initializable {
             return;
         }
 
-        // ✅ Usamos UserService con SQLiteRepository
         SQLiteRepository repo = new SQLiteRepository();
+        //IUserRepository repo = Factory.getInstance().getUserRepository("sqlite");
         UserService service = new UserService(repo);
 
         User valido = service.login(usuario, contrasenia);
@@ -48,7 +48,6 @@ public class LoginController implements Initializable {
         if (valido != null) {
             mostrarAlerta("Login exitoso", "Bienvenido " + valido.getFirstName(), Alert.AlertType.INFORMATION);
 
-            // 🔄 Cambiar a la siguiente vista → Home.fxml
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Home.fxml"));
                 Parent root = loader.load();
@@ -66,7 +65,7 @@ public class LoginController implements Initializable {
         }
     }
 
-    // ✅ Evento de Hyperlink para registro
+    
     @FXML
     private void evenBtnRegister(ActionEvent event) {
         try {

@@ -97,7 +97,7 @@ public class RegisterController implements Initializable {
                 e.printStackTrace();
             }
         } else {
-            mostrarAlerta("Error de registro", "No se pudo registrar el usuario. Verifique si el correo ya está en uso o si cumple las validaciones.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error de registro", "No se pudo registrar el usuario. Verifique si el correo ya está en uso o si la contraseña Cumple el formato.", Alert.AlertType.ERROR);
         }
     }
 
