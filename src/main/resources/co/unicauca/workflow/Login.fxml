@@ -21,7 +21,7 @@
                   <Image url="@../../../../java/co/unicauca/workflow/images/antorcha.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="148.0" fitWidth="301.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="157.0" fitWidth="544.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../../../java/co/unicauca/workflow/images/bandera.png" />
                </image>
