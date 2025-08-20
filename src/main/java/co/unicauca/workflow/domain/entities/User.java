@@ -19,7 +19,7 @@ public abstract class User {
         this.password = password;
         this.role = role;
     }
-
+    
     // 🔹 Métodos getters/setters
     public String getFirstName() {
         return firstName;

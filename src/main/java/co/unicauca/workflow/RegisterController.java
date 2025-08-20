@@ -1,80 +1,122 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.SQLiteRepository;
+import co.unicauca.workflow.domain.entities.Student;
+import co.unicauca.workflow.domain.entities.Teacher;
+import co.unicauca.workflow.domain.entities.User;
+import co.unicauca.workflow.service.UserService;
 import java.net.URL;
 import java.util.ResourceBundle;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Alert.AlertType;
-import javafx.geometry.Insets;
+import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author julia
- */
 public class RegisterController implements Initializable {
 
-    // Campos del formulario
     @FXML
     private TextField txt_nombre;
     @FXML
     private TextField txt_apellido;
     @FXML
-    private TextField txt_programa;
+    private ComboBox<String> cbx_programa;
     @FXML
     private TextField txt_email;
-    @FXML
-    private ComboBox<String> cbx_rol;
     @FXML
     private PasswordField txt_password;
     @FXML
     private PasswordField txt_confirmPassword;
     @FXML
+    private CheckBox chk_estudiante;
+    @FXML
+    private CheckBox chk_docente;
+    @FXML
     private Button btn_register;
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }   
+    @FXML
+    private Hyperlink hpl_login;
 
     @FXML
     private void onRegister(ActionEvent event) {
-        String nombre = txt_nombre.getText();
-        String apellido = txt_apellido.getText();
-        String programa = txt_programa.getText();
-        String correo = txt_email.getText();
-        String rol = cbx_rol.getValue();
+        String nombre = txt_nombre.getText().trim();
+        String apellido = txt_apellido.getText().trim();
+        String programa = cbx_programa.getValue(); // ahora el programa viene del combo
+        String correo = txt_email.getText().trim();
         String pass = txt_password.getText();
         String confirmPass = txt_confirmPassword.getText();
 
-        // 1. Validaciones básicas
-        if (nombre.isEmpty() || apellido.isEmpty() || programa.isEmpty() || 
-            correo.isEmpty() || rol == null || pass.isEmpty() || confirmPass.isEmpty()) {
-            mostrarAlerta("Error de registro", "Por favor complete todos los campos", AlertType.WARNING);
+        // Validaciones básicas
+        if (nombre.isEmpty() || apellido.isEmpty() || programa == null ||
+            correo.isEmpty() || pass.isEmpty() || confirmPass.isEmpty() ||
+            (!chk_estudiante.isSelected() && !chk_docente.isSelected())) {
+            mostrarAlerta("Error de registro", "Por favor complete todos los campos y seleccione un rol", Alert.AlertType.WARNING);
             return;
         }
 
-        // 2. Validación de contraseñas
+        // Validación de contraseñas
         if (!pass.equals(confirmPass)) {
-            mostrarAlerta("Error de registro", "Las contraseñas no coinciden", AlertType.ERROR);
+            mostrarAlerta("Error de registro", "Las contraseñas no coinciden", Alert.AlertType.ERROR);
             return;
         }
 
-        // 3. Aquí vamos a invocar el método de la capa de servicio/repositorio
-        //    (esto lo ajustamos en cuanto me digas de dónde tomar los métodos)
-        // Ejemplo:
-        // UserService service = new UserService(new SQLiteRepository());
-        // boolean creado = service.register(new User(...));
-        // if (creado) { ... } else { ... }
+        // Determinar rol
+        User user;
+        if (chk_estudiante.isSelected() && chk_docente.isSelected()) {
+            mostrarAlerta("Error de registro", "Debe seleccionar solo un rol", Alert.AlertType.WARNING);
+            return;
+        } else if (chk_estudiante.isSelected()) {
+            user = new Student(nombre, apellido, null, programa, correo, pass);
+        } else {
+            user = new Teacher(nombre, apellido, null, programa, correo, pass);
+        }
 
-        mostrarAlerta("Registro", "Usuario registrado correctamente (lógica pendiente)", AlertType.INFORMATION);
+        // Registrar usuario con el servicio
+        SQLiteRepository repo = new SQLiteRepository();
+        UserService service = new UserService(repo);
+
+        boolean creado = service.register(user);
+
+        if (creado) {
+            mostrarAlerta("Registro exitoso", "Usuario registrado correctamente", Alert.AlertType.CONFIRMATION);
+            limpiarCampos();
+
+            // Regresar automáticamente al login
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) btn_register.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Iniciar Sesión");
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            mostrarAlerta("Error de registro", "No se pudo registrar el usuario. Verifique si el correo ya está en uso o si cumple las validaciones.", Alert.AlertType.ERROR);
+        }
     }
 
-    private void mostrarAlerta(String titulo, String mensaje, AlertType tipo) {
+    @FXML
+    private void onGoToLogin(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) hpl_login.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Iniciar Sesión");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo volver a la ventana de login.", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
         alerta.setHeaderText(null);
@@ -90,5 +132,27 @@ public class RegisterController implements Initializable {
         alerta.getDialogPane().setContent(contenedor);
 
         alerta.showAndWait();
+    }
+
+    private void limpiarCampos() {
+        txt_nombre.clear();
+        txt_apellido.clear();
+        cbx_programa.getSelectionModel().clearSelection();
+        txt_email.clear();
+        txt_password.clear();
+        txt_confirmPassword.clear();
+        chk_estudiante.setSelected(false);
+        chk_docente.setSelected(false);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Aquí puedes llenar el combo de programas desde BD o manualmente
+        cbx_programa.getItems().addAll(
+            "Ingeniería de Sistemas",
+            "Ingeniería Automática Industrial",
+            "Ingeniería Electrónica y Telecomunicaciones",
+            "Técnologo en Telemática"
+        );
     }
 }
