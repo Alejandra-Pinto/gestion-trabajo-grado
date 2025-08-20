@@ -1,4 +1,5 @@
 co\unicauca\workflow\domain\entities\Student.class
+co\unicauca\workflow\HomeController.class
 co\unicauca\workflow\domain\entities\Teacher.class
 co\unicauca\workflow\RegisterController.class
 co\unicauca\workflow\service\UserService.class
