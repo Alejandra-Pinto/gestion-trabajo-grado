@@ -57,11 +57,18 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </CheckBox>
-                  <Button fx:id="btn_login" layoutX="131.0" layoutY="251.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="INICIAR SESION" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Button>
+                    <Button fx:id="btn_login" 
+                            layoutX="131.0" 
+                            layoutY="251.0" 
+                            mnemonicParsing="false" 
+                            style="-fx-background-color: #111F63;" 
+                            text="INICIAR SESION" 
+                            textFill="WHITE"
+                            onAction="#evenBtnIngresar">
+                       <font>
+                          <Font name="System Bold" size="14.0" />
+                       </font>
+                    </Button>
                   <Label layoutX="88.0" layoutY="228.0" text="¿No tienes una cuenta?" />
                   <Hyperlink fx:id="hpl_register" layoutX="217.0" layoutY="225.0" onAction="#evenBtnRegister" text="Regístrate aquí" textFill="#0050c9">
                      <font>
