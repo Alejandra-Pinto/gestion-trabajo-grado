@@ -21,12 +21,12 @@ public class UserService {
      */
     public boolean register(User user) {
         if (!isValidEmail(user.getEmail())) {
-            System.out.println("❌ Email inválido. Debe ser institucional @unicauca.edu.co");
+            System.out.println("Email inválido. Debe ser institucional @unicauca.edu.co");
             return false;
         }
 
         if (!isValidPassword(user.getPassword())) {
-            System.out.println("❌ Contraseña insegura. Debe tener al menos 6 caracteres, un número, un caracter especial y una mayúscula.");
+            System.out.println("Contraseña insegura. Debe tener al menos 6 caracteres, un número, un caracter especial y una mayúscula.");
             return false;
         }
 

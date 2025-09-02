@@ -17,12 +17,12 @@ public class Teacher extends User {
     }
 
     // Métodos adicionales específicos del docente
-    public void evaluateProposal() {
-        System.out.println("Evaluando anteproyecto...");
+    public void uploadFormatA() {
+        System.out.println("Subiendo formato A...");
     }
 
-    public void evaluateMonograph() {
-        System.out.println("Evaluando monografía...");
+    public void listStudents() {
+        System.out.println("El coordinador está listando todos los estudiantes de trabajos de grado...");
     }
 }
 
