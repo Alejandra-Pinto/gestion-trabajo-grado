@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
@@ -9,14 +10,28 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.HomeController">
    <children>
-      <Pane prefHeight="400.0" prefWidth="188.0">
+      <Pane prefHeight="792.0" prefWidth="1534.0">
          <effect>
             <InnerShadow />
          </effect>
          <children>
-            <Pane prefHeight="99.0" prefWidth="600.0" style="-fx-background-color: #111F63;">
+            <SplitPane dividerPositions="0.24419211694074652" layoutY="112.0" prefHeight="684.0" prefWidth="1534.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="488.0" prefWidth="327.0">
+                     <children>
+                        <ImageView fitHeight="169.0" fitWidth="671.0" layoutY="513.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/bandera.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="682.0" prefWidth="982.0" />
+              </items>
+            </SplitPane>
+            <Pane prefHeight="128.0" prefWidth="1534.0" style="-fx-background-color: #0F3EA4;">
                <children>
-                  <ImageView fitHeight="78.0" fitWidth="174.0" layoutX="14.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="108.0" fitWidth="185.0" layoutX="14.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/logo.png" />
                      </image>
@@ -26,11 +41,6 @@
                   <DropShadow />
                </effect>
             </Pane>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutY="324.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/bandera.png" />
-               </image>
-            </ImageView>
          </children>
       </Pane>
    </children>
