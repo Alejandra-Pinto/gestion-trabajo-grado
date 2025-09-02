@@ -14,21 +14,21 @@
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.LoginController">
    <children>
-      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1540.0" style="-fx-background-color: #0F3FA5;">
+      <Pane prefHeight="800.0" prefWidth="1540.0" style="-fx-background-color: #0F3FA5;">
          <children>
-            <ImageView fitHeight="130.0" fitWidth="270.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="169.0" fitWidth="671.0" layoutY="636.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../java/co/unicauca/workflow/images/bandera.png" />
+                  <Image url="@images/bandera.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="401.0" fitWidth="175.0" layoutX="431.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="757.0" fitWidth="490.0" layoutX="921.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../java/co/unicauca/workflow/images/antorcha.png" />
+                  <Image url="@images/antorcha.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="59.0" fitWidth="112.0" layoutX="6.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="108.0" fitWidth="185.0" layoutX="29.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../java/co/unicauca/workflow/images/logo.png" />
+                  <Image url="@images/logo.png" />
                </image>
             </ImageView>
             <Pane layoutX="600.0" layoutY="300.0" prefHeight="295.0" prefWidth="385.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
@@ -57,11 +57,11 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </CheckBox>
-                  <Button fx:id="btn_login" layoutX="131.0" layoutY="251.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="INICIAR SESION" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Button>
+                    <Button fx:id="btn_login" layoutX="131.0" layoutY="251.0" mnemonicParsing="false" onAction="#evenBtnIngresar" style="-fx-background-color: #111F63;" text="INICIAR SESION" textFill="WHITE">
+                       <font>
+                          <Font name="System Bold" size="14.0" />
+                       </font>
+                    </Button>
                   <Label layoutX="88.0" layoutY="228.0" text="¿No tienes una cuenta?" />
                   <Hyperlink fx:id="hpl_register" layoutX="217.0" layoutY="225.0" onAction="#evenBtnRegister" text="Regístrate aquí" textFill="#0050c9">
                      <font>

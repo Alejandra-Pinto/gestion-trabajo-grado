@@ -16,65 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Dana Isabella
+ * @author USUARIO
  */
 public class UserServiceTest {
     
     public UserServiceTest() {
     }
     
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
-    }
-
-    /**
-     * Test of register method, of class UserService.
-     */
-    @Test
-    public void testRegister() {
-        System.out.println("register");
-        User user = null;
-        UserService instance = null;
-        boolean expResult = false;
-        boolean result = instance.register(user);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of login method, of class UserService.
-     */
-    @Test
-    public void testLogin() {
-        System.out.println("login");
-        String email = "";
-        String password = "";
-        UserService instance = null;
-        User expResult = null;
-        User result = instance.login(email, password);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
     @Test
     public void testRegistrarUsuarioValido() throws Exception {
         System.out.println("registrarUsuarioValido");
-        User nuevoUsuario = new User("Pedro", "Perez", "3216549870", "Ingeniería de Sistemas", 
-                                     "pedro@unicauca.edu.co", "Pedro123!", "Estudiante") {
+        User nuevoUsuario = new User("Pedro", "Perez", "3216549870", "Ingeniería de Sistemas",
+                                     "pedro3@unicauca.edu.co", "@Pedro123!", "STUDENT") {
             @Override
             public void showDashboard() {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -86,5 +39,126 @@ public class UserServiceTest {
         boolean result = instance.register(nuevoUsuario);
         assertEquals(expResult, result);
     }
-    
+
+    @Test
+    public void testRegistrarUsuarioEmailInvalido() throws Exception {
+        System.out.println("registrarUsuarioEmailInvalido");
+        User nuevoUsuario = new User("Maria", "Lopez", "3149876543", "Ingeniería de Sistemas",
+                                     "maria@gmail.com", "Maria123!", "STUDENT") {
+            @Override
+            public void showDashboard() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+        boolean expResult = false;
+        boolean result = instance.register(nuevoUsuario);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testRegistrarUsuarioPasswordCorta() throws Exception {
+        System.out.println("registrarUsuarioPasswordCorta");
+        User nuevoUsuario = new User("Laura", "Rodriguez", "3001112233", "Ingeniería de Sistemas",
+                                     "laura@unicauca.edu.co", "L1!", "STUDENT") {
+            @Override
+            public void showDashboard() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+        boolean expResult = false;
+        boolean result = instance.register(nuevoUsuario);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testRegistrarUsuarioPasswordSinNumero() throws Exception {
+        System.out.println("registrarUsuarioPasswordSinNumero");
+        User nuevoUsuario = new User("Andres", "Gomez", "3012223344", "Ingeniería de Sistemas",
+                                     "andres@unicauca.edu.co", "Password!", "STUDENT") {
+            @Override
+            public void showDashboard() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+        boolean expResult = false;
+        boolean result = instance.register(nuevoUsuario);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testRegistrarUsuarioPasswordSinMayuscula() throws Exception {
+        System.out.println("registrarUsuarioPasswordSinMayuscula");
+        User nuevoUsuario = new User("Camilo", "Diaz", "3023334455", "Ingeniería de Sistemas",
+                                     "camilo@unicauca.edu.co", "password123!", "STUDENT") {
+            @Override
+            public void showDashboard() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+        boolean expResult = false;
+        boolean result = instance.register(nuevoUsuario);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testRegistrarUsuarioPasswordSinEspecial() throws Exception {
+        System.out.println("registrarUsuarioPasswordSinEspecial");
+        User nuevoUsuario = new User("Luisa", "Martinez", "3034445566", "Ingeniería de Sistemas",
+                                     "luisa@unicauca.edu.co", "Luisa123", "STUDENT") {
+            @Override
+            public void showDashboard() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+        boolean expResult = false;
+        boolean result = instance.register(nuevoUsuario);
+        assertEquals(expResult, result);
+    }
+
+    @Test
+    public void testLoginUsuarioValido() throws Exception {
+        System.out.println("loginUsuarioValido");
+        String email = "juan@unicauca.edu.co";
+        String password = "Juan123!";
+        User nuevoUsuario = new User("Juan", "Lopez", "3112223344", "Ingeniería de Sistemas",
+                                     email, password, "STUDENT") {
+            @Override
+            public void showDashboard() {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
+        };
+
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+
+        // Registrar primero al usuario
+        instance.register(nuevoUsuario);
+
+        User result = instance.login(email, password);
+        assertNotNull(result);
+        assertEquals(email, result.getEmail());
+    }
+
+    @Test
+    public void testLoginUsuarioInvalido() throws Exception {
+        System.out.println("loginUsuarioInvalido");
+        String email = "invalido@unicauca.edu.co";
+        String password = "NoExiste123!";
+        IUsersRepository repository = new SQLiteRepository();
+        UserService instance = new UserService(repository);
+        User expResult = null;
+        User result = instance.login(email, password);
+        assertEquals(expResult, result);
+    }
 }
+
