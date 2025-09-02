@@ -16,6 +16,9 @@ public class FormatoA {
     private String archivoPdf; // ruta del archivo PDF
     private String cartaAceptacionEmpresa; // solo si es práctica profesional
     private EstadoFormatoA estado;
+    private int id;
+
+
 
     // Constructor
     public FormatoA(String idEstudiante, String idProfesor, String tituloProyecto, Modalidad modalidad,
@@ -35,6 +38,9 @@ public class FormatoA {
     }
 
     // Getters y Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
     public String getIdEstudiante() { return idEstudiante; }
     public void setIdEstudiante(String idEstudiante) { this.idEstudiante = idEstudiante; }
 
