@@ -1,6 +1,7 @@
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.access.Factory;
+import co.unicauca.workflow.access.IUsersRepository;
 import co.unicauca.workflow.access.SQLiteRepository;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.service.UserService;
@@ -39,8 +40,8 @@ public class LoginController implements Initializable {
             return;
         }
 
-        SQLiteRepository repo = new SQLiteRepository();
-        //IUserRepository repo = Factory.getInstance().getUserRepository("sqlite");
+        //SQLiteRepository repo = new SQLiteRepository();
+        IUsersRepository repo = Factory.getInstance().getUserRepository("sqlite");
         UserService service = new UserService(repo);
 
         User valido = service.login(usuario, contrasenia);

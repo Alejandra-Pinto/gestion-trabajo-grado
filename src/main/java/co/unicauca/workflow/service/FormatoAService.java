@@ -1,52 +1,80 @@
 package co.unicauca.workflow.service;
 
+import co.unicauca.workflow.access.IFormatoARepository;
 import co.unicauca.workflow.domain.entities.*;
 import co.unicauca.workflow.infra.Subject;
+import java.util.List;
 
 public class FormatoAService extends Subject {
-    private FormatoA formatoA;
+    private final IFormatoARepository repository;
 
-    // Constructor
-    public FormatoAService(FormatoA formatoA) {
-        this.formatoA = formatoA;
+    public FormatoAService(IFormatoARepository repository) {
+        this.repository = repository;
     }
 
-    // Obtener el Formato A
-    public FormatoA getFormatoA() {
-        return formatoA;
+    // Registrar un nuevo FormatoA
+    public boolean registrarFormato(FormatoA formato) {
+        return repository.save(formato);
     }
 
-    // Actualizar datos generales del formato
-    public void updateFormato(FormatoA nuevoFormato) {
-        this.formatoA = nuevoFormato;
-        this.notifyAllObserves(); // notificar a todos los observadores
+    // Obtener un FormatoA por id
+    public FormatoA obtenerFormato(int id) {
+        return repository.findById(id);
     }
 
-    // Cambiar el estado del Formato A
-    public void cambiarEstado(EstadoFormatoA nuevoEstado) {
-        this.formatoA.setEstado(nuevoEstado);
-        this.notifyAllObserves(); // 🔔 notificar a todas las vistas
+    // Listar todos los formatos
+    public List<FormatoA> listarFormatos() {
+        return repository.listAllFormatoA();
     }
 
-    // Método de ayuda para avanzar a la siguiente evaluación
-    public void avanzarEvaluacion() {
-        switch (formatoA.getEstado()) {
+    // Actualizar un formato
+    public boolean actualizarFormato(FormatoA formato) {
+        boolean updated = repository.update(formato);
+        if (updated) {
+            this.notifyAllObserves();
+        }
+        return updated;
+    }
+
+    // Eliminar un formato
+    public boolean eliminarFormato(int id) {
+        return repository.delete(id);
+    }
+
+    // Cambiar estado
+    public boolean cambiarEstado(int id, EstadoFormatoA nuevoEstado) {
+        FormatoA formato = repository.findById(id);
+        if (formato != null) {
+            formato.setEstado(nuevoEstado);
+            return repository.update(formato);
+        }
+        return false;
+    }
+
+    // Avanzar evaluación
+    public boolean avanzarEvaluacion(int id) {
+        FormatoA formato = repository.findById(id);
+        if (formato == null) return false;
+
+        switch (formato.getEstado()) {
             case PRIMERA_EVALUACION:
-                cambiarEstado(EstadoFormatoA.SEGUNDA_EVALUACION);
+                formato.setEstado(EstadoFormatoA.SEGUNDA_EVALUACION);
                 break;
             case SEGUNDA_EVALUACION:
-                cambiarEstado(EstadoFormatoA.TERCERA_EVALUACION);
+                formato.setEstado(EstadoFormatoA.TERCERA_EVALUACION);
                 break;
             case TERCERA_EVALUACION:
-                cambiarEstado(EstadoFormatoA.ACEPTADO); // por defecto acepta
+                formato.setEstado(EstadoFormatoA.ACEPTADO);
                 break;
             default:
-                System.out.println("El formato ya fue evaluado: " + formatoA.getEstado());
+                System.out.println("El formato ya fue evaluado: " + formato.getEstado());
+                return false;
         }
+        return repository.update(formato);
     }
 
-    // Rechazar el Formato A
-    public void rechazar() {
-        cambiarEstado(EstadoFormatoA.RECHAZADO);
+    // Rechazar
+    public boolean rechazar(int id) {
+        return cambiarEstado(id, EstadoFormatoA.RECHAZADO);
     }
 }
