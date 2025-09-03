@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -52,6 +53,8 @@ public class LoginController implements Initializable {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Home.fxml"));
                 Parent root = loader.load();
+                HomeController homeController = loader.getController();
+                homeController.setUsuario(valido);
                 Stage stage = (Stage) btn_login.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("Inicio - Workflow");
@@ -81,7 +84,7 @@ public class LoginController implements Initializable {
             mostrarAlerta("Error", "No se pudo abrir la ventana de registro.", Alert.AlertType.ERROR);
         }
     }
-
+    
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
