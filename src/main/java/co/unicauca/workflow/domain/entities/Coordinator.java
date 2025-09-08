@@ -11,10 +11,9 @@ public class Coordinator extends User {
     public void showDashboard() {
         // Aquí se define lo que hace un coordinador al iniciar sesión
         System.out.println("Mostrando panel del Coordinador para el programa: ");
-        // ⚡️ En JavaFX, aquí podrías cargar CoordinatorDashboard.fxml
     }
 
-    // 🔹 Métodos adicionales específicos del coordinador
+    // Métodos adicionales específicos del coordinador
     public void reviewFormatoA() {
         System.out.println("El coordinador está revisando un Formato A...");
     }
