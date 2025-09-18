@@ -23,8 +23,8 @@ public class DegreeWorkService extends Subject {
     }
 
     // Listar todos los formatos
-    public List<DegreeWork> listarFormatos() {
-        return repository.listAllFormatoA();
+    public List<DegreeWork> listarDegreeWorks() { 
+        return repository.listAllDegreeWork(); 
     }
 
     // Actualizar un formato
