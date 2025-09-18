@@ -2,7 +2,7 @@ package co.unicauca.workflow;
 
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IUsersRepository;
-import co.unicauca.workflow.access.SQLiteRepository;
+import co.unicauca.workflow.access.UserSQLiteRepository;
 import co.unicauca.workflow.domain.entities.Student;
 import co.unicauca.workflow.domain.entities.Teacher;
 import co.unicauca.workflow.domain.entities.User;

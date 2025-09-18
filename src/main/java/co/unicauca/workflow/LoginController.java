@@ -2,7 +2,7 @@ package co.unicauca.workflow;
 
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IUsersRepository;
-import co.unicauca.workflow.access.SQLiteRepository;
+import co.unicauca.workflow.access.UserSQLiteRepository;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
