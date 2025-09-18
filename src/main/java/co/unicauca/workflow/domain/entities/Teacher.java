@@ -7,6 +7,7 @@ public class Teacher extends User {
     public Teacher(String firstName, String lastName, String phone, String program,
                    String email, String password) {
         super(firstName, lastName, phone, program, email, password, "TEACHER");
+        this.setStatus("ACEPTADO");
     }
 
     @Override

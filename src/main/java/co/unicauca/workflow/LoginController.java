@@ -41,13 +41,31 @@ public class LoginController implements Initializable {
             return;
         }
 
-        //SQLiteRepository repo = new SQLiteRepository();
         IUsersRepository repo = Factory.getInstance().getUserRepository("sqlite");
         UserService service = new UserService(repo);
 
         User valido = service.login(usuario, contrasenia);
 
         if (valido != null) {
+            // Si el usuario es coordinador y no está aprobado, mostrar alerta especial
+            if (valido instanceof co.unicauca.workflow.domain.entities.Coordinator) {
+                co.unicauca.workflow.domain.entities.Coordinator coord = 
+                    (co.unicauca.workflow.domain.entities.Coordinator) valido;
+
+                if ("PENDIENTE".equals(coord.getStatus())) {
+                    mostrarAlerta("Solicitud en espera", 
+                        "Su solicitud de registro como coordinador aún está en revisión.", 
+                        Alert.AlertType.INFORMATION);
+                    return;
+                } else if ("RECHAZADO".equals(coord.getStatus())) {
+                    mostrarAlerta("Solicitud rechazada", 
+                        "Su solicitud de registro como coordinador fue rechazada.", 
+                        Alert.AlertType.ERROR);
+                    return;
+                }
+            }
+
+            // Si pasa la validación normal, entra al Home
             mostrarAlerta("Login exitoso", "Bienvenido " + valido.getFirstName(), Alert.AlertType.INFORMATION);
 
             try {
@@ -68,7 +86,6 @@ public class LoginController implements Initializable {
             mostrarAlerta("Error de login", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
         }
     }
-
     
     @FXML
     private void evenBtnRegister(ActionEvent event) {
