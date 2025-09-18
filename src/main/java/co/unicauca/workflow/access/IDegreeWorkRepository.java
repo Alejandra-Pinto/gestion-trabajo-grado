@@ -8,7 +8,7 @@ public interface IDegreeWorkRepository {
 
     DegreeWork findById(int id);
 
-    List<DegreeWork> listAllFormatoA();
+    List<DegreeWork> listAllDegreeWork();
 
     boolean update(DegreeWork formato);
 

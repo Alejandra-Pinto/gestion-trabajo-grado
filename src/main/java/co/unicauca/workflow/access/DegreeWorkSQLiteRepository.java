@@ -1,49 +1,62 @@
 package co.unicauca.workflow.access;
 
-import co.unicauca.workflow.domain.entities.*;
+import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.domain.entities.EstadoFormatoA;
+import co.unicauca.workflow.domain.entities.Modalidad;
+
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
+
     private Connection conn;
 
     public DegreeWorkSQLiteRepository() {
+        connect();
+        createTableIfNotExists();
+    }
+
+    private void connect() {
         try {
-            conn = DriverManager.getConnection("jdbc:sqlite:workflow.db");
-            createFormatoATableIfNotExists();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+            String url = "jdbc:sqlite:workflow.db";
+            conn = DriverManager.getConnection(url);
+            System.out.println("Conexión a SQLite establecida.");
+        } catch (SQLException e) {
+            System.out.println("Error de conexión: " + e.getMessage());
         }
     }
 
-    private void createFormatoATableIfNotExists() throws SQLException {
-        String sqlFormatoA = "CREATE TABLE IF NOT EXISTS formato_a ("
+    private void createTableIfNotExists() {
+        String sql = "CREATE TABLE IF NOT EXISTS degree_work ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "idEstudiante TEXT NOT NULL,"
-                + "idProfesor TEXT NOT NULL,"
-                + "tituloProyecto TEXT NOT NULL,"
+                + "id_estudiante TEXT NOT NULL,"
+                + "id_profesor TEXT NOT NULL,"
+                + "titulo_proyecto TEXT NOT NULL,"
                 + "modalidad TEXT NOT NULL,"
-                + "fechaActual TEXT NOT NULL,"
-                + "directorProyecto TEXT NOT NULL,"
-                + "codirectorProyecto TEXT,"
-                + "objetivoGeneral TEXT NOT NULL,"
-                + "objetivosEspecificos TEXT,"
-                + "archivoPdf TEXT NOT NULL,"
-                + "cartaAceptacionEmpresa TEXT,"
+                + "fecha_actual TEXT NOT NULL,"
+                + "director_proyecto TEXT NOT NULL,"
+                + "codirector_proyecto TEXT,"
+                + "objetivo_general TEXT NOT NULL,"
+                + "objetivos_especificos TEXT,"
+                + "archivo_pdf TEXT,"
+                + "carta_aceptacion_empresa TEXT,"
                 + "estado TEXT NOT NULL"
-                + ")";
-        Statement stmtFormatoA = conn.createStatement();
-        stmtFormatoA.execute(sqlFormatoA);
+                + ");";
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            System.out.println("Error creando tabla: " + e.getMessage());
+        }
     }
 
     @Override
     public boolean save(DegreeWork formato) {
-        String sql = "INSERT INTO formato_a("
-                + "idEstudiante, idProfesor, tituloProyecto, modalidad, fechaActual, "
-                + "directorProyecto, codirectorProyecto, objetivoGeneral, objetivosEspecificos, "
-                + "archivoPdf, cartaAceptacionEmpresa, estado"
-                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO degree_work(id_estudiante, id_profesor, titulo_proyecto, modalidad, "
+                   + "fecha_actual, director_proyecto, codirector_proyecto, objetivo_general, "
+                   + "objetivos_especificos, archivo_pdf, carta_aceptacion_empresa, estado) "
+                   + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, formato.getIdEstudiante());
             pstmt.setString(2, formato.getIdProfesor());
@@ -59,9 +72,7 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
             pstmt.setString(12, formato.getEstado().name());
 
             int affected = pstmt.executeUpdate();
-            if (affected == 0) {
-                return false;
-            }
+            if (affected == 0) return false;
 
             try (ResultSet keys = pstmt.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -70,46 +81,46 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
             }
             return true;
         } catch (SQLException e) {
-            System.out.println("Error guardando FormatoA: " + e.getMessage());
+            System.out.println("Error guardando DegreeWork: " + e.getMessage());
             return false;
         }
     }
 
     @Override
     public DegreeWork findById(int id) {
-        String sql = "SELECT * FROM formato_a WHERE id = ?";
+        String sql = "SELECT * FROM degree_work WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return buildFormatoAFromResultSet(rs);
+                return buildFromResultSet(rs);
             }
         } catch (SQLException e) {
-            System.out.println("Error consultando FormatoA: " + e.getMessage());
+            System.out.println("Error consultando DegreeWork: " + e.getMessage());
         }
         return null;
     }
 
     @Override
-    public List<DegreeWork> listAllFormatoA() {
+    public List<DegreeWork> listAllDegreeWork() {
         List<DegreeWork> list = new ArrayList<>();
-        String sql = "SELECT * FROM formato_a ORDER BY id";
+        String sql = "SELECT * FROM degree_work ORDER BY id";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                list.add(buildFormatoAFromResultSet(rs));
+                list.add(buildFromResultSet(rs));
             }
         } catch (SQLException e) {
-            System.out.println("Error listando FormatoA: " + e.getMessage());
+            System.out.println("Error listando DegreeWork: " + e.getMessage());
         }
         return list;
     }
 
     @Override
     public boolean update(DegreeWork formato) {
-        String sql = "UPDATE formato_a SET "
-                + "idEstudiante=?, idProfesor=?, tituloProyecto=?, modalidad=?, fechaActual=?, "
-                + "directorProyecto=?, codirectorProyecto=?, objetivoGeneral=?, objetivosEspecificos=?, "
-                + "archivoPdf=?, cartaAceptacionEmpresa=?, estado=? "
+        String sql = "UPDATE degree_work SET "
+                + "id_estudiante=?, id_profesor=?, titulo_proyecto=?, modalidad=?, fecha_actual=?, "
+                + "director_proyecto=?, codirector_proyecto=?, objetivo_general=?, objetivos_especificos=?, "
+                + "archivo_pdf=?, carta_aceptacion_empresa=?, estado=? "
                 + "WHERE id=?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, formato.getIdEstudiante());
@@ -128,60 +139,53 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error actualizando FormatoA: " + e.getMessage());
+            System.out.println("Error actualizando DegreeWork: " + e.getMessage());
             return false;
         }
     }
 
     @Override
     public boolean delete(int id) {
-        String sql = "DELETE FROM formato_a WHERE id = ?";
+        String sql = "DELETE FROM degree_work WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.out.println("Error eliminando FormatoA: " + e.getMessage());
+            System.out.println("Error eliminando DegreeWork: " + e.getMessage());
             return false;
         }
     }
 
-    private DegreeWork buildFormatoAFromResultSet(ResultSet rs) throws SQLException {
+    // Helpers
+    private DegreeWork buildFromResultSet(ResultSet rs) throws SQLException {
         DegreeWork f = new DegreeWork(
-                rs.getString("idEstudiante"),
-                rs.getString("idProfesor"),
-                rs.getString("tituloProyecto"),
+                rs.getString("id_estudiante"),
+                rs.getString("id_profesor"),
+                rs.getString("titulo_proyecto"),
                 Modalidad.valueOf(rs.getString("modalidad")),
-                java.time.LocalDate.parse(rs.getString("fechaActual")),
-                rs.getString("directorProyecto"),
-                rs.getString("codirectorProyecto"),
-                rs.getString("objetivoGeneral"),
-                deserializeObjetivos(rs.getString("objetivosEspecificos")),
-                rs.getString("archivoPdf")
+                LocalDate.parse(rs.getString("fecha_actual")),
+                rs.getString("director_proyecto"),
+                rs.getString("codirector_proyecto"),
+                rs.getString("objetivo_general"),
+                deserializeObjetivos(rs.getString("objetivos_especificos")),
+                rs.getString("archivo_pdf")
         );
         f.setId(rs.getInt("id"));
         f.setEstado(EstadoFormatoA.valueOf(rs.getString("estado")));
-        f.setCartaAceptacionEmpresa(rs.getString("cartaAceptacionEmpresa"));
+        f.setCartaAceptacionEmpresa(rs.getString("carta_aceptacion_empresa"));
         return f;
     }
 
     private String serializeObjetivos(List<String> objetivos) {
-        if (objetivos == null || objetivos.isEmpty()) {
-            return null;
-        }
+        if (objetivos == null || objetivos.isEmpty()) return "";
         return String.join("||", objetivos);
     }
 
     private List<String> deserializeObjetivos(String raw) {
-        if (raw == null || raw.isEmpty()) {
-            return new ArrayList<>();
-        }
+        if (raw == null || raw.isEmpty()) return new ArrayList<>();
         String[] parts = raw.split("\\|\\|");
         List<String> list = new ArrayList<>();
-        for (String p : parts) {
-            if (p != null) {
-                list.add(p);
-            }
-        }
+        for (String p : parts) list.add(p);
         return list;
     }
 }
