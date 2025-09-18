@@ -1,16 +1,19 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.Factory;
+import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.*;
 import co.unicauca.workflow.service.DegreeWorkService;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.ResourceBundle;
+import java.util.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 public class ManagementTeacherFormatAController implements Initializable {
@@ -19,9 +22,7 @@ public class ManagementTeacherFormatAController implements Initializable {
     @FXML
     private Button btnAdjuntarDocumento;
     @FXML
-    private Button btnUsuario; 
-    @FXML
-    private Button btnGuardar; // 🔹 necesitas agregar este botón en el FXML
+    private ToggleButton btnUsuario;
 
     // Campos de formulario
     @FXML
@@ -50,11 +51,21 @@ public class ManagementTeacherFormatAController implements Initializable {
     private User usuarioActual;
     private File archivoAdjunto;
 
-    // Servicio
     private DegreeWorkService service;
 
-    public void setService(DegreeWorkService service) {
-        this.service = service;
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        lblEstado.setText("No enviado");
+
+        // Inicializamos opciones de modalidad
+        cbModalidad.getItems().setAll(
+            "INVESTIGACION",
+            "PRACTICA_PROFESIONAL"
+        );
+
+        // Instanciar servicio vía factory
+        IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
+        service = new DegreeWorkService(repo);
     }
 
     public void setUsuario(User usuario) {
@@ -82,68 +93,69 @@ public class ManagementTeacherFormatAController implements Initializable {
 
         if (archivoAdjunto != null) {
             txtArchivoAdjunto.setText(archivoAdjunto.getAbsolutePath());
-            lblEstado.setText("Documento cargado");
+            lblEstado.setText("Enviado");
+            mostrarAlerta("Documento cargado",
+                    "El documento \"" + archivoAdjunto.getName() + "\" se cargó correctamente.",
+                    Alert.AlertType.INFORMATION);
         } else {
             lblEstado.setText("No enviado");
+            mostrarAlerta("Carga cancelada",
+                    "No seleccionaste ningún archivo. Intenta nuevamente.",
+                    Alert.AlertType.WARNING);
         }
     }
 
     @FXML
     private void onGuardarFormato(ActionEvent event) {
-        try {
-            // Validaciones básicas
-            if (txtCodEstudiante.getText().isEmpty() ||
-                txtTituloTrabajo.getText().isEmpty() ||
-                cbModalidad.getValue() == null ||
-                dpFechaActual.getValue() == null ||
-                txtDirector.getText().isEmpty() ||
-                txtObjetivoGeneral.getText().isEmpty() ||
-                archivoAdjunto == null) {
-                
-                Alert alerta = new Alert(Alert.AlertType.WARNING, "Por favor completa todos los campos obligatorios (*)", ButtonType.OK);
-                alerta.showAndWait();
-                return;
-            }
+        // Validaciones
+        if (txtCodEstudiante.getText().isEmpty() ||
+            txtTituloTrabajo.getText().isEmpty() ||
+            cbModalidad.getValue() == null ||
+            dpFechaActual.getValue() == null ||
+            txtDirector.getText().isEmpty() ||
+            txtObjetivoGeneral.getText().isEmpty() ||
+            txtObjetivosEspecificos.getText().isEmpty() ||
+            archivoAdjunto == null) {
 
+            mostrarAlerta("Campos incompletos", "Por favor llene todos los campos obligatorios (*)", Alert.AlertType.WARNING);
+            return;
+        }
+
+        try {
             // Construir objeto DegreeWork
             DegreeWork formato = new DegreeWork(
-                txtCodEstudiante.getText(), // estudiante
-                usuarioActual.getEmail(),   // profesor (este usuario logueado es el docente)
+                txtCodEstudiante.getText(),
+                usuarioActual != null ? usuarioActual.getEmail() : "docente@default.com",
                 txtTituloTrabajo.getText(),
-                Modalidad.valueOf(cbModalidad.getValue().toUpperCase()),
+                Modalidad.valueOf(cbModalidad.getValue()),
                 dpFechaActual.getValue(),
                 txtDirector.getText(),
                 txtCodirector.getText(),
                 txtObjetivoGeneral.getText(),
-                Arrays.asList(txtObjetivosEspecificos.getText().split(";")), // separados por ;
+                Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
                 archivoAdjunto.getAbsolutePath()
             );
 
             formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
 
-            // Guardar en BD
-            boolean ok = service.registrarFormato(formato);
+            boolean creado = service.registrarFormato(formato);
 
-            if (ok) {
-                lblEstado.setText("Guardado");
-                Alert alerta = new Alert(Alert.AlertType.INFORMATION, "Formato A registrado con éxito", ButtonType.OK);
-                alerta.showAndWait();
-                limpiarFormulario();
+            if (creado) {
+                mostrarAlerta("Éxito", "Formato A registrado correctamente", Alert.AlertType.CONFIRMATION);
+                limpiarCampos();
             } else {
-                Alert alerta = new Alert(Alert.AlertType.ERROR, "Error al guardar el Formato A", ButtonType.OK);
-                alerta.showAndWait();
+                mostrarAlerta("Error", "No se pudo registrar el Formato A", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alerta = new Alert(Alert.AlertType.ERROR, "Ocurrió un error: " + e.getMessage(), ButtonType.OK);
-            alerta.showAndWait();
+            mostrarAlerta("Error inesperado", "Ocurrió un error: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    private void limpiarFormulario() {
+    private void limpiarCampos() {
         txtCodEstudiante.clear();
         txtTituloTrabajo.clear();
-        cbModalidad.setValue(null);
+        cbModalidad.getSelectionModel().clearSelection();
         dpFechaActual.setValue(LocalDate.now());
         txtDirector.clear();
         txtCodirector.clear();
@@ -154,15 +166,20 @@ public class ManagementTeacherFormatAController implements Initializable {
         lblEstado.setText("No enviado");
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        lblEstado.setText("No enviado");
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
 
-        cbModalidad.getItems().setAll(
-            "INVESTIGACION",
-            "PRACTICA_PROFESIONAL"
-        );
+        Label etiqueta = new Label(mensaje);
+        etiqueta.setWrapText(true);
+        etiqueta.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: #2c3e50;");
 
-        dpFechaActual.setValue(LocalDate.now());
+        VBox contenedor = new VBox(etiqueta);
+        contenedor.setSpacing(10);
+        contenedor.setPadding(new Insets(10));
+
+        alerta.getDialogPane().setContent(contenedor);
+        alerta.showAndWait();
     }
 }

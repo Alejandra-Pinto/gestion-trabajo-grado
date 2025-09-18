@@ -1,6 +1,5 @@
 package co.unicauca.workflow.access;
 
-
 public class Factory {
 
     private static Factory instance;
@@ -22,7 +21,21 @@ public class Factory {
                 result = new UserSQLiteRepository();
                 break;
             default:
-                System.out.println("❌ Tipo de repositorio no soportado: " + type);
+                System.out.println("❌ Tipo de repositorio de usuarios no soportado: " + type);
+                break;
+        }
+        return result;
+    }
+
+    public IDegreeWorkRepository getDegreeWorkRepository(String type) {
+        IDegreeWorkRepository result = null;
+
+        switch (type.toLowerCase()) {
+            case "sqlite":
+                result = new DegreeWorkSQLiteRepository();
+                break;
+            default:
+                System.out.println("❌ Tipo de repositorio de trabajos de grado no soportado: " + type);
                 break;
         }
         return result;
