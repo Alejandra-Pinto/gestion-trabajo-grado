@@ -5,7 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLiteRepository implements IUsersRepository, IFormatoARepository {
+public class SQLiteRepository implements IUsersRepository, IDegreeWorkRepository {
     private Connection conn;
 
     public SQLiteRepository() {
@@ -148,11 +148,10 @@ public class SQLiteRepository implements IUsersRepository, IFormatoARepository {
         }
     }
 
-    /* ======================= MÉTODOS DE FORMATO A ======================= */
 
     /* ======================= MÉTODOS DE FORMATO A ======================= */
     @Override
-    public boolean save(FormatoA formato) {
+    public boolean save(DegreeWork formato) {
         String sql = "INSERT INTO formato_a("
                 + "idEstudiante, idProfesor, tituloProyecto, modalidad, fechaActual, "
                 + "directorProyecto, codirectorProyecto, objetivoGeneral, objetivosEspecificos, "
@@ -190,7 +189,7 @@ public class SQLiteRepository implements IUsersRepository, IFormatoARepository {
     }
 
     @Override
-    public FormatoA findById(int id) {
+    public DegreeWork findById(int id) {
         String sql = "SELECT * FROM formato_a WHERE id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
@@ -205,8 +204,8 @@ public class SQLiteRepository implements IUsersRepository, IFormatoARepository {
     }
 
     @Override
-    public List<FormatoA> listAllFormatoA() {
-        List<FormatoA> list = new ArrayList<>();
+    public List<DegreeWork> listAllFormatoA() {
+        List<DegreeWork> list = new ArrayList<>();
         String sql = "SELECT * FROM formato_a ORDER BY id";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -219,7 +218,7 @@ public class SQLiteRepository implements IUsersRepository, IFormatoARepository {
     }
 
     @Override
-    public boolean update(FormatoA formato) {
+    public boolean update(DegreeWork formato) {
         String sql = "UPDATE formato_a SET "
                 + "idEstudiante=?, idProfesor=?, tituloProyecto=?, modalidad=?, fechaActual=?, "
                 + "directorProyecto=?, codirectorProyecto=?, objetivoGeneral=?, objetivosEspecificos=?, "
@@ -259,9 +258,9 @@ public class SQLiteRepository implements IUsersRepository, IFormatoARepository {
         }
     }
 
-    private FormatoA buildFormatoAFromResultSet(ResultSet rs) throws SQLException {
+    private DegreeWork buildFormatoAFromResultSet(ResultSet rs) throws SQLException {
         // Construye con el constructor existente
-        FormatoA f = new FormatoA(
+        DegreeWork f = new DegreeWork(
                 rs.getString("idEstudiante"),
                 rs.getString("idProfesor"),
                 rs.getString("tituloProyecto"),

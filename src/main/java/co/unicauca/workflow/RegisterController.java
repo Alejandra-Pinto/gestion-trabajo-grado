@@ -1,5 +1,7 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.Factory;
+import co.unicauca.workflow.access.IUsersRepository;
 import co.unicauca.workflow.access.SQLiteRepository;
 import co.unicauca.workflow.domain.entities.Student;
 import co.unicauca.workflow.domain.entities.Teacher;
@@ -76,7 +78,8 @@ public class RegisterController implements Initializable {
         }
 
         // Registrar usuario con el servicio
-        SQLiteRepository repo = new SQLiteRepository();
+        //SQLiteRepository repo = new SQLiteRepository();
+        IUsersRepository repo = Factory.getInstance().getUserRepository("sqlite");
         UserService service = new UserService(repo);
 
         boolean creado = service.register(user);

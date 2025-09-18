@@ -3,7 +3,7 @@ package co.unicauca.workflow.domain.entities;
 import java.time.LocalDate;
 import java.util.List;
 
-public class FormatoA {
+public class DegreeWork {
     private String idEstudiante;
     private String idProfesor;
     private String tituloProyecto;
@@ -21,7 +21,7 @@ public class FormatoA {
 
 
     // Constructor
-    public FormatoA(String idEstudiante, String idProfesor, String tituloProyecto, Modalidad modalidad,
+    public DegreeWork(String idEstudiante, String idProfesor, String tituloProyecto, Modalidad modalidad,
                     LocalDate fechaActual, String directorProyecto, String codirectorProyecto,
                     String objetivoGeneral, List<String> objetivosEspecificos, String archivoPdf) {
         this.idEstudiante = idEstudiante;
