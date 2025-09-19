@@ -1,52 +1,68 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.domain.entities.User;
+import co.unicauca.workflow.domain.entities.Teacher;
+import co.unicauca.workflow.domain.entities.Student;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 
-/**
- * FXML Controller class
- *
- * @author Dana Isabella
- */
 public class HomeController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
     @FXML
-    private Label lblNombre;
+    private ToggleButton btnRol; // 🔹 este es el que siempre será visible
+
     @FXML
-    private Label lblPrograma;
-    
-    
+    private ToggleButton btnAnteproyectoDocente;
+    @FXML
+    private ToggleButton btnFormatoDocente;
+    @FXML
+    private ToggleButton btnFormatoEstudiante;
+    @FXML
+    private ToggleButton btnAnteproyectoEstudiante;
+    @FXML
+    private ToggleButton btnEvaluarPropuestas;
+    @FXML
+    private ToggleButton btnEvaluarAnteproyectos;
+
     private User usuario;
-    
-    
-    
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
-     public void setUsuario(User usuario) {
+        // por defecto ocultar todos menos btnRol
+        btnRol.setVisible(true);
+        btnAnteproyectoDocente.setVisible(false);
+        btnFormatoDocente.setVisible(false);
+        btnFormatoEstudiante.setVisible(false);
+        btnAnteproyectoEstudiante.setVisible(false);
+        btnEvaluarPropuestas.setVisible(false);
+        btnEvaluarAnteproyectos.setVisible(false);
+    }
+
+    public void setUsuario(User usuario) {
         this.usuario = usuario;
         cargarUsuario();
     }
-     
-    private void cargarUsuario(){
-        lblNombre.setText(usuario.getFirstName() +" "+ usuario.getLastName());
-        lblPrograma.setText(String.valueOf(usuario.getProgram()));
-        
+
+    private void cargarUsuario() {
+        String programa = usuario.getProgram() != null ? usuario.getProgram().toString() : "";
+
+        if (usuario instanceof Teacher) {
+            btnRol.setText("Docente\n(" + programa + ")");
+            btnAnteproyectoDocente.setVisible(true);
+            btnFormatoDocente.setVisible(true);
+
+        } else if (usuario instanceof Student) {
+            btnRol.setText("Estudiante\n(" + programa + ")");
+            btnFormatoEstudiante.setVisible(true);
+            btnAnteproyectoEstudiante.setVisible(true);
+
+        } else if ("coordinador".equalsIgnoreCase(usuario.getRole())) {
+            btnRol.setText("Coordinador\n(" + programa + ")");
+            btnEvaluarPropuestas.setVisible(true);
+            btnEvaluarAnteproyectos.setVisible(true);
+        }
     }
 }
