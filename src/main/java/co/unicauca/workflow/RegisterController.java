@@ -2,9 +2,9 @@ package co.unicauca.workflow;
 
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IUsersRepository;
-import co.unicauca.workflow.access.SQLiteRepository;
 import co.unicauca.workflow.domain.entities.Student;
 import co.unicauca.workflow.domain.entities.Teacher;
+import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.service.UserService;
 import java.net.URL;
@@ -35,19 +35,24 @@ public class RegisterController implements Initializable {
     @FXML
     private PasswordField txt_confirmPassword;
     @FXML
-    private CheckBox chk_estudiante;
+    private RadioButton rbEstudiante;
     @FXML
-    private CheckBox chk_docente;
+    private RadioButton rbDocente;
+    @FXML
+    private RadioButton rbCoordinador;
     @FXML
     private Button btn_register;
     @FXML
     private Hyperlink hpl_login;
 
+    // ToggleGroup para asegurar que solo se seleccione un rol
+    private ToggleGroup groupRoles;
+
     @FXML
     private void onRegister(ActionEvent event) {
         String nombre = txt_nombre.getText().trim();
         String apellido = txt_apellido.getText().trim();
-        String programa = cbx_programa.getValue(); // ahora el programa viene del combo
+        String programa = cbx_programa.getValue();
         String correo = txt_email.getText().trim();
         String pass = txt_password.getText();
         String confirmPass = txt_confirmPassword.getText();
@@ -55,7 +60,7 @@ public class RegisterController implements Initializable {
         // Validaciones básicas
         if (nombre.isEmpty() || apellido.isEmpty() || programa == null ||
             correo.isEmpty() || pass.isEmpty() || confirmPass.isEmpty() ||
-            (!chk_estudiante.isSelected() && !chk_docente.isSelected())) {
+            groupRoles.getSelectedToggle() == null) {
             mostrarAlerta("Error de registro", "Por favor complete todos los campos y seleccione un rol", Alert.AlertType.WARNING);
             return;
         }
@@ -68,17 +73,14 @@ public class RegisterController implements Initializable {
 
         // Determinar rol
         User user;
-        if (chk_estudiante.isSelected() && chk_docente.isSelected()) {
-            mostrarAlerta("Error de registro", "Debe seleccionar solo un rol", Alert.AlertType.WARNING);
-            return;
-        } else if (chk_estudiante.isSelected()) {
+        if (rbEstudiante.isSelected()) {
             user = new Student(nombre, apellido, null, programa, correo, pass);
-        } else {
+        } else if (rbDocente.isSelected()) {
             user = new Teacher(nombre, apellido, null, programa, correo, pass);
+        } else {
+            user = new Coordinator(nombre, apellido, null, programa, correo, pass);
         }
 
-        // Registrar usuario con el servicio
-        //SQLiteRepository repo = new SQLiteRepository();
         IUsersRepository repo = Factory.getInstance().getUserRepository("sqlite");
         UserService service = new UserService(repo);
 
@@ -88,7 +90,6 @@ public class RegisterController implements Initializable {
             mostrarAlerta("Registro exitoso", "Usuario registrado correctamente", Alert.AlertType.CONFIRMATION);
             limpiarCampos();
 
-            // Regresar automáticamente al login
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
                 Parent root = loader.load();
@@ -100,7 +101,7 @@ public class RegisterController implements Initializable {
                 e.printStackTrace();
             }
         } else {
-            mostrarAlerta("Error de registro", "No se pudo registrar el usuario. Verifique si el correo ya está en uso o si la contraseña Cumple el formato.", Alert.AlertType.ERROR);
+            mostrarAlerta("Error de registro", "No se pudo registrar el usuario. Verifique si el correo ya está en uso o si la contraseña cumple el formato.", Alert.AlertType.ERROR);
         }
     }
 
@@ -144,18 +145,22 @@ public class RegisterController implements Initializable {
         txt_email.clear();
         txt_password.clear();
         txt_confirmPassword.clear();
-        chk_estudiante.setSelected(false);
-        chk_docente.setSelected(false);
+        groupRoles.selectToggle(null);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Aquí puedes llenar el combo de programas desde BD o manualmente
         cbx_programa.getItems().addAll(
             "Ingeniería de Sistemas",
             "Ingeniería Automática Industrial",
             "Ingeniería Electrónica y Telecomunicaciones",
             "Técnologo en Telemática"
         );
+
+        // Configurar el ToggleGroup para los roles
+        groupRoles = new ToggleGroup();
+        rbEstudiante.setToggleGroup(groupRoles);
+        rbDocente.setToggleGroup(groupRoles);
+        rbCoordinador.setToggleGroup(groupRoles);
     }
 }

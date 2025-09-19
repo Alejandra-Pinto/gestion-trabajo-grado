@@ -8,7 +8,8 @@ public abstract class User {
     private String program;
     private String email;
     private String password; // cifrada
-    private String role; // "STUDENT" o "PROFESSOR"
+    private String role; // "STUDENT" o "PROFESSOR" o "COORDINATOR"
+    private String status; 
 
     public User(String firstName, String lastName, String phone, String program, String email, String password, String role) {
         this.firstName = firstName;
@@ -18,6 +19,7 @@ public abstract class User {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.status =  "ACEPTADO";
     }
     
     // 🔹 Métodos getters/setters
@@ -68,6 +70,12 @@ public abstract class User {
     }
     public void setRole(String role) {
         this.role = role;
+    }
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // 🔹 Método abstracto: comportamiento que dependerá del rol
