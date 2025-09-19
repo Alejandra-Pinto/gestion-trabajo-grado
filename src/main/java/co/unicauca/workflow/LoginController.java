@@ -51,10 +51,9 @@ public class LoginController implements Initializable {
             mostrarAlerta("Login exitoso", "Bienvenido " + valido.getFirstName(), Alert.AlertType.INFORMATION);
 
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementTeacherFormatA.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Home.fxml"));
                 Parent root = loader.load();
-                //cambiaré temporalmente a Manegement
-                ManagementTeacherFormatAController homeController = loader.getController();
+                HomeController homeController = loader.getController();
                 homeController.setUsuario(valido);
                 Stage stage = (Stage) btn_login.getScene().getWindow();
                 stage.setScene(new Scene(root));

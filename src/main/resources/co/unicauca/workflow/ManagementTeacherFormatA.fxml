@@ -10,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
@@ -59,7 +60,7 @@
                            </image>
                         </ImageView>
 
-                        <Button fx:id="btnAdjuntarDocumento" layoutX="21.0" layoutY="371.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
+                        <Button fx:id="btnAdjuntarDocumento" layoutX="21.0" layoutY="371.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -72,7 +73,11 @@
                         <TextField fx:id="txtCodirector" layoutX="262.0" layoutY="195.0" prefHeight="25.0" prefWidth="200.0" promptText="Codirector del proyecto*" />
                         <TextField fx:id="txtObjetivoGeneral" layoutX="262.0" layoutY="224.0" prefHeight="25.0" prefWidth="200.0" promptText="Objetivo general*" />
                         <TextField fx:id="txtObjetivosEspecificos" layoutX="262.0" layoutY="253.0" prefHeight="25.0" prefWidth="200.0" promptText="Objetivos específicos*" />
-                        <TextField fx:id="txtArchivoAdjunto" layoutX="21.0" layoutY="306.0" prefHeight="54.0" prefWidth="439.0" />
+                        <HBox layoutX="21.0" layoutY="306.0" spacing="5">
+                            <TextField fx:id="txtArchivoAdjunto" editable="false" prefHeight="25.0" prefWidth="370.0" />
+                            <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" text="Abrir" />
+                        </HBox>
+
                         <Label layoutX="23.0" layoutY="55.0" text="Codigo estudiante" />
                         <TextField fx:id="txtCodEstudiante" layoutX="262.0" layoutY="51.0" prefHeight="25.0" prefWidth="200.0" promptText="Código estudiantil*" />
                         <Button fx:id="btnGuardar" layoutX="384.0" layoutY="371.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">

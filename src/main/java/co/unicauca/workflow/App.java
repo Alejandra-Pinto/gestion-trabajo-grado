@@ -2,37 +2,51 @@ package co.unicauca.workflow;
 
 import java.io.IOException;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
+import javafx.application.HostServices;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-
-/**
- * JavaFX App
- */
 public class App extends Application {
-     private static Scene scene;
+    private static Scene scene;
+
+    // 🔹 Aquí declaramos el campo estático
+    private static HostServices hostServices;
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("Login"), 1540, 800);
+        // ✅ Asignamos hostServices al arrancar la app
+        hostServices = getHostServices();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+        Parent root = loader.load();
+
+        scene = new Scene(root, 1540, 800);
         stage.setScene(scene);
+        stage.setTitle("Login - Workflow");
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+    private Parent loadFXML(String fxml) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        Parent root = fxmlLoader.load();
+
+        // ✅ Inyectar HostServices si el controller lo soporta
+        Object controller = fxmlLoader.getController();
+        if (controller instanceof Hostable) {
+            ((Hostable) controller).setHostServices(hostServices);
+        }
+
+        return root;
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
+    // 🔹 Método público para otros controladores
+    public static HostServices getHostServicesInstance() {
+        return hostServices;
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
-
 }

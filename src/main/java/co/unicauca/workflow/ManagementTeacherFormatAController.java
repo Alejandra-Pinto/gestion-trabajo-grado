@@ -15,9 +15,15 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.application.HostServices;
 
-public class ManagementTeacherFormatAController implements Initializable {
+public class ManagementTeacherFormatAController implements Initializable, Hostable {
+    private HostServices hostServices;
 
+    @Override
+    public void setHostServices(HostServices hs) {
+        this.hostServices = hs;
+    }
     // Botones principales
     @FXML
     private Button btnAdjuntarDocumento;
@@ -49,7 +55,7 @@ public class ManagementTeacherFormatAController implements Initializable {
     private Label lblEstado;
 
     private User usuarioActual;
-    //temporalmente lo usamos como label
+    
     private File archivoAdjunto;
 
     private DegreeWorkService service;
@@ -85,18 +91,20 @@ public class ManagementTeacherFormatAController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Seleccionar documento");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
-            new FileChooser.ExtensionFilter("Word Files", "*.docx"),
-            new FileChooser.ExtensionFilter("Todos los archivos", "*.*")
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Word Files", "*.docx"),
+                new FileChooser.ExtensionFilter("Todos los archivos", "*.*")
         );
 
-        archivoAdjunto = fileChooser.showOpenDialog(null);
+        File archivoSeleccionado = fileChooser.showOpenDialog(null);
 
-        if (archivoAdjunto != null) {
-            txtArchivoAdjunto.setText(archivoAdjunto.getAbsolutePath());
+        if (archivoSeleccionado != null) {
+            // ✅ Guardamos solo la ruta en el TextField
+            txtArchivoAdjunto.setText(archivoSeleccionado.getAbsolutePath());
             lblEstado.setText("Enviado");
+
             mostrarAlerta("Documento cargado",
-                    "El documento \"" + archivoAdjunto.getName() + "\" se cargó correctamente.",
+                    "El documento \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
                     Alert.AlertType.INFORMATION);
         } else {
             lblEstado.setText("No enviado");
@@ -106,8 +114,24 @@ public class ManagementTeacherFormatAController implements Initializable {
         }
     }
 
+
     @FXML
+    private void onAbrirArchivo(ActionEvent event) {
+        String ruta = txtArchivoAdjunto.getText();
+        if (ruta == null || ruta.isEmpty()) {
+            mostrarAlerta("Sin archivo", "No hay ningún archivo seleccionado.", Alert.AlertType.WARNING);
+            return;
+        }
+        File archivo = new File(ruta);
+        if (!archivo.exists()) {
+            mostrarAlerta("Archivo no encontrado", "El archivo no existe en la ruta especificada.", Alert.AlertType.ERROR);
+            return;
+        }
+        // abre en navegador por defecto
+        hostServices.showDocument(archivo.toURI().toString());
+    }
     
+    @FXML
     private void onGuardarFormato(ActionEvent event) {
         // Validaciones
         if (txtCodEstudiante.getText().isEmpty()
