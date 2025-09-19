@@ -90,12 +90,7 @@ public class UserSQLiteRepository implements IUsersRepository {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                // Validar login de coordinador (solo si está aceptado)
-                if ("COORDINATOR".equalsIgnoreCase(rs.getString("role")) &&
-                    !"ACEPTADO".equalsIgnoreCase(rs.getString("status"))) {
-                    System.out.println("El coordinador aún no está aceptado.");
-                    return null;
-                }
+                // ⚠️ Ya no bloqueamos aquí al coordinador
                 return buildUserFromResultSet(rs);
             }
         } catch (SQLException e) {
@@ -157,4 +152,18 @@ public class UserSQLiteRepository implements IUsersRepository {
             return t;
         }
     }
+    @Override
+    public boolean updateCoordinatorStatus(String email, String newStatus) {
+        String sql = "UPDATE users SET status = ? WHERE email = ? AND role = 'COORDINATOR'";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newStatus);
+            pstmt.setString(2, email);
+            int affected = pstmt.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error actualizando estado del coordinador: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
