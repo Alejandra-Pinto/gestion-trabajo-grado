@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="477.0" prefWidth="691.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementStudentFormatAController">
+   <children>
+      <SplitPane fx:id="splitMain" dividerPositions="0.30523255813953487" layoutY="51.0" prefHeight="426.0" prefWidth="691.0">
+        <items>
+          <!-- Panel izquierdo -->
+          <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Estudiante" textFill="#111f63">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                           <image>
+                              <Image url="@images/gente2.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </ToggleButton>
+
+                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato propuesta">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                           <image>
+                              <Image url="@images/carpeta2.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </ToggleButton>
+
+                  <ToggleButton fx:id="btnAnteproyecto" layoutY="90.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Anteproyecto">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                           <image>
+                              <Image url="@images/birrete2.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </ToggleButton>
+
+                  <ImageView fx:id="imgBandera" fitHeight="83.0" fitWidth="206.0" layoutY="345.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/bandera.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+
+          <!-- Panel derecho -->
+          <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="416.0" prefWidth="471.0">
+               <children>
+                  <Label fx:id="lblTitulo" layoutX="21.0" layoutY="14.0" text="ESTADO DE PROPUESTA">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblEstadoTitulo" layoutX="21.0" layoutY="49.0" text="ESTADO:">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTituloTrabajo" layoutX="21.0" layoutY="83.0" text="Título Trabajo de Grado:" />
+                  <Label fx:id="lblModalidadTitulo" layoutX="22.0" layoutY="114.0" text="Modalidad:" />
+                  <Label fx:id="lblFechaTitulo" layoutX="22.0" layoutY="146.0" text="Fecha:" />
+                  <Label fx:id="lblDirectorTitulo" layoutX="22.0" layoutY="178.0" text="Director del Proyecto:" />
+                  <Label fx:id="lblCodirectorTitulo" layoutX="22.0" layoutY="209.0" text="Codirector del Proyecto:" />
+                  <Label fx:id="lblObjGeneralTitulo" layoutX="22.0" layoutY="242.0" text="Objetivo general:" />
+                  <Label fx:id="lblObjEspecificosTitulo" layoutX="23.0" layoutY="275.0" text="Objetivos específicos:" />
+
+                  <Label fx:id="lblEstadoValor" layoutX="86.0" layoutY="49.0" text="PRIMERA VERSIÓN" textFill="#111f63">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+
+                  <Button fx:id="btnVerCorrecciones" layoutX="23.0" layoutY="363.0" mnemonicParsing="false" style="-fx-background-color: #111f63;" text="VER CORRECCIONES" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+
+                  <!-- Labels dinámicos -->
+                  <Label fx:id="lblFechaValor" layoutX="199.0" layoutY="146.0" text="Cargar Fecha" />
+                  <Label fx:id="lblDirectorValor" layoutX="199.0" layoutY="178.0" text="Cargar Director" />
+                  <Label fx:id="lblModalidadValor" layoutX="199.0" layoutY="114.0" text="Cargar Modalidad" />
+                  <Label fx:id="lblCodirectorValor" layoutX="199.0" layoutY="209.0" text="Cargar Codirector" />
+                  <TextArea fx:id="txtObjEspecificos" layoutX="199.0" layoutY="275.0" prefHeight="69.0" prefWidth="249.0" text="Cargar Objetivos específicos" />
+                  <Label fx:id="lblTituloValor" layoutX="199.0" layoutY="83.0" text="Cargar Titulo" />
+                  <Label fx:id="lblObjGeneralValor" layoutX="199.0" layoutY="242.0" text="Cargar Objetivo general" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+
+      <ImageView fx:id="imgLogo" fitHeight="43.0" fitWidth="97.0" layoutX="18.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
