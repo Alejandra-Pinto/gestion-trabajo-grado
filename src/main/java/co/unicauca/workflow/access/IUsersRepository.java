@@ -12,4 +12,6 @@ public interface IUsersRepository {
     User login(String email, String password);
 
     List<User> listAll();
+    
+    public boolean updateCoordinatorStatus(String email, String newStatus);
 }

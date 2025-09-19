@@ -1,9 +1,12 @@
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.access.Factory;
+import co.unicauca.workflow.access.IAdminRepository;
 import co.unicauca.workflow.access.IUsersRepository;
-import co.unicauca.workflow.access.UserSQLiteRepository;
 import co.unicauca.workflow.domain.entities.User;
+import co.unicauca.workflow.domain.entities.Coordinator;
+import co.unicauca.workflow.domain.entities.SuperAdmin;
+import co.unicauca.workflow.service.AdminService;
 import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
 import java.net.URL;
@@ -13,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -41,52 +43,67 @@ public class LoginController implements Initializable {
             return;
         }
 
-        IUsersRepository repo = Factory.getInstance().getUserRepository("sqlite");
-        UserService service = new UserService(repo);
+        // Repositorios
+        IUsersRepository userRepo = Factory.getInstance().getUserRepository("sqlite");
+        UserService userService = new UserService(userRepo);
 
-        User valido = service.login(usuario, contrasenia);
+        IAdminRepository adminRepo = Factory.getInstance().getAdminRepository("sqlite");
+        AdminService adminService = new AdminService(adminRepo);
 
+        // 1. Primero probar con SuperAdmin
+        SuperAdmin adminValido = adminService.login(usuario, contrasenia);
+        if (adminValido != null) {
+            abrirVentana("/co/unicauca/workflow/HomeAdmin.fxml", "Inicio - Super Admin", null);
+            return;
+        }
+
+        // 2. Si no, probar como usuario normal
+        User valido = userService.login(usuario, contrasenia);
         if (valido != null) {
-            // Si el usuario es coordinador y no está aprobado, mostrar alerta especial
-            if (valido instanceof co.unicauca.workflow.domain.entities.Coordinator) {
-                co.unicauca.workflow.domain.entities.Coordinator coord = 
-                    (co.unicauca.workflow.domain.entities.Coordinator) valido;
-
+            if (valido instanceof Coordinator) {
+                Coordinator coord = (Coordinator) valido;
                 if ("PENDIENTE".equals(coord.getStatus())) {
-                    mostrarAlerta("Solicitud en espera", 
-                        "Su solicitud de registro como coordinador aún está en revisión.", 
-                        Alert.AlertType.INFORMATION);
+                    mostrarAlerta("Solicitud en espera",
+                            "Su solicitud de registro como coordinador aún está en revisión.",
+                            Alert.AlertType.INFORMATION);
                     return;
                 } else if ("RECHAZADO".equals(coord.getStatus())) {
-                    mostrarAlerta("Solicitud rechazada", 
-                        "Su solicitud de registro como coordinador fue rechazada.", 
-                        Alert.AlertType.ERROR);
+                    mostrarAlerta("Solicitud rechazada",
+                            "Su solicitud de registro como coordinador fue rechazada.",
+                            Alert.AlertType.ERROR);
                     return;
                 }
             }
 
-            // Si pasa la validación normal, entra al Home
-            mostrarAlerta("Login exitoso", "Bienvenido " + valido.getFirstName(), Alert.AlertType.INFORMATION);
+            abrirVentana("/co/unicauca/workflow/Home.fxml", "Inicio - Workflow", valido);
+            return;
+        }
 
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Home.fxml"));
-                Parent root = loader.load();
+        // 3. Ninguno válido
+        mostrarAlerta("Error de login", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
+    }
+
+
+    private void abrirVentana(String fxml, String titulo, User usuario) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+
+            if (usuario != null) {
                 HomeController homeController = loader.getController();
-                homeController.setUsuario(valido);
-                Stage stage = (Stage) btn_login.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Inicio - Workflow");
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                mostrarAlerta("Error", "No se pudo abrir la ventana principal.", Alert.AlertType.ERROR);
+                homeController.setUsuario(usuario);
             }
 
-        } else {
-            mostrarAlerta("Error de login", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
+            Stage stage = (Stage) btn_login.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(titulo);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la ventana.", Alert.AlertType.ERROR);
         }
     }
-    
+
     @FXML
     private void evenBtnRegister(ActionEvent event) {
         try {
@@ -101,7 +118,7 @@ public class LoginController implements Initializable {
             mostrarAlerta("Error", "No se pudo abrir la ventana de registro.", Alert.AlertType.ERROR);
         }
     }
-    
+
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
