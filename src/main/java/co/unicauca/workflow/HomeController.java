@@ -1,51 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbproject://nbproject/nbproject.properties to edit this template
- */
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.domain.entities.User;
-import java.io.IOException;
+import co.unicauca.workflow.domain.entities.Teacher;
+import co.unicauca.workflow.domain.entities.Student;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.control.ToggleButton;
 
-/**
- * FXML Controller class
- *
- * @author Dana Isabella
- */
 public class HomeController implements Initializable {
 
     @FXML
-    private Label lblNombre;
+    private ToggleButton btnRol; // 🔹 este es el que siempre será visible
+
     @FXML
-    private Label lblPrograma;
+    private ToggleButton btnAnteproyectoDocente;
     @FXML
-    private Button btnAnteproyectoDocente;
+    private ToggleButton btnFormatoDocente;
     @FXML
-    private Button btnFormatoDocente;
+    private ToggleButton btnFormatoEstudiante;
     @FXML
-    private Button btnFormatoEstudiante;
+    private ToggleButton btnAnteproyectoEstudiante;
     @FXML
-    private Button btnAnteproyectoEstudiante;
+    private ToggleButton btnEvaluarPropuestas;
     @FXML
-    private Button btnEvaluarPropuestas;
-    @FXML
-    private Button btnEvaluarAnteproyectos;
+    private ToggleButton btnEvaluarAnteproyectos;
 
     private User usuario;
 
-    
+    @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicializar botones como invisibles
+        // por defecto ocultar todos menos btnRol
+        btnRol.setVisible(true);
         btnAnteproyectoDocente.setVisible(false);
         btnFormatoDocente.setVisible(false);
         btnFormatoEstudiante.setVisible(false);
@@ -60,42 +47,22 @@ public class HomeController implements Initializable {
     }
 
     private void cargarUsuario() {
-        lblNombre.setText(usuario.getFirstName() + " " + usuario.getLastName());
-        lblPrograma.setText(String.valueOf(usuario.getProgram()));
+        String programa = usuario.getProgram() != null ? usuario.getProgram().toString() : "";
 
-        // Mostrar botones según el tipo de usuario
-        if (usuario instanceof co.unicauca.workflow.domain.entities.Teacher) {
-            // Docente
+        if (usuario instanceof Teacher) {
+            btnRol.setText("Docente\n(" + programa + ")");
             btnAnteproyectoDocente.setVisible(true);
             btnFormatoDocente.setVisible(true);
-        } else if (usuario instanceof co.unicauca.workflow.domain.entities.Student) {
-            // Estudiante
+
+        } else if (usuario instanceof Student) {
+            btnRol.setText("Estudiante\n(" + programa + ")");
             btnFormatoEstudiante.setVisible(true);
             btnAnteproyectoEstudiante.setVisible(true);
+
         } else if ("coordinador".equalsIgnoreCase(usuario.getRole())) {
-            // Coordinador
+            btnRol.setText("Coordinador\n(" + programa + ")");
             btnEvaluarPropuestas.setVisible(true);
             btnEvaluarAnteproyectos.setVisible(true);
-        }
-    }
-
-    @FXML
-    private void onBtnFormatoDocenteClicked() {
-        try {
-            // Cargar el FXML de GestionPropuestaDocente
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("GestionPropuestaDocente.fxml"));
-            // Crear instancia del controlador con el usuario
-            GestionPropuestaDocenteController controller = new GestionPropuestaDocenteController(usuario);
-            loader.setController(controller);
-            AnchorPane root = loader.load();
-
-            // Crear y mostrar la nueva ventana
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Gestión de Propuestas Docente");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
