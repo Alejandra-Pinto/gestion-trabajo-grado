@@ -19,7 +19,7 @@ public class Factory {
 
         switch (type.toLowerCase()) {
             case "sqlite":
-                result = new SQLiteRepository();
+                result = new UserSQLiteRepository();
                 break;
             default:
                 System.out.println("❌ Tipo de repositorio no soportado: " + type);

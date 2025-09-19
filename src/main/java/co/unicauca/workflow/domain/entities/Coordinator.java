@@ -5,15 +5,14 @@ public class Coordinator extends User {
     public Coordinator(String firstName, String lastName, String phone, String program,
                        String email, String password) {
         super(firstName, lastName, phone, program, email, password, "COORDINATOR");
+        this.setStatus("PENDIENTE"); 
     }
 
     @Override
     public void showDashboard() {
-        // Aquí se define lo que hace un coordinador al iniciar sesión
         System.out.println("Mostrando panel del Coordinador para el programa: ");
     }
-
-    // Métodos adicionales específicos del coordinador
+    
     public void reviewFormatoA() {
         System.out.println("El coordinador está revisando un Formato A...");
     }

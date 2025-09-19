@@ -5,7 +5,7 @@
 package co.unicauca.workflow.service;
 
 import co.unicauca.workflow.access.IUsersRepository;
-import co.unicauca.workflow.access.SQLiteRepository;
+import co.unicauca.workflow.access.UserSQLiteRepository;
 import co.unicauca.workflow.domain.entities.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -33,7 +33,7 @@ public class UserServiceTest {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         boolean expResult = true;
         boolean result = instance.register(nuevoUsuario);
@@ -50,7 +50,7 @@ public class UserServiceTest {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         boolean expResult = false;
         boolean result = instance.register(nuevoUsuario);
@@ -67,7 +67,7 @@ public class UserServiceTest {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         boolean expResult = false;
         boolean result = instance.register(nuevoUsuario);
@@ -84,7 +84,7 @@ public class UserServiceTest {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         boolean expResult = false;
         boolean result = instance.register(nuevoUsuario);
@@ -101,7 +101,7 @@ public class UserServiceTest {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         boolean expResult = false;
         boolean result = instance.register(nuevoUsuario);
@@ -118,7 +118,7 @@ public class UserServiceTest {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         };
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         boolean expResult = false;
         boolean result = instance.register(nuevoUsuario);
@@ -138,7 +138,7 @@ public class UserServiceTest {
             }
         };
 
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
 
         // Registrar primero al usuario
@@ -154,7 +154,7 @@ public class UserServiceTest {
         System.out.println("loginUsuarioInvalido");
         String email = "invalido@unicauca.edu.co";
         String password = "NoExiste123!";
-        IUsersRepository repository = new SQLiteRepository();
+        IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
         User expResult = null;
         User result = instance.login(email, password);
