@@ -1,5 +1,4 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbproject://nbproject/nbproject.properties to edit this template
  */
 package co.unicauca.workflow;
@@ -44,7 +43,7 @@ public class GestionPropuestaDocenteController implements Initializable {
         this.usuario = usuario;
     }
 
-    // Constructor por defecto necesario para FXML
+    // Constructor por defecto necesario para FXML (aunque no se usará)
     public GestionPropuestaDocenteController() {
         this.usuario = null;
     }
@@ -54,11 +53,15 @@ public class GestionPropuestaDocenteController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        System.out.println("Inicializando GestionPropuestaDocenteController");
         // Configurar visibilidad de botones según el rol
         if (usuario instanceof Teacher) {
             btnRol.setVisible(true);
             btnFormatoDocente.setVisible(true);
             btnAnteproyectoDocente.setVisible(true);
+            System.out.println("Usuario es Docente, mostrando botones");
+        } else {
+            System.out.println("Usuario no es Docente, botones ocultos");
         }
 
         // Configurar el ComboBox con opciones de clasificación
@@ -94,7 +97,7 @@ public class GestionPropuestaDocenteController implements Initializable {
                 String color = switch (estadoActual) {
                     case "Aprobado" -> "#4CAF50"; // Verde
                     case "Rechazado" -> "#F44336"; // Rojo
-                    default -> "#e0e0e0"; // Gris para Pendiente
+                    default -> "#e0e0e0"; // Gris para Pendiente (cambio de azul)
                 };
                 estado.setStyle("-fx-background-color: " + color + "; " +
                                 "-fx-padding: 10; " +
@@ -107,7 +110,7 @@ public class GestionPropuestaDocenteController implements Initializable {
         }
     }
 
-    // Método para establecer el usuario desde HomeController
+    // Método para establecer el usuario desde HomeController (opcional, ya que se usa el constructor)
     public void setUsuario(User usuario) {
         this.usuario = usuario;
         // Actualizar visibilidad de botones si ya está inicializado
@@ -116,6 +119,7 @@ public class GestionPropuestaDocenteController implements Initializable {
             btnRol.setVisible(esDocente);
             btnFormatoDocente.setVisible(esDocente);
             btnAnteproyectoDocente.setVisible(esDocente);
+            System.out.println("setUsuario: esDocente=" + esDocente);
         }
     }
 }
