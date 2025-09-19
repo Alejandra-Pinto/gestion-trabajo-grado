@@ -49,6 +49,7 @@ public class ManagementTeacherFormatAController implements Initializable {
     private Label lblEstado;
 
     private User usuarioActual;
+    //temporalmente lo usamos como label
     private File archivoAdjunto;
 
     private DegreeWorkService service;
@@ -106,16 +107,17 @@ public class ManagementTeacherFormatAController implements Initializable {
     }
 
     @FXML
+    
     private void onGuardarFormato(ActionEvent event) {
         // Validaciones
-        if (txtCodEstudiante.getText().isEmpty() ||
-            txtTituloTrabajo.getText().isEmpty() ||
-            cbModalidad.getValue() == null ||
-            dpFechaActual.getValue() == null ||
-            txtDirector.getText().isEmpty() ||
-            txtObjetivoGeneral.getText().isEmpty() ||
-            txtObjetivosEspecificos.getText().isEmpty() ||
-            archivoAdjunto == null) {
+        if (txtCodEstudiante.getText().isEmpty()
+                || txtTituloTrabajo.getText().isEmpty()
+                || cbModalidad.getValue() == null
+                || dpFechaActual.getValue() == null
+                || txtDirector.getText().isEmpty()
+                || txtObjetivoGeneral.getText().isEmpty()
+                || txtObjetivosEspecificos.getText().isEmpty()
+                || txtArchivoAdjunto.getText().isEmpty()) {
 
             mostrarAlerta("Campos incompletos", "Por favor llene todos los campos obligatorios (*)", Alert.AlertType.WARNING);
             return;
@@ -124,16 +126,17 @@ public class ManagementTeacherFormatAController implements Initializable {
         try {
             // Construir objeto DegreeWork
             DegreeWork formato = new DegreeWork(
-                txtCodEstudiante.getText(),
-                usuarioActual != null ? usuarioActual.getEmail() : "docente@default.com",
-                txtTituloTrabajo.getText(),
-                Modalidad.valueOf(cbModalidad.getValue()),
-                dpFechaActual.getValue(),
-                txtDirector.getText(),
-                txtCodirector.getText(),
-                txtObjetivoGeneral.getText(),
-                Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
-                archivoAdjunto.getAbsolutePath()
+                    txtCodEstudiante.getText(),
+                    usuarioActual != null ? usuarioActual.getEmail() : "docente@default.com",
+                    txtTituloTrabajo.getText(),
+                    Modalidad.valueOf(cbModalidad.getValue()),
+                    dpFechaActual.getValue(),
+                    txtDirector.getText(),
+                    txtCodirector.getText(),
+                    txtObjetivoGeneral.getText(),
+                    Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
+                    //cambiamos esto archivoAdjunto.getAbsolutePath() a esto:
+                    txtArchivoAdjunto.getText()
             );
 
             formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
@@ -143,6 +146,16 @@ public class ManagementTeacherFormatAController implements Initializable {
             if (creado) {
                 mostrarAlerta("Éxito", "Formato A registrado correctamente", Alert.AlertType.CONFIRMATION);
                 limpiarCampos();
+
+                // 🔹 Aquí agregamos la consulta a la BD para verificar
+                List<DegreeWork> lista = service.listarDegreeWorks();
+                System.out.println("📋 Formatos guardados en la base de datos:");
+                for (DegreeWork dw : lista) {
+                    System.out.println("ID: " + dw.getId()
+                            + " | Estudiante: " + dw.getIdEstudiante()
+                            + " | Título: " + dw.getTituloProyecto()
+                            + " | Director: " + dw.getDirectorProyecto());
+                }
             } else {
                 mostrarAlerta("Error", "No se pudo registrar el Formato A", Alert.AlertType.ERROR);
             }
@@ -151,6 +164,7 @@ public class ManagementTeacherFormatAController implements Initializable {
             mostrarAlerta("Error inesperado", "Ocurrió un error: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
     private void limpiarCampos() {
         txtCodEstudiante.clear();
