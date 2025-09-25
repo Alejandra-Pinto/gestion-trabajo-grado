@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementCoordinatorFormatAController">
+
+   <children>
+      <Pane prefHeight="537.0" prefWidth="691.0" style="-fx-background-color: #0F3EA4;">
+         <children>
+            <SplitPane dividerPositions="0.2709030100334448" layoutY="61.0" prefHeight="486.0" prefWidth="691.0">
+              <items>
+                <!-- Panel izquierdo -->
+                <AnchorPane prefHeight="454.0" prefWidth="210.0" style="-fx-background-color: fafafa;">
+                     <children>
+                        <ImageView fitHeight="78.0" fitWidth="213.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/bandera.png" />
+                           </image>
+                        </ImageView>
+                        
+                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Coordinador" textFill="#111f63">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/gente2.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </ToggleButton>
+
+                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/carpeta2.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </ToggleButton>
+
+                        <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="90.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Anteproyecto">
+                           <graphic>
+                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/birrete2.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </ToggleButton>
+                     </children>
+                  </AnchorPane>
+
+                <!-- Panel derecho -->
+                <AnchorPane prefHeight="472.0" prefWidth="477.0">
+                     <children>
+                        <Label layoutX="21.0" layoutY="14.0" text="FORMATOS PARA CALIFICAR">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="21.0" layoutY="60.0" text="Bandeja de entrada">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="21.0" layoutY="92.0" text="Clasificar" />
+                        
+                        <!-- ComboBox con opciones -->
+                        <ComboBox fx:id="comboClasificar" layoutX="88.0" layoutY="88.0" prefWidth="200.0" style="-fx-background-color: FFFFFF;" />
+                        
+                        <Button fx:id="btnClasificar" layoutX="310.0" layoutY="88.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="CLASIFICAR SOLICITUDES" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
+                        
+                        <!-- ListView para mostrar los formatos -->
+                        <ListView fx:id="listFormatos" layoutX="63.0" layoutY="178.0" prefHeight="250.0" prefWidth="350.0" />
+                        
+                        <ImageView fitHeight="486.0" fitWidth="190.0" layoutX="200.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/antorcha.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+
+            <ImageView fitHeight="45.0" fitWidth="88.0" layoutX="18.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/logo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>
