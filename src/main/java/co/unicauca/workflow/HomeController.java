@@ -4,19 +4,19 @@ import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.domain.entities.Teacher;
 import co.unicauca.workflow.domain.entities.Student;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class HomeController implements Initializable {
@@ -56,19 +56,19 @@ public class HomeController implements Initializable {
         System.out.println("=== HomeController.setUsuario() llamado ===");
         System.out.println("Usuario recibido: " + (usuario != null ? usuario.getClass().getSimpleName() : "null"));
         System.out.println("Rol del usuario: " + (usuario != null ? usuario.getRole() : "null"));
-        
+
         this.usuario = usuario;
         cargarUsuario();
     }
 
     private void cargarUsuario() {
         System.out.println("=== HomeController.cargarUsuario() ===");
-        
+
         if (usuario == null) {
             System.out.println("ERROR: usuario es null");
             return;
         }
-        
+
         String programa = usuario.getProgram() != null ? usuario.getProgram().toString() : "Sin programa";
         System.out.println("Cargando usuario: " + usuario.getClass().getSimpleName() + ", Programa: " + programa);
         System.out.println("Rol: " + usuario.getRole());
@@ -83,17 +83,17 @@ public class HomeController implements Initializable {
             btnRol.setText("Docente\n(" + programa + ")");
             btnAnteproyectoDocente.setVisible(true);
             btnFormatoDocente.setVisible(true);
-            
+
             // Verificar visibilidad de botones
             System.out.println("btnAnteproyectoDocente visible: " + btnAnteproyectoDocente.isVisible());
             System.out.println("btnFormatoDocente visible: " + btnFormatoDocente.isVisible());
-            
+
         } else if (usuario instanceof Student) {
             System.out.println("Configurando botones para ESTUDIANTE");
             btnRol.setText("Estudiante\n(" + programa + ")");
             btnFormatoEstudiante.setVisible(true);
             btnAnteproyectoEstudiante.setVisible(true);
-            
+
         } else if (usuario instanceof Coordinator || "coordinador".equalsIgnoreCase(usuario.getRole())) {
             System.out.println("Configurando botones para COORDINADOR");
             btnRol.setText("Coordinador\n(" + programa + ")");
@@ -102,7 +102,7 @@ public class HomeController implements Initializable {
         } else {
             System.out.println("Tipo de usuario no reconocido: " + usuario.getClass().getSimpleName());
         }
-        
+
         System.out.println("=== Fin cargarUsuario() ===");
     }
 
@@ -114,7 +114,6 @@ public class HomeController implements Initializable {
         try {
             co.unicauca.workflow.service.SessionManager.clearSession();
 
-            // Usar el método correcto para volver al Login
             Stage stage = (Stage) btnRol.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
             Parent root = loader.load();

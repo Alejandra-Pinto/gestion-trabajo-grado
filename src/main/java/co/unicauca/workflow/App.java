@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     private static Scene scene;
-    private static Stage primaryStage;
+    private static Stage primaryStage; // ✅ conservar
     private static HostServices hostServices;
 
     @Override
@@ -51,15 +51,11 @@ public class App extends Application {
      * MÉTODO CORREGIDO: Cargar una vista dentro del BaseLayout
      */
     public static void loadViewInBaseLayout(String fxmlName) throws IOException {
-        // Cargar el BaseLayout
         FXMLLoader baseLoader = new FXMLLoader(App.class.getResource("/co/unicauca/workflow/BaseLayout.fxml"));
         Parent root = baseLoader.load();
         BaseLayoutController baseController = baseLoader.getController();
         
-        // Cargar la vista específica dentro del BaseLayout
-        baseController.loadContent(fxmlName); // Método corregido
-        
-        // Actualizar la escena
+        baseController.loadContent(fxmlName); 
         scene.setRoot(root);
     }
 
