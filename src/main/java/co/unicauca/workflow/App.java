@@ -10,12 +10,13 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     private static Scene scene;
-
+    private static Stage primaryStage;
     private static HostServices hostServices;
 
     @Override
     public void start(Stage stage) throws IOException {
         hostServices = getHostServices();
+        primaryStage = stage;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
         Parent root = loader.load();
@@ -26,7 +27,15 @@ public class App extends Application {
         stage.show();
     }
 
-    private Parent loadFXML(String fxml) throws IOException {
+    public static HostServices getHostServicesInstance() {
+        return hostServices;
+    }
+    
+    public static void setRoot(String fxml) throws IOException {
+        scene.setRoot(loadFXML(fxml));
+    }
+
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         Parent root = fxmlLoader.load();
 
@@ -38,8 +47,24 @@ public class App extends Application {
         return root;
     }
 
-    public static HostServices getHostServicesInstance() {
-        return hostServices;
+    /**
+     * MÉTODO CORREGIDO: Cargar una vista dentro del BaseLayout
+     */
+    public static void loadViewInBaseLayout(String fxmlName) throws IOException {
+        // Cargar el BaseLayout
+        FXMLLoader baseLoader = new FXMLLoader(App.class.getResource("/co/unicauca/workflow/BaseLayout.fxml"));
+        Parent root = baseLoader.load();
+        BaseLayoutController baseController = baseLoader.getController();
+        
+        // Cargar la vista específica dentro del BaseLayout
+        baseController.loadContent(fxmlName); // Método corregido
+        
+        // Actualizar la escena
+        scene.setRoot(root);
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void main(String[] args) {

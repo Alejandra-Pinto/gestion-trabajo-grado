@@ -7,6 +7,7 @@ import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.domain.entities.SuperAdmin;
 import co.unicauca.workflow.service.AdminService;
+import co.unicauca.workflow.service.SessionManager;
 import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
 import java.net.URL;
@@ -53,7 +54,30 @@ public class LoginController implements Initializable {
         // 1. Primero probar con SuperAdmin
         SuperAdmin adminValido = adminService.login(usuario, contrasenia);
         if (adminValido != null) {
-            abrirVentana("/co/unicauca/workflow/HomeAdmin.fxml", "Inicio - Super Admin", null);
+            SessionManager.setCurrentUser(adminValido, "Admin");
+            try {
+                // Cargar HomeAdmin y pasar el usuario
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/HomeAdmin.fxml"));
+                Parent root = loader.load();
+
+                // Pasar el usuario al controlador si existe el método setUsuario
+                Object controller = loader.getController();
+                if (controller != null) {
+                    try {
+                        controller.getClass().getMethod("setUsuario", Object.class).invoke(controller, adminValido);
+                    } catch (Exception e) {
+                        System.out.println("El controlador no tiene método setUsuario: " + e.getMessage());
+                    }
+                }
+
+                Stage stage = (Stage) btn_login.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Inicio - Super Admin");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "No se pudo cargar la interfaz.", Alert.AlertType.ERROR);
+            }
             return;
         }
 
@@ -75,7 +99,26 @@ public class LoginController implements Initializable {
                 }
             }
 
-            abrirVentana("/co/unicauca/workflow/Home.fxml", "Inicio - Workflow", valido);
+            SessionManager.setCurrentUser(valido, valido.getClass().getSimpleName());
+            try {
+                // Cargar Home y pasar el usuario CORRECTAMENTE
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Home.fxml"));
+                Parent root = loader.load();
+
+                // Pasar el usuario al controlador del Home
+                HomeController homeController = loader.getController();
+                homeController.setUsuario(valido); // ¡ESTA LÍNEA ES CLAVE!
+
+                Stage stage = (Stage) btn_login.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Inicio - Workflow");
+                stage.show();
+
+                System.out.println("Usuario pasado al HomeController: " + valido.getClass().getSimpleName());
+            } catch (IOException e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "No se pudo cargar la interfaz.", Alert.AlertType.ERROR);
+            }
             return;
         }
 
@@ -83,36 +126,10 @@ public class LoginController implements Initializable {
         mostrarAlerta("Error de login", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
     }
 
-
-    private void abrirVentana(String fxml, String titulo, User usuario) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-
-            if (usuario != null) {
-                HomeController homeController = loader.getController();
-                homeController.setUsuario(usuario);
-            }
-
-            Stage stage = (Stage) btn_login.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle(titulo);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo abrir la ventana.", Alert.AlertType.ERROR);
-        }
-    }
-
     @FXML
     private void evenBtnRegister(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Register.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) hpl_register.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Registro de Usuario");
-            stage.show();
+            App.setRoot("Register");
         } catch (IOException e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo abrir la ventana de registro.", Alert.AlertType.ERROR);
