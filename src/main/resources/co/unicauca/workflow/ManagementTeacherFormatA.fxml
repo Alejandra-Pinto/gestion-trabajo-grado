@@ -15,23 +15,23 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementTeacherFormatAController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementTeacherFormatAController">
 
    <children>
-      <Pane prefHeight="647.0" prefWidth="855.0" style="-fx-background-color: #0F3EA4;">
+      <Pane prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
          <children>
-            <SplitPane dividerPositions="0.24654323880946796" layoutY="61.0" prefHeight="592.0" prefWidth="855.0">
+            <SplitPane dividerPositions="0.24654323880946796" layoutY="61.0" prefHeight="744.0" prefWidth="1552.0">
               <items>
                 <!-- Panel izquierdo -->
-                <AnchorPane prefHeight="550.0" prefWidth="187.0" style="-fx-background-color: fafafa;">
+                <AnchorPane prefHeight="682.0" prefWidth="427.0" style="-fx-background-color: fafafa;">
                      <children>
-                        <ImageView fitHeight="121.0" fitWidth="207.0" layoutY="512.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="231.0" fitWidth="454.0" layoutY="576.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
                         
-                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Docente" textFill="#111f63">
+                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" textFill="#111f63">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -44,7 +44,7 @@
                            </font>
                         </ToggleButton>
 
-                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta">
+                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="102.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato de Propuesta">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -54,7 +54,7 @@
                            </graphic>
                         </ToggleButton>
 
-                        <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="90.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Anteproyecto">
+                        <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="204.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -83,15 +83,15 @@
                         <Label layoutX="22.0" layoutY="295.0" text="Objetivos específicos" />
                         <Label layoutX="25.0" layoutY="390.0" text="Formato A*" />
 
-                        <ImageView fitHeight="397.0" fitWidth="174.0" layoutX="158.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="644.0" fitWidth="310.0" layoutX="332.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/antorcha.png" />
                            </image>
                         </ImageView>
 
-                        <Button fx:id="btnAdjuntarDocumento" layoutX="23.0" layoutY="472.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
+                        <Button fx:id="btnAdjuntarDocumento" layoutX="451.0" layoutY="406.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" prefHeight="26.0" prefWidth="152.0" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="11.0" />
                            </font>
                         </Button>
 
@@ -107,13 +107,31 @@
                         
                         <HBox layoutX="23.0" layoutY="407.0" spacing="5">
                             <TextField fx:id="txtArchivoAdjunto" editable="false" prefHeight="25.0" prefWidth="370.0" />
-                            <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" text="Abrir" />
+                            <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" style="-fx-background-color: #ae2f2f;" text="Abrir" textFill="WHITE">
+                              <font>
+                                 <Font name="System Bold" size="12.0" />
+                              </font></Button>
                         </HBox>
 
                         <Label layoutX="23.0" layoutY="55.0" text="Codigo estudiante" />
                         <ComboBox fx:id="cbEstudiante" layoutX="262.0" layoutY="51.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione estudiante*" />
                         
-                        <Button fx:id="btnGuardar" layoutX="386.0" layoutY="472.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">
+                        <Label fx:id="lblCartaAceptacion" layoutX="22.0" layoutY="479.0" prefHeight="18.0" prefWidth="206.0" text="Carta de aceptación de la empresa*" visible="false" />
+
+                        <HBox fx:id="hbCartaAceptacion" layoutX="20.0" layoutY="499.0" spacing="5" visible="false">
+                            <TextField fx:id="txtCartaAceptacion" editable="false" prefHeight="25.0" prefWidth="370.0" />
+                            <Button fx:id="btnAbrirCarta" onAction="#onAbrirCarta" style="-fx-background-color: #ae2f2f;" text="Abrir" textFill="WHITE">
+                              <font>
+                                 <Font name="System Bold" size="12.0" />
+                              </font></Button>
+                            <Button fx:id="btnAdjuntarCarta" onAction="#onAdjuntarCarta" style="-fx-background-color: #111F63;" text="Adjuntar" textFill="WHITE">
+                              <font>
+                                 <Font name="System Bold" size="12.0" />
+                              </font></Button>
+                        </HBox>
+
+                        
+                        <Button fx:id="btnGuardar" layoutX="474.0" layoutY="541.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>

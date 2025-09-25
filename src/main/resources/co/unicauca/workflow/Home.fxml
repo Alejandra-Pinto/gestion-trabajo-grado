@@ -26,9 +26,17 @@
                   </image>
                </ImageView>
                
+<<<<<<< HEAD
                <Pane HBox.hgrow="ALWAYS" />
                
                <Button onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
+=======
+               <Pane HBox.hgrow="ALWAYS">
+                  <children>
+                     
+                     <Button layoutX="1188.0" layoutY="31.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
+                  </children></Pane>
+>>>>>>> c682be47ad699c416bf41e067b6944d642501e0a
             </HBox>
 
             <!-- Split principal -->
@@ -43,7 +51,11 @@
                            </image>
                         </ImageView>
                         <!-- Botón Rol (único visible al inicio) -->
+<<<<<<< HEAD
                         <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" textFill="#111f63" visible="true">
+=======
+                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" onAction="#onBtnRolClicked" prefHeight="101.0" prefWidth="453.0" text="Docente" textFill="#111f63" visible="true">
+>>>>>>> c682be47ad699c416bf41e067b6944d642501e0a
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -55,6 +67,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
+
                         
                         <!-- Docente -->
                         <ToggleButton fx:id="btnAnteproyectoDocente" 
@@ -92,6 +105,22 @@
                                       mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" 
                                       text="Evaluar anteproyectos" visible="false"
                                       onAction="#onBtnEvaluarAnteproyectosClicked"/>
+
+                        <!-- Docente -->
+                        <ToggleButton fx:id="btnAnteproyectoDocente" graphicTextGap="20" layoutX="3.0" layoutY="206.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Docente" visible="false" />
+                        
+                        <ToggleButton fx:id="btnFormatoDocente" graphicTextGap="20" layoutX="3.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnFormatoDocenteClicked" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Docente" visible="false" />
+
+                        <!-- Estudiante -->
+                        <ToggleButton fx:id="btnFormatoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="309.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Estudiante" visible="false" />
+                        
+                        <ToggleButton fx:id="btnAnteproyectoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="412.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Estudiante" visible="false" />
+
+                        <!-- Coordinador -->
+                        <ToggleButton fx:id="btnEvaluarPropuestas" graphicTextGap="20" layoutX="3.0" layoutY="515.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar propuestas" visible="false" />
+
+                        <ToggleButton fx:id="btnEvaluarAnteproyectos" graphicTextGap="20" layoutX="3.0" layoutY="618.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar anteproyectos" visible="false" />
+
                      </children>
                   </AnchorPane>
 
