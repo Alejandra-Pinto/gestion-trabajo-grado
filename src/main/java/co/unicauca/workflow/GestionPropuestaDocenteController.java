@@ -5,14 +5,21 @@ package co.unicauca.workflow;
 
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.domain.entities.Teacher;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -120,6 +127,23 @@ public class GestionPropuestaDocenteController implements Initializable {
             btnFormatoDocente.setVisible(esDocente);
             btnAnteproyectoDocente.setVisible(esDocente);
             System.out.println("setUsuario: esDocente=" + esDocente);
+        }
+    }
+    public void onAgregarPropuesta(ActionEvent event){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementTeacherFormatA.fxml"));
+            Parent root = loader.load();
+
+            // Cambiar toda la escena
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            ManagementTeacherFormatAController teacherController = loader.getController();
+            teacherController.setHostServices(App.getHostServicesInstance());
+            stage.setTitle("Gestión de propuestas");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
