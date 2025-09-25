@@ -192,61 +192,6 @@ public class HomeController implements Initializable {
         }
     }
 
-
-    // Métodos para otros botones (debes implementarlos similarmente)
-    @FXML
-    private void onBtnAnteproyectoDocenteClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnFormatoEstudianteClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnAnteproyectoEstudianteClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnEvaluarPropuestasClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnEvaluarAnteproyectosClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-    
-    @FXML
-    private void onBtnRolClicked() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
-            Parent root = loader.load();
-
-            RolController rolController = loader.getController();
-
-            // Crear servicios (usando las implementaciones reales de tus repositorios)
-            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
-            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
-
-            // Pasar usuario + servicios
-            if (usuario != null) {
-                rolController.setUsuario(usuario, userService, adminService);
-            }
-
-            Stage stage = (Stage) btnRol.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Información del Usuario");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), AlertType.ERROR);
-        }
-    }
-
-
     private void configurarBotones() {
         btnRol.setVisible(true);
         btnAnteproyectoDocente.setVisible(false);
