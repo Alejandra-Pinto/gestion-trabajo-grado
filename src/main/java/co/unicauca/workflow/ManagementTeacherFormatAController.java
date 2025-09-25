@@ -17,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.application.HostServices;
+import javafx.scene.layout.HBox;
 
 public class ManagementTeacherFormatAController implements Initializable, Hostable {
     private HostServices hostServices;
@@ -52,7 +53,18 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private TextField txtArchivoAdjunto;
 
-    
+    //para la carta de aceptación
+    @FXML
+    private Label lblCartaAceptacion;
+    @FXML
+    private HBox hbCartaAceptacion;
+    @FXML
+    private TextField txtCartaAceptacion;
+    @FXML
+    private Button btnAdjuntarCarta;
+    @FXML
+    private Button btnAbrirCarta;
+
 
     private User usuarioActual;
     
@@ -78,6 +90,18 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         cbEstudiante.getItems().setAll(estudiantes.stream().map(User::getEmail).toList());
         cbDirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
         cbCodirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
+        
+        cbModalidad.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("PRACTICA_PROFESIONAL".equals(newVal)) {
+                lblCartaAceptacion.setVisible(true);
+                hbCartaAceptacion.setVisible(true);
+            } else {
+                lblCartaAceptacion.setVisible(false);
+                hbCartaAceptacion.setVisible(false);
+                txtCartaAceptacion.clear();
+            }
+        });
+
     }
 
 
@@ -167,6 +191,9 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                     Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
                     txtArchivoAdjunto.getText()
             );
+            if ("PRACTICA_PROFESIONAL".equals(cbModalidad.getValue())) {
+                formato.setCartaAceptacionEmpresa(txtCartaAceptacion.getText());
+            }
 
 
             formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
@@ -184,7 +211,9 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                     System.out.println("ID: " + dw.getId()
                             + " | Estudiante: " + dw.getIdEstudiante()
                             + " | Título: " + dw.getTituloProyecto()
-                            + " | Director: " + dw.getDirectorProyecto());
+                            + " | Director: " + dw.getDirectorProyecto()
+                            + " | Carta: " + dw.getCartaAceptacionEmpresa()
+                            + " | ObjEsp: " + dw.getObjetivosEspecificos());
                 }
             } else {
                 mostrarAlerta("Error", "No se pudo registrar el Formato A", Alert.AlertType.ERROR);
@@ -196,6 +225,49 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     }
 
 
+    //métodos para la carta de aceptación
+    @FXML
+    private void onAdjuntarCarta(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar carta de aceptación");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Word Files", "*.docx"),
+                new FileChooser.ExtensionFilter("Todos los archivos", "*.*")
+        );
+
+        File archivoSeleccionado = fileChooser.showOpenDialog(null);
+
+        if (archivoSeleccionado != null) {
+            txtCartaAceptacion.setText(archivoSeleccionado.getAbsolutePath());
+            mostrarAlerta("Documento cargado",
+                    "La carta \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
+                    Alert.AlertType.INFORMATION);
+        } else {
+            mostrarAlerta("Carga cancelada",
+                    "No seleccionaste ningún archivo. Intenta nuevamente.",
+                    Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void onAbrirCarta(ActionEvent event) {
+        String ruta = txtCartaAceptacion.getText();
+        if (ruta == null || ruta.isEmpty()) {
+            mostrarAlerta("Sin archivo", "No hay ninguna carta seleccionada.", Alert.AlertType.WARNING);
+            return;
+        }
+        File archivo = new File(ruta);
+        if (!archivo.exists()) {
+            mostrarAlerta("Archivo no encontrado", "El archivo no existe en la ruta especificada.", Alert.AlertType.ERROR);
+            return;
+        }
+        hostServices.showDocument(archivo.toURI().toString());
+    }
+
+    
+    
+    
     private void limpiarCampos() {
         cbEstudiante.getSelectionModel().clearSelection(); // ✅ ComboBox en vez de TextField
         txtTituloTrabajo.clear();
