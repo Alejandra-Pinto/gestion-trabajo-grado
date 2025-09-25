@@ -60,20 +60,16 @@ public class LoginController implements Initializable {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/HomeAdmin.fxml"));
                 Parent root = loader.load();
 
-                // Pasar el usuario al controlador si existe el método setUsuario
-                Object controller = loader.getController();
-                if (controller != null) {
-                    try {
-                        controller.getClass().getMethod("setUsuario", Object.class).invoke(controller, adminValido);
-                    } catch (Exception e) {
-                        System.out.println("El controlador no tiene método setUsuario: " + e.getMessage());
-                    }
-                }
+                // Pasar el usuario al controlador
+                HomeAdminController homeAdminController = loader.getController();
+                homeAdminController.setUsuario(adminValido);
 
                 Stage stage = (Stage) btn_login.getScene().getWindow();
                 stage.setScene(new Scene(root));
                 stage.setTitle("Inicio - Super Admin");
                 stage.show();
+
+                System.out.println("SuperAdmin pasado al HomeAdminController correctamente");
             } catch (IOException e) {
                 e.printStackTrace();
                 mostrarAlerta("Error", "No se pudo cargar la interfaz.", Alert.AlertType.ERROR);
@@ -84,8 +80,7 @@ public class LoginController implements Initializable {
         // 2. Si no, probar como usuario normal
         User valido = userService.login(usuario, contrasenia);
         if (valido != null) {
-            if (valido instanceof Coordinator) {
-                Coordinator coord = (Coordinator) valido;
+            if (valido instanceof Coordinator coord) {
                 if ("PENDIENTE".equals(coord.getStatus())) {
                     mostrarAlerta("Solicitud en espera",
                             "Su solicitud de registro como coordinador aún está en revisión.",
@@ -101,13 +96,13 @@ public class LoginController implements Initializable {
 
             SessionManager.setCurrentUser(valido, valido.getClass().getSimpleName());
             try {
-                // Cargar Home y pasar el usuario CORRECTAMENTE
+                // Cargar Home y pasar el usuario
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Home.fxml"));
                 Parent root = loader.load();
 
                 // Pasar el usuario al controlador del Home
                 HomeController homeController = loader.getController();
-                homeController.setUsuario(valido); // ¡ESTA LÍNEA ES CLAVE!
+                homeController.setUsuario(valido);
 
                 Stage stage = (Stage) btn_login.getScene().getWindow();
                 stage.setScene(new Scene(root));

@@ -37,7 +37,7 @@
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
-                        <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Administrador" />
+                        <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Administrador" onAction="#onBtnUsuarioClicked"/>
                         <ToggleButton fx:id="btnCoordinadores" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Gestion de Coordinadores" />
                      </children>
                   </AnchorPane>

@@ -1,9 +1,12 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.domain.entities.Teacher;
 import co.unicauca.workflow.domain.entities.Student;
+import co.unicauca.workflow.service.AdminService;
+import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -187,6 +190,34 @@ public class HomeController implements Initializable {
     private void onBtnEvaluarAnteproyectosClicked() {
         // Implementar similar a onBtnFormatoDocenteClicked
     }
+    
+    @FXML
+    private void onBtnRolClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
+            Parent root = loader.load();
+
+            RolController rolController = loader.getController();
+
+            // Crear servicios (usando las implementaciones reales de tus repositorios)
+            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
+
+            // Pasar usuario + servicios
+            if (usuario != null) {
+                rolController.setUsuario(usuario, userService, adminService);
+            }
+
+            Stage stage = (Stage) btnRol.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Información del Usuario");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), AlertType.ERROR);
+        }
+    }
+
 
     private void configurarBotones() {
         btnRol.setVisible(true);
