@@ -4,6 +4,7 @@ import co.unicauca.workflow.access.*;
 import co.unicauca.workflow.domain.entities.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class UserService {
@@ -84,5 +85,10 @@ public class UserService {
             throw new RuntimeException("Error en cifrado de contraseña", e);
         }
     }
+    
+    public List<User> listarPorRol(String role) {
+        return repository.listByRole(role);
+    }
+
 }
 
