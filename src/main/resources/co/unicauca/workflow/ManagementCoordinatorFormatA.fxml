@@ -66,6 +66,12 @@
                 <!-- Panel derecho -->
                 <AnchorPane prefHeight="472.0" prefWidth="477.0">
                      <children>
+                        
+                        <ImageView fitHeight="486.0" fitWidth="190.0" layoutX="200.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/antorcha.png" />
+                           </image>
+                        </ImageView>
                         <Label layoutX="21.0" layoutY="14.0" text="FORMATOS PARA CALIFICAR">
                            <font>
                               <Font name="System Bold" size="18.0" />
@@ -89,12 +95,6 @@
                         
                         <!-- ListView para mostrar los formatos -->
                         <ListView fx:id="listFormatos" layoutX="63.0" layoutY="178.0" prefHeight="250.0" prefWidth="350.0" />
-                        
-                        <ImageView fitHeight="486.0" fitWidth="190.0" layoutX="200.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/antorcha.png" />
-                           </image>
-                        </ImageView>
                      </children>
                   </AnchorPane>
               </items>

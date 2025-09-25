@@ -5,6 +5,10 @@ import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.DegreeWork;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.service.DegreeWorkService;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -31,6 +35,9 @@ public class ManagementStudentFormatAController implements Initializable {
     private TextArea txtObjetivosEspecificos;
     @FXML
     private Label lblEstado;
+    // Botón para ver correcciones (debe existir fx:id="btnVerCorrecciones" en el FXML)
+    @FXML
+    private Button btnVerCorrecciones;
 
     private DegreeWorkService service;
     private User usuarioActual;
@@ -79,4 +86,29 @@ public class ManagementStudentFormatAController implements Initializable {
             lblEstado.setText("Error cargando datos");
         }
     }
+    
+    @FXML
+    private void onBtnVerCorreccionesClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentReviewFormatA.fxml"));
+            Parent root = loader.load();
+
+            // Pasar usuario al nuevo controlador
+            StudentReviewFormatAController controller = loader.getController();
+            controller.setUsuario(usuarioActual);
+
+            // Obtener ventana actual
+            Stage stage = (Stage) btnVerCorrecciones.getScene().getWindow();
+
+            // Cambiar la escena
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+    
 }

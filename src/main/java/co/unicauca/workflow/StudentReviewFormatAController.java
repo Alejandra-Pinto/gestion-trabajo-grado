@@ -1,26 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.domain.entities.User;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
-/**
- * FXML Controller class
- *
- * @author julia
- */
 public class StudentReviewFormatAController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
+    private User usuarioActual;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
-    
+        // Aquí puedes inicializar componentes si es necesario
+    }
+
+    /**
+     * Método para recibir el usuario actual desde la ventana anterior
+     */
+    public void setUsuario(User usuario) {
+        this.usuarioActual = usuario;
+        // Aquí puedes cargar la información de las correcciones según el usuario
+        cargarCorrecciones();
+    }
+
+    private void cargarCorrecciones() {
+        // TODO: implementar la lógica para traer las correcciones del formato A
+        // usando usuarioActual
+        System.out.println("Cargando correcciones para: " + usuarioActual.getEmail());
+    }
 }
