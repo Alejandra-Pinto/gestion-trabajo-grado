@@ -4,6 +4,7 @@ import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.*;
 import co.unicauca.workflow.service.DegreeWorkService;
+import co.unicauca.workflow.service.UserService;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
@@ -32,7 +33,12 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
     // Campos de formulario
     @FXML
-    private TextField txtCodEstudiante;
+    private ComboBox<String> cbEstudiante;
+    @FXML
+    private ComboBox<String> cbDirector;
+    @FXML
+    private ComboBox<String> cbCodirector;
+
     @FXML
     private TextField txtTituloTrabajo;
     @FXML
@@ -40,19 +46,13 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private DatePicker dpFechaActual;
     @FXML
-    private TextField txtDirector;
+    private TextArea txtObjetivoGeneral;
     @FXML
-    private TextField txtCodirector;
-    @FXML
-    private TextField txtObjetivoGeneral;
-    @FXML
-    private TextField txtObjetivosEspecificos;
+    private TextArea txtObjetivosEspecificos;
     @FXML
     private TextField txtArchivoAdjunto;
 
-    // Estado del documento
-    @FXML
-    private Label lblEstado;
+    
 
     private User usuarioActual;
     
@@ -62,18 +62,24 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        lblEstado.setText("No enviado");
+        
 
-        // Inicializamos opciones de modalidad
-        cbModalidad.getItems().setAll(
-            "INVESTIGACION",
-            "PRACTICA_PROFESIONAL"
-        );
+        cbModalidad.getItems().setAll("INVESTIGACION", "PRACTICA_PROFESIONAL");
 
-        // Instanciar servicio vía factory
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
         service = new DegreeWorkService(repo);
+
+        // 🔹 Cargar estudiantes y profesores
+        UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+
+        List<User> estudiantes = userService.listarPorRol("STUDENT");
+        List<User> profesores = userService.listarPorRol("TEACHER");
+
+        cbEstudiante.getItems().setAll(estudiantes.stream().map(User::getEmail).toList());
+        cbDirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
+        cbCodirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
     }
+
 
     public void setUsuario(User usuario) {
         this.usuarioActual = usuario;
@@ -101,13 +107,13 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         if (archivoSeleccionado != null) {
             // ✅ Guardamos solo la ruta en el TextField
             txtArchivoAdjunto.setText(archivoSeleccionado.getAbsolutePath());
-            lblEstado.setText("Enviado");
+            
 
             mostrarAlerta("Documento cargado",
                     "El documento \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
                     Alert.AlertType.INFORMATION);
         } else {
-            lblEstado.setText("No enviado");
+            
             mostrarAlerta("Carga cancelada",
                     "No seleccionaste ningún archivo. Intenta nuevamente.",
                     Alert.AlertType.WARNING);
@@ -134,11 +140,11 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private void onGuardarFormato(ActionEvent event) {
         // Validaciones
-        if (txtCodEstudiante.getText().isEmpty()
+        if (cbEstudiante.getValue() == null
                 || txtTituloTrabajo.getText().isEmpty()
                 || cbModalidad.getValue() == null
                 || dpFechaActual.getValue() == null
-                || txtDirector.getText().isEmpty()
+                || cbDirector.getValue() == null
                 || txtObjetivoGeneral.getText().isEmpty()
                 || txtObjetivosEspecificos.getText().isEmpty()
                 || txtArchivoAdjunto.getText().isEmpty()) {
@@ -150,18 +156,18 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         try {
             // Construir objeto DegreeWork
             DegreeWork formato = new DegreeWork(
-                    txtCodEstudiante.getText(),
+                    cbEstudiante.getValue(), // estudiante (correo)
                     usuarioActual != null ? usuarioActual.getEmail() : "docente@default.com",
                     txtTituloTrabajo.getText(),
                     Modalidad.valueOf(cbModalidad.getValue()),
                     dpFechaActual.getValue(),
-                    txtDirector.getText(),
-                    txtCodirector.getText(),
+                    cbDirector.getValue(), // director (correo)
+                    cbCodirector.getValue(), // codirector (correo o null)
                     txtObjetivoGeneral.getText(),
                     Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
-                    //cambiamos esto archivoAdjunto.getAbsolutePath() a esto:
                     txtArchivoAdjunto.getText()
             );
+
 
             formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
 
@@ -191,18 +197,18 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
 
     private void limpiarCampos() {
-        txtCodEstudiante.clear();
+        cbEstudiante.getSelectionModel().clearSelection(); // ✅ ComboBox en vez de TextField
         txtTituloTrabajo.clear();
         cbModalidad.getSelectionModel().clearSelection();
         dpFechaActual.setValue(LocalDate.now());
-        txtDirector.clear();
-        txtCodirector.clear();
+        cbDirector.getSelectionModel().clearSelection();
+        cbCodirector.getSelectionModel().clearSelection();;
         txtObjetivoGeneral.clear();
         txtObjetivosEspecificos.clear();
         txtArchivoAdjunto.clear();
         archivoAdjunto = null;
-        lblEstado.setText("No enviado");
     }
+
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);

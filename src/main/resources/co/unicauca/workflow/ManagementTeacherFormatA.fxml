@@ -5,6 +5,7 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
@@ -17,14 +18,14 @@
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementTeacherFormatAController">
 
    <children>
-      <Pane prefHeight="537.0" prefWidth="691.0" style="-fx-background-color: #0F3EA4;">
+      <Pane prefHeight="647.0" prefWidth="855.0" style="-fx-background-color: #0F3EA4;">
          <children>
-            <SplitPane dividerPositions="0.2709030100334448" layoutY="61.0" prefHeight="486.0" prefWidth="691.0">
+            <SplitPane dividerPositions="0.24654323880946796" layoutY="61.0" prefHeight="592.0" prefWidth="855.0">
               <items>
                 <!-- Panel izquierdo -->
-                <AnchorPane prefHeight="454.0" prefWidth="210.0" style="-fx-background-color: fafafa;">
+                <AnchorPane prefHeight="550.0" prefWidth="187.0" style="-fx-background-color: fafafa;">
                      <children>
-                        <ImageView fitHeight="78.0" fitWidth="213.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="121.0" fitWidth="207.0" layoutY="512.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/bandera.png" />
                            </image>
@@ -66,7 +67,7 @@
                   </AnchorPane>
 
                 <!-- Panel derecho -->
-                <AnchorPane prefHeight="472.0" prefWidth="477.0">
+                <AnchorPane prefHeight="486.0" prefWidth="582.0">
                      <children>
                         <Label layoutX="21.0" layoutY="14.0" text="GESTIÓN DE MI PROPUESTA">
                            <font>
@@ -79,10 +80,8 @@
                         <Label layoutX="22.0" layoutY="170.0" text="Director" />
                         <Label layoutX="22.0" layoutY="200.0" text="Codirector" />
                         <Label layoutX="22.0" layoutY="228.0" text="Objetivo general" />
-                        <Label layoutX="22.0" layoutY="257.0" text="Objetivos específicos" />
-                        <Label layoutX="23.0" layoutY="289.0" text="Formato A*" />
-                        <Label layoutX="22.0" layoutY="443.0" text="Estado:" />
-                        <Label fx:id="lblEstado" layoutX="81.0" layoutY="443.0" text="No enviado" textFill="#4a4a4a" />
+                        <Label layoutX="22.0" layoutY="295.0" text="Objetivos específicos" />
+                        <Label layoutX="25.0" layoutY="390.0" text="Formato A*" />
 
                         <ImageView fitHeight="397.0" fitWidth="174.0" layoutX="158.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -90,7 +89,7 @@
                            </image>
                         </ImageView>
 
-                        <Button fx:id="btnAdjuntarDocumento" layoutX="21.0" layoutY="371.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
+                        <Button fx:id="btnAdjuntarDocumento" layoutX="23.0" layoutY="472.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -99,18 +98,22 @@
                         <TextField fx:id="txtTituloTrabajo" layoutX="262.0" layoutY="79.0" prefHeight="25.0" prefWidth="200.0" promptText="Título trabajo de grado*" />
                         <ComboBox fx:id="cbModalidad" layoutX="262.0" layoutY="108.0" prefHeight="25.0" prefWidth="200.0" promptText="Modalidad*" />
                         <DatePicker fx:id="dpFechaActual" layoutX="262.0" layoutY="137.0" prefHeight="25.0" prefWidth="200.0" promptText="Fecha actual*" />
-                        <TextField fx:id="txtDirector" layoutX="262.0" layoutY="166.0" prefHeight="25.0" prefWidth="200.0" promptText="Director del proyecto*" />
-                        <TextField fx:id="txtCodirector" layoutX="262.0" layoutY="195.0" prefHeight="25.0" prefWidth="200.0" promptText="Codirector del proyecto*" />
-                        <TextField fx:id="txtObjetivoGeneral" layoutX="262.0" layoutY="224.0" prefHeight="25.0" prefWidth="200.0" promptText="Objetivo general*" />
-                        <TextField fx:id="txtObjetivosEspecificos" layoutX="262.0" layoutY="253.0" prefHeight="25.0" prefWidth="200.0" promptText="Objetivos específicos*" />
-                        <HBox layoutX="21.0" layoutY="306.0" spacing="5">
+                        <ComboBox fx:id="cbDirector" layoutX="262.0" layoutY="166.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione director*" />
+                        <ComboBox fx:id="cbCodirector" layoutX="262.0" layoutY="195.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione codirector" />
+
+                        <TextArea fx:id="txtObjetivoGeneral" layoutX="262.0" layoutY="224.0" prefHeight="60.0" prefWidth="290.0" promptText="Objetivo general*" wrapText="true" />
+                        <TextArea fx:id="txtObjetivosEspecificos" layoutX="262.0" layoutY="290.0" prefHeight="100.0" prefWidth="290.0" promptText="Objetivos específicos*" wrapText="true" />
+
+                        
+                        <HBox layoutX="23.0" layoutY="407.0" spacing="5">
                             <TextField fx:id="txtArchivoAdjunto" editable="false" prefHeight="25.0" prefWidth="370.0" />
                             <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" text="Abrir" />
                         </HBox>
 
                         <Label layoutX="23.0" layoutY="55.0" text="Codigo estudiante" />
-                        <TextField fx:id="txtCodEstudiante" layoutX="262.0" layoutY="51.0" prefHeight="25.0" prefWidth="200.0" promptText="Código estudiantil*" />
-                        <Button fx:id="btnGuardar" layoutX="384.0" layoutY="371.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">
+                        <ComboBox fx:id="cbEstudiante" layoutX="262.0" layoutY="51.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione estudiante*" />
+                        
+                        <Button fx:id="btnGuardar" layoutX="386.0" layoutY="472.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>

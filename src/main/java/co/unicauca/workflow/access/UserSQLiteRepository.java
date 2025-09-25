@@ -165,5 +165,22 @@ public class UserSQLiteRepository implements IUsersRepository {
             return false;
         }
     }
+    
+    @Override
+    public List<User> listByRole(String role) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE role = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, role);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(buildUserFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error listando usuarios por rol: " + e.getMessage());
+        }
+        return users;
+    }
+
 
 }
