@@ -42,7 +42,7 @@
                            </font>
                         </ToggleButton>
 
-                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta">
+                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta" onAction="#onBtnEvaluarPropuestasClicked">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>

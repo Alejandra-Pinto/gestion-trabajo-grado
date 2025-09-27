@@ -73,6 +73,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
         service = new DegreeWorkService(repo);
+        usuarioActual = (User) SessionManager.getCurrentUser();
 
         configurarColumnas();
         cargarFormatos();

@@ -1,6 +1,7 @@
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.access.Factory;
+import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.domain.entities.DegreeWork;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.service.AdminService;
@@ -84,6 +85,7 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
     public void initialize(URL url, ResourceBundle rb) {
         txtArchivoAdjunto.setEditable(false);
         txtCartaEmpresa.setEditable(false);
+        usuarioActual = (User) SessionManager.getCurrentUser();
 
         btnAbrirArchivo.setOnAction(e -> onAbrirArchivo());
         btnAbrirCartaEmpresa.setOnAction(e -> onAbrirCartaEmpresa());
@@ -345,7 +347,14 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
+    @FXML
+    private void onBtnEvaluarPropuestasClicked() {
+        if (!(usuarioActual instanceof Coordinator)) {
+            mostrarAlerta("Acceso denegado", "Solo los coordinadores pueden acceder a esta funcionalidad.", Alert.AlertType.WARNING);
+            return;
+        }
+        cargarVistaConUsuario("/co/unicauca/workflow/ManagementCoordinatorFormatA.fxml", "Gestión de Propuestas - Coordinador");
+    }
     
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
@@ -362,5 +371,29 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
 
         alerta.getDialogPane().setContent(contenedor);
         alerta.showAndWait();
+    }
+    private void cargarVistaConUsuario(String fxml, String tituloVentana) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+
+            // Pasar usuario al nuevo controlador si existe setUsuario
+            Object controller = loader.getController();
+            if (controller != null) {
+                try {
+                    controller.getClass().getMethod("setUsuario", User.class).invoke(controller, usuarioActual);
+                } catch (Exception e) {
+                    System.out.println("El controlador no tiene setUsuario(User): " + controller.getClass().getSimpleName());
+                }
+            }
+
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(tituloVentana);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "Error al cargar: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }
