@@ -162,5 +162,6 @@
             <Image url="@images/logo.png" />
          </image>
       </ImageView>
+      <Button layoutX="1359.0" layoutY="35.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
    </children>
 </AnchorPane>

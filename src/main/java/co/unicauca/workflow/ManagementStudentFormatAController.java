@@ -36,6 +36,7 @@ public class ManagementStudentFormatAController implements Initializable {
     
     private DegreeWorkService service;
     private User usuarioActual;
+    private DegreeWork formatoActual; // 🔹 Guardamos el formato encontrado
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -57,26 +58,26 @@ public class ManagementStudentFormatAController implements Initializable {
         try {
             List<DegreeWork> formatos = service.listarDegreeWorks();
 
-            DegreeWork formato = formatos.stream()
+            formatoActual = formatos.stream()
                     .filter(f -> f.getEstudiante() != null
                     && f.getEstudiante().getEmail().equalsIgnoreCase(usuarioActual.getEmail()))
                     .findFirst()
                     .orElse(null);
 
-            if (formato != null) {
-                lblTituloValor.setText(formato.getTituloProyecto());
-                lblModalidadValor.setText(formato.getModalidad().toString());
-                lblFechaValor.setText(formato.getFechaActual().toString());
+            if (formatoActual != null) {
+                lblTituloValor.setText(formatoActual.getTituloProyecto());
+                lblModalidadValor.setText(formatoActual.getModalidad().toString());
+                lblFechaValor.setText(formatoActual.getFechaActual().toString());
                 lblDirectorValor.setText(
-                        formato.getDirectorProyecto() != null ? formato.getDirectorProyecto().getEmail() : "-"
+                        formatoActual.getDirectorProyecto() != null ? formatoActual.getDirectorProyecto().getEmail() : "-"
                 );
                 lblCodirectorValor.setText(
-                        formato.getCodirectorProyecto()!= null ? formato.getCodirectorProyecto().getEmail() : "-"
+                        formatoActual.getCodirectorProyecto()!= null ? formatoActual.getCodirectorProyecto().getEmail() : "-"
                 );
 
-                txtObjGeneral.setText(formato.getObjetivoGeneral());
-                txtObjEspecificos.setText(String.join("; ", formato.getObjetivosEspecificos()));
-                lblEstadoValor.setText(formato.getEstado().toString());
+                txtObjGeneral.setText(formatoActual.getObjetivoGeneral());
+                txtObjEspecificos.setText(String.join("; ", formatoActual.getObjetivosEspecificos()));
+                lblEstadoValor.setText(formatoActual.getEstado().toString());
             } else {
                 lblTituloValor.setText("No hay trabajo registrado");
                 lblModalidadValor.setText("-");
@@ -102,14 +103,19 @@ public class ManagementStudentFormatAController implements Initializable {
             Parent root = loader.load();
 
             StudentReviewFormatAController controller = loader.getController();
-            controller.setUsuario(usuarioActual);
+
+            if (usuarioActual != null && formatoActual != null) {
+                controller.setUsuarioYFormato(usuarioActual, formatoActual);
+            }
 
             Stage stage = (Stage) btnVerCorrecciones.getScene().getWindow();
             stage.setScene(new Scene(root));
+            stage.setTitle("Correcciones del Formato A");
             stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de correcciones: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
     
@@ -146,6 +152,22 @@ public class ManagementStudentFormatAController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    @FXML
+    private void handleLogout() {
+        try {
+            SessionManager.clearSession();
+
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login - Workflow");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

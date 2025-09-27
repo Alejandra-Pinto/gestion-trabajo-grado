@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
 
 <AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.StudentReviewFormatAController">
    <children>
@@ -22,7 +23,7 @@
                      </image>
                   </ImageView>
 
-                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Estudiante" textFill="#111f63">
+                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Estudiante" textFill="#111f63" onAction="#onBtnUsuarioClicked">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -35,7 +36,7 @@
                      </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Formato propuesta">
+                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Formato propuesta" onAction="#onBtnFormatoEstudianteClicked">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -100,5 +101,6 @@
             <Image url="@images/logo.png" />
          </image>
       </ImageView>
+      <Button layoutX="1359.0" layoutY="35.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
    </children>
 </AnchorPane>
