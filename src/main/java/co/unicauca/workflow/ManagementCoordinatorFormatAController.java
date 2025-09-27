@@ -3,6 +3,7 @@ package co.unicauca.workflow;
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.domain.entities.EstadoFormatoA;
 import co.unicauca.workflow.domain.entities.Student;
 import co.unicauca.workflow.service.DegreeWorkService;
 import javafx.fxml.FXML;
@@ -39,6 +40,9 @@ public class ManagementCoordinatorFormatAController implements Initializable {
 
     @FXML
     private TableColumn<DegreeWork, String> colFecha;
+    
+    @FXML
+    private TableColumn<DegreeWork, String> colEstado;    
 
     @FXML
     private TableColumn<DegreeWork, Void> colAccion; // para el botón
@@ -60,10 +64,9 @@ public class ManagementCoordinatorFormatAController implements Initializable {
 
         configurarColumnas();
         cargarFormatos();
-        inicializarComboBox();
-        configurarBotonClasificar();
+        inicializarComboBox(); // aquí ya queda conectado el evento setOnAction
     }
-    
+
     private void configurarColumnas() {
         
         colTitulo.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
@@ -80,6 +83,10 @@ public class ManagementCoordinatorFormatAController implements Initializable {
         
         colFecha.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 data.getValue().getFechaActual() != null ? data.getValue().getFechaActual().toString() : ""));
+        
+        colEstado.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getEstado() != null ? data.getValue().getEstado().name() : ""
+        ));
 
         // Columna con botón
         colAccion.setCellFactory(param -> new TableCell<DegreeWork, Void>() {
@@ -107,11 +114,24 @@ public class ManagementCoordinatorFormatAController implements Initializable {
     private void cargarFormatos() {
         try {
             todosLosFormatos = service.listarDegreeWorks();
-            tableFormatos.getItems().setAll(todosLosFormatos);
+
+            // Agrupar por estudiante y quedarnos solo con el de mayor id
+            Map<String, DegreeWork> ultimosPorEstudiante = todosLosFormatos.stream()
+                    .collect(Collectors.toMap(
+                            f -> f.getEstudiante().getEmail(),
+                            f -> f,
+                            (f1, f2) -> f1.getId() > f2.getId() ? f1 : f2
+                    ));
+
+            List<DegreeWork> ultimos = new ArrayList<>(ultimosPorEstudiante.values());
+
+            tableFormatos.getItems().setAll(ultimos);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 
     
@@ -141,48 +161,94 @@ public class ManagementCoordinatorFormatAController implements Initializable {
     private void inicializarComboBox() {
         comboClasificar.getItems().addAll(
                 "Todos",
-                "Programa académico",   // si luego agregas programa en DegreeWork, se podrá usar
+                "Aceptados",
+                "No aceptados",
+                "Primera evaluación",
+                "Segunda evaluación",
+                "Tercera evaluación",
                 "Fecha más reciente",
                 "Fecha más antigua"
         );
         comboClasificar.getSelectionModel().selectFirst(); // por defecto "Todos"
-    }
 
-    private void configurarBotonClasificar() {
-        btnClasificar.setOnAction(event -> {
-            String opcion = comboClasificar.getValue();
-            if (opcion == null) {
-                return;
-            }
-
-            switch (opcion) {
-                case "Todos":
-                    tableFormatos.getItems().setAll(todosLosFormatos);
-                    break;
-
-                case "Programa académico":
-                    
-                    List<DegreeWork> porPrograma = todosLosFormatos.stream()
-                            .sorted(Comparator.comparing(f -> f.getEstudiante() != null ? f.getEstudiante().getEmail() : ""))
-                            .collect(Collectors.toList());
-                    tableFormatos.getItems().setAll(porPrograma);
-                    break;
-
-                case "Fecha más reciente":
-                    List<DegreeWork> masRecientes = todosLosFormatos.stream()
-                            .sorted(Comparator.comparing(DegreeWork::getFechaActual).reversed())
-                            .collect(Collectors.toList());
-                    tableFormatos.getItems().setAll(masRecientes);
-                    break;
-
-                case "Fecha más antigua":
-                    List<DegreeWork> masAntiguos = todosLosFormatos.stream()
-                            .sorted(Comparator.comparing(DegreeWork::getFechaActual))
-                            .collect(Collectors.toList());
-                    tableFormatos.getItems().setAll(masAntiguos);
-                    break;
-            }
+        // 🔥 Evento que se dispara al cambiar de opción
+        comboClasificar.setOnAction(event -> {
+            aplicarFiltro(comboClasificar.getValue());
         });
     }
+
+
+
+    private void aplicarFiltro(String opcion) {
+        if (opcion == null) {
+            return;
+        }
+
+        List<DegreeWork> base = new ArrayList<>(todosLosFormatos);
+
+        switch (opcion) {
+            case "Todos":
+                tableFormatos.getItems().setAll(base);
+                break;
+
+            case "Aceptados":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.ACEPTADO)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "No aceptados":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.NO_ACEPTADO)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Primera evaluación":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Segunda evaluación":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.SEGUNDA_EVALUACION)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Tercera evaluación":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.TERCERA_EVALUACION)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Fecha más reciente":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .sorted(Comparator.comparing(DegreeWork::getFechaActual).reversed())
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Fecha más antigua":
+                tableFormatos.getItems().setAll(
+                        base.stream()
+                                .sorted(Comparator.comparing(DegreeWork::getFechaActual))
+                                .collect(Collectors.toList())
+                );
+                break;
+        }
+    }
+
+
 
 }
