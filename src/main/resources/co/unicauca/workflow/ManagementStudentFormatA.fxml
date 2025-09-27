@@ -17,7 +17,7 @@
           <!-- Panel izquierdo -->
           <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Estudiante" textFill="#111f63">
+                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Estudiante" textFill="#111f63" onAction="#onBtnUsuarioClicked" >
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -30,7 +30,7 @@
                      </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Formato propuesta">
+                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Formato propuesta" >
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
