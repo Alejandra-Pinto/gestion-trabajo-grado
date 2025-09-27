@@ -42,7 +42,7 @@
             <SplitPane fx:id="splitPane" dividerPositions="0.3"
                        layoutY="120.0" prefHeight="684.0" prefWidth="1552.0">
               <items>
-                <!-- Panel izquierdo -->
+                <!-- Panel izquierdo con TODOS los botones -->
                 <AnchorPane prefWidth="427.0">
                      <children>
                         <ImageView fitHeight="176.0" fitWidth="480.0" layoutY="505.0" preserveRatio="true">
@@ -50,9 +50,11 @@
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
+
+                        <!-- Botón Rol -->
                         <ToggleButton fx:id="btnRol" layoutX="3.0"
                                       prefHeight="101.0" prefWidth="453.0"
-                                      text="Docente" textFill="#111f63" onAction="#onBtnRolClicked">
+                                      text="Rol" textFill="#111f63" onAction="#onBtnRolClicked">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -64,6 +66,47 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
+
+                        <!-- ========== NUEVOS BOTONES DE HOMEADMIN ========== -->
+
+                        <!-- Gestión de Coordinadores -->
+                        <ToggleButton fx:id="btnCoordinadores" layoutX="3.0" layoutY="206.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Gestión de Coordinadores"
+                                      onAction="#onBtnCoordinadoresClicked"/>
+
+                        <!-- ================================================== -->
+
+                        <!-- Docente -->
+                        <ToggleButton fx:id="btnFormatoDocente" layoutX="3.0" layoutY="309.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Formato propuesta Docente" visible="false"
+                                      onAction="#onBtnFormatoDocenteClicked"/>
+
+                        <ToggleButton fx:id="btnAnteproyectoDocente" layoutX="3.0" layoutY="412.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Anteproyecto Docente" visible="false"/>
+
+                        <!-- Estudiante -->
+                        <ToggleButton fx:id="btnFormatoEstudiante" layoutX="3.0" layoutY="515.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Formato propuesta Estudiante" visible="false"
+                                      onAction="#onBtnFormatoEstudianteClicked"/>
+
+                        <ToggleButton fx:id="btnAnteproyectoEstudiante" layoutX="3.0" layoutY="618.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Anteproyecto Estudiante" visible="false"/>
+
+                        <!-- Coordinador -->
+                        <ToggleButton fx:id="btnEvaluarPropuestas" layoutX="3.0" layoutY="721.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Evaluar propuestas" visible="false"
+                                      onAction="#onBtnEvaluarPropuestasClicked"/>
+
+                        <ToggleButton fx:id="btnEvaluarAnteproyectos" layoutX="3.0" layoutY="824.0"
+                                      prefHeight="101.0" prefWidth="453.0"
+                                      text="Evaluar anteproyectos" visible="false"
+                                      onAction="#onBtnEvaluarAnteproyectosClicked"/>
                      </children>
                   </AnchorPane>
 
