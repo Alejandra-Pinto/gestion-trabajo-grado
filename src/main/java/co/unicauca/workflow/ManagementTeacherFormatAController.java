@@ -4,6 +4,7 @@ import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.*;
 import co.unicauca.workflow.service.DegreeWorkService;
+import co.unicauca.workflow.service.UserService;
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.application.HostServices;
+import javafx.scene.layout.HBox;
 
 public class ManagementTeacherFormatAController implements Initializable, Hostable {
     private HostServices hostServices;
@@ -32,7 +34,12 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
     // Campos de formulario
     @FXML
-    private TextField txtCodEstudiante;
+    private ComboBox<String> cbEstudiante;
+    @FXML
+    private ComboBox<String> cbDirector;
+    @FXML
+    private ComboBox<String> cbCodirector;
+
     @FXML
     private TextField txtTituloTrabajo;
     @FXML
@@ -40,19 +47,24 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private DatePicker dpFechaActual;
     @FXML
-    private TextField txtDirector;
+    private TextArea txtObjetivoGeneral;
     @FXML
-    private TextField txtCodirector;
-    @FXML
-    private TextField txtObjetivoGeneral;
-    @FXML
-    private TextField txtObjetivosEspecificos;
+    private TextArea txtObjetivosEspecificos;
     @FXML
     private TextField txtArchivoAdjunto;
 
-    // Estado del documento
+    //para la carta de aceptación
     @FXML
-    private Label lblEstado;
+    private Label lblCartaAceptacion;
+    @FXML
+    private HBox hbCartaAceptacion;
+    @FXML
+    private TextField txtCartaAceptacion;
+    @FXML
+    private Button btnAdjuntarCarta;
+    @FXML
+    private Button btnAbrirCarta;
+
 
     private User usuarioActual;
     
@@ -62,18 +74,36 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        lblEstado.setText("No enviado");
+        
 
-        // Inicializamos opciones de modalidad
-        cbModalidad.getItems().setAll(
-            "INVESTIGACION",
-            "PRACTICA_PROFESIONAL"
-        );
+        cbModalidad.getItems().setAll("INVESTIGACION", "PRACTICA_PROFESIONAL");
 
-        // Instanciar servicio vía factory
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
         service = new DegreeWorkService(repo);
+
+        // 🔹 Cargar estudiantes y profesores
+        UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+
+        List<User> estudiantes = userService.listarPorRol("STUDENT");
+        List<User> profesores = userService.listarPorRol("TEACHER");
+
+        cbEstudiante.getItems().setAll(estudiantes.stream().map(User::getEmail).toList());
+        cbDirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
+        cbCodirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
+        
+        cbModalidad.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("PRACTICA_PROFESIONAL".equals(newVal)) {
+                lblCartaAceptacion.setVisible(true);
+                hbCartaAceptacion.setVisible(true);
+            } else {
+                lblCartaAceptacion.setVisible(false);
+                hbCartaAceptacion.setVisible(false);
+                txtCartaAceptacion.clear();
+            }
+        });
+
     }
+
 
     public void setUsuario(User usuario) {
         this.usuarioActual = usuario;
@@ -101,13 +131,13 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         if (archivoSeleccionado != null) {
             // ✅ Guardamos solo la ruta en el TextField
             txtArchivoAdjunto.setText(archivoSeleccionado.getAbsolutePath());
-            lblEstado.setText("Enviado");
+            
 
             mostrarAlerta("Documento cargado",
                     "El documento \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
                     Alert.AlertType.INFORMATION);
         } else {
-            lblEstado.setText("No enviado");
+            
             mostrarAlerta("Carga cancelada",
                     "No seleccionaste ningún archivo. Intenta nuevamente.",
                     Alert.AlertType.WARNING);
@@ -134,11 +164,11 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private void onGuardarFormato(ActionEvent event) {
         // Validaciones
-        if (txtCodEstudiante.getText().isEmpty()
+        if (cbEstudiante.getValue() == null
                 || txtTituloTrabajo.getText().isEmpty()
                 || cbModalidad.getValue() == null
                 || dpFechaActual.getValue() == null
-                || txtDirector.getText().isEmpty()
+                || cbDirector.getValue() == null
                 || txtObjetivoGeneral.getText().isEmpty()
                 || txtObjetivosEspecificos.getText().isEmpty()
                 || txtArchivoAdjunto.getText().isEmpty()) {
@@ -150,18 +180,21 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         try {
             // Construir objeto DegreeWork
             DegreeWork formato = new DegreeWork(
-                    txtCodEstudiante.getText(),
+                    cbEstudiante.getValue(), // estudiante (correo)
                     usuarioActual != null ? usuarioActual.getEmail() : "docente@default.com",
                     txtTituloTrabajo.getText(),
                     Modalidad.valueOf(cbModalidad.getValue()),
                     dpFechaActual.getValue(),
-                    txtDirector.getText(),
-                    txtCodirector.getText(),
+                    cbDirector.getValue(), // director (correo)
+                    cbCodirector.getValue(), // codirector (correo o null)
                     txtObjetivoGeneral.getText(),
                     Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
-                    //cambiamos esto archivoAdjunto.getAbsolutePath() a esto:
                     txtArchivoAdjunto.getText()
             );
+            if ("PRACTICA_PROFESIONAL".equals(cbModalidad.getValue())) {
+                formato.setCartaAceptacionEmpresa(txtCartaAceptacion.getText());
+            }
+
 
             formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
 
@@ -178,7 +211,9 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                     System.out.println("ID: " + dw.getId()
                             + " | Estudiante: " + dw.getIdEstudiante()
                             + " | Título: " + dw.getTituloProyecto()
-                            + " | Director: " + dw.getDirectorProyecto());
+                            + " | Director: " + dw.getDirectorProyecto()
+                            + " | Carta: " + dw.getCartaAceptacionEmpresa()
+                            + " | ObjEsp: " + dw.getObjetivosEspecificos());
                 }
             } else {
                 mostrarAlerta("Error", "No se pudo registrar el Formato A", Alert.AlertType.ERROR);
@@ -190,19 +225,62 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     }
 
 
+    //métodos para la carta de aceptación
+    @FXML
+    private void onAdjuntarCarta(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar carta de aceptación");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Word Files", "*.docx"),
+                new FileChooser.ExtensionFilter("Todos los archivos", "*.*")
+        );
+
+        File archivoSeleccionado = fileChooser.showOpenDialog(null);
+
+        if (archivoSeleccionado != null) {
+            txtCartaAceptacion.setText(archivoSeleccionado.getAbsolutePath());
+            mostrarAlerta("Documento cargado",
+                    "La carta \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
+                    Alert.AlertType.INFORMATION);
+        } else {
+            mostrarAlerta("Carga cancelada",
+                    "No seleccionaste ningún archivo. Intenta nuevamente.",
+                    Alert.AlertType.WARNING);
+        }
+    }
+
+    @FXML
+    private void onAbrirCarta(ActionEvent event) {
+        String ruta = txtCartaAceptacion.getText();
+        if (ruta == null || ruta.isEmpty()) {
+            mostrarAlerta("Sin archivo", "No hay ninguna carta seleccionada.", Alert.AlertType.WARNING);
+            return;
+        }
+        File archivo = new File(ruta);
+        if (!archivo.exists()) {
+            mostrarAlerta("Archivo no encontrado", "El archivo no existe en la ruta especificada.", Alert.AlertType.ERROR);
+            return;
+        }
+        hostServices.showDocument(archivo.toURI().toString());
+    }
+
+    
+    
+    
     private void limpiarCampos() {
-        txtCodEstudiante.clear();
+        cbEstudiante.getSelectionModel().clearSelection(); // ✅ ComboBox en vez de TextField
         txtTituloTrabajo.clear();
         cbModalidad.getSelectionModel().clearSelection();
         dpFechaActual.setValue(LocalDate.now());
-        txtDirector.clear();
-        txtCodirector.clear();
+        cbDirector.getSelectionModel().clearSelection();
+        cbCodirector.getSelectionModel().clearSelection();;
         txtObjetivoGeneral.clear();
         txtObjetivosEspecificos.clear();
         txtArchivoAdjunto.clear();
         archivoAdjunto = null;
-        lblEstado.setText("No enviado");
     }
+
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);

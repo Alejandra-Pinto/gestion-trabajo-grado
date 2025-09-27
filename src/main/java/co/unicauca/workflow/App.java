@@ -10,14 +10,13 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     private static Scene scene;
-
-    // 🔹 Aquí declaramos el campo estático
+    private static Stage primaryStage; // ✅ conservar
     private static HostServices hostServices;
 
     @Override
     public void start(Stage stage) throws IOException {
-        // ✅ Asignamos hostServices al arrancar la app
         hostServices = getHostServices();
+        primaryStage = stage;
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
         Parent root = loader.load();
@@ -28,11 +27,18 @@ public class App extends Application {
         stage.show();
     }
 
-    private Parent loadFXML(String fxml) throws IOException {
+    public static HostServices getHostServicesInstance() {
+        return hostServices;
+    }
+    
+    public static void setRoot(String fxml) throws IOException {
+        scene.setRoot(loadFXML(fxml));
+    }
+
+    public static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
         Parent root = fxmlLoader.load();
 
-        // ✅ Inyectar HostServices si el controller lo soporta
         Object controller = fxmlLoader.getController();
         if (controller instanceof Hostable) {
             ((Hostable) controller).setHostServices(hostServices);
@@ -41,9 +47,20 @@ public class App extends Application {
         return root;
     }
 
-    // 🔹 Método público para otros controladores
-    public static HostServices getHostServicesInstance() {
-        return hostServices;
+    /**
+     * MÉTODO CORREGIDO: Cargar una vista dentro del BaseLayout
+     */
+    public static void loadViewInBaseLayout(String fxmlName) throws IOException {
+        FXMLLoader baseLoader = new FXMLLoader(App.class.getResource("/co/unicauca/workflow/BaseLayout.fxml"));
+        Parent root = baseLoader.load();
+        BaseLayoutController baseController = baseLoader.getController();
+        
+        baseController.loadContent(fxmlName); 
+        scene.setRoot(root);
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     public static void main(String[] args) {

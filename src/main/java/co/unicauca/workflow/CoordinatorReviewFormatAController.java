@@ -13,7 +13,7 @@ import javafx.fxml.Initializable;
  *
  * @author julia
  */
-public class CorrectionsStudentFormatAController implements Initializable {
+public class CoordinatorReviewFormatAController implements Initializable {
 
     /**
      * Initializes the controller class.

@@ -1,26 +1,114 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 package co.unicauca.workflow;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import co.unicauca.workflow.access.Factory;
+import co.unicauca.workflow.access.IDegreeWorkRepository;
+import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.domain.entities.User;
+import co.unicauca.workflow.service.DegreeWorkService;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 
-/**
- * FXML Controller class
- *
- * @author julia
- */
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
 public class ManagementStudentFormatAController implements Initializable {
 
-    /**
-     * Initializes the controller class.
-     */
+    @FXML
+    private Label lblTitulo;
+    @FXML
+    private Label lblModalidad;
+    @FXML
+    private Label lblFecha;
+    @FXML
+    private Label lblDirector;
+    @FXML
+    private Label lblCodirector;
+    @FXML
+    private TextArea txtObjetivoGeneral;
+    @FXML
+    private TextArea txtObjetivosEspecificos;
+    @FXML
+    private Label lblEstado;
+    // Botón para ver correcciones (debe existir fx:id="btnVerCorrecciones" en el FXML)
+    @FXML
+    private Button btnVerCorrecciones;
+
+    private DegreeWorkService service;
+    private User usuarioActual;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        // Instanciar servicio igual que en Teacher
+        IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
+        service = new DegreeWorkService(repo);
+    }
+
+    public void setUsuario(User usuario) {
+        this.usuarioActual = usuario;
+        cargarFormatoA();
+    }
+
+    private void cargarFormatoA() {
+        if (usuarioActual == null) return;
+
+        try {
+            // Consultar todos los formatos
+            List<DegreeWork> formatos = service.listarDegreeWorks();
+
+            // Buscar el formato que corresponda a este estudiante
+            DegreeWork formato = formatos.stream()
+                    .filter(f -> f.getIdEstudiante().equalsIgnoreCase(usuarioActual.getEmail())) // ajusta aquí según tu User
+                    .findFirst()
+                    .orElse(null);
+
+            if (formato != null) {
+                lblTitulo.setText(formato.getTituloProyecto());
+                lblModalidad.setText(formato.getModalidad().toString());
+                lblFecha.setText(formato.getFechaActual().toString());
+                lblDirector.setText(formato.getDirectorProyecto());
+                lblCodirector.setText(formato.getCodirectorProyecto() != null ? formato.getCodirectorProyecto() : "-");
+                txtObjetivoGeneral.setText(formato.getObjetivoGeneral());
+                txtObjetivosEspecificos.setText(String.join("; ", formato.getObjetivosEspecificos()));
+                lblEstado.setText(formato.getEstado().toString());
+            } else {
+                lblTitulo.setText("No hay formato registrado");
+                lblEstado.setText("Pendiente");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            lblEstado.setText("Error cargando datos");
+        }
+    }
+    
+    @FXML
+    private void onBtnVerCorreccionesClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("StudentReviewFormatA.fxml"));
+            Parent root = loader.load();
+
+            // Pasar usuario al nuevo controlador
+            StudentReviewFormatAController controller = loader.getController();
+            controller.setUsuario(usuarioActual);
+
+            // Obtener ventana actual
+            Stage stage = (Stage) btnVerCorrecciones.getScene().getWindow();
+
+            // Cambiar la escena
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
     
 }
