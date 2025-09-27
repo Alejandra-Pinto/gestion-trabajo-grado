@@ -9,20 +9,20 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="477.0" prefWidth="691.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.StudentReviewFormatAController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.StudentReviewFormatAController">
    <children>
-      <SplitPane fx:id="splitMain" dividerPositions="0.3047895500725689" layoutY="53.0" prefHeight="426.0" prefWidth="691.0">
+      <SplitPane fx:id="splitMain" dividerPositions="0.3047895500725689" layoutY="115.0" prefHeight="710.0" prefWidth="1552.0">
         <items>
           <!-- Panel izquierdo -->
-          <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="424.0" prefWidth="206.0">
+          <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="682.0" prefWidth="427.0">
                <children>
-                  <ImageView fx:id="imgBandera" fitHeight="86.0" fitWidth="209.0" layoutX="-1.0" layoutY="344.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imgBandera" fitHeight="181.0" fitWidth="471.0" layoutX="-7.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/bandera.png" />
                      </image>
                   </ImageView>
 
-                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Estudiante" textFill="#111f63">
+                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Estudiante" textFill="#111f63">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -31,11 +31,11 @@
                         </ImageView>
                      </graphic>
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato propuesta">
+                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Formato propuesta">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -43,9 +43,12 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnAnteproyecto" layoutY="90.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Anteproyecto">
+                  <ToggleButton fx:id="btnAnteproyecto" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Anteproyecto">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -53,40 +56,46 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
                   </ToggleButton>
                </children>
             </AnchorPane>
 
           <!-- Panel derecho -->
-          <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="424.0" prefWidth="493.0">
+          <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="682.0" prefWidth="427.0">
                <children>
-                  <Label fx:id="lblTitulo" layoutX="21.0" layoutY="43.0" text="CORRECIONES DE LA PROPUESTA">
+                  <Label fx:id="lblTitulo" layoutX="57.0" layoutY="41.0" text="CORRECIONES DE LA PROPUESTA">
                      <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="44.0" />
                      </font>
                   </Label>
 
-                  <Label fx:id="lblEstadoTitulo" layoutX="21.0" layoutY="81.0" text="ESTADO:">
+                  <Label fx:id="lblEstadoTitulo" layoutX="62.0" layoutY="134.0" text="ESTADO:">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
 
-                  <Label fx:id="lblEstadoValor" layoutX="89.0" layoutY="81.0" text="RECHAZADO" textFill="#a01f18">
+                  <Label fx:id="lblEstadoValor" layoutX="203.0" layoutY="134.0" text="RECHAZADO" textFill="#a01f18">
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="22.0" />
                      </font>
                   </Label>
 
-                  <TextArea fx:id="txtCorrecciones" layoutX="21.0" layoutY="112.0" prefHeight="200.0" prefWidth="433.0" />
+                  <TextArea fx:id="txtCorrecciones" layoutX="63.0" layoutY="226.0" prefHeight="300.0" prefWidth="940.0" />
 
-                  <Label fx:id="lblComite" layoutX="360.0" layoutY="322.0" text="Comité Evaluador" />
+                  <Label fx:id="lblComite" layoutX="845.0" layoutY="556.0" text="Comité Evaluador">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
 
-      <ImageView fx:id="imgLogo" fitHeight="43.0" fitWidth="97.0" layoutX="18.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgLogo" fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/logo.png" />
          </image>

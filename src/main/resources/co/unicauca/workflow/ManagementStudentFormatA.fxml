@@ -10,14 +10,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="545.0" prefWidth="777.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementStudentFormatAController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementStudentFormatAController">
    <children>
-      <SplitPane fx:id="splitMain" dividerPositions="0.30523255813953487" layoutY="59.0" prefHeight="486.0" prefWidth="777.0">
+      <SplitPane fx:id="splitMain" dividerPositions="0.30523255813953487" layoutY="109.0" prefHeight="696.0" prefWidth="1553.0">
         <items>
           <!-- Panel izquierdo -->
           <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Estudiante" textFill="#111f63" onAction="#onBtnUsuarioClicked" >
+                  <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="470.0" text="Estudiante" textFill="#111f63">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -26,11 +26,11 @@
                         </ImageView>
                      </graphic>
                      <font>
-                        <Font name="System Bold" size="12.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Formato propuesta" >
+                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Formato propuesta">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -38,9 +38,12 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnAnteproyecto" layoutY="90.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="234.0" text="Anteproyecto">
+                  <ToggleButton fx:id="btnAnteproyecto" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Anteproyecto">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -48,9 +51,12 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
                   </ToggleButton>
 
-                  <ImageView fx:id="imgBandera" fitHeight="99.0" fitWidth="240.0" layoutX="-3.0" layoutY="401.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imgBandera" fitHeight="196.0" fitWidth="474.0" layoutX="-4.0" layoutY="515.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/bandera.png" />
                      </image>
@@ -59,62 +65,99 @@
             </AnchorPane>
 
           <!-- Panel derecho -->
-          <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="483.0" prefWidth="535.0">
+          <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="686.0" prefWidth="1075.0">
                <children>
-                  <Label fx:id="lblTitulo" layoutX="21.0" layoutY="24.0" text="ESTADO DE PROPUESTA">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="lblEstadoTitulo" layoutX="21.0" layoutY="59.0" text="ESTADO:">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="lblTituloTrabajo" layoutX="21.0" layoutY="93.0" text="Título Trabajo de Grado:" />
-                  <Label fx:id="lblModalidadTitulo" layoutX="22.0" layoutY="124.0" text="Modalidad:" />
-                  <Label fx:id="lblFechaTitulo" layoutX="22.0" layoutY="156.0" text="Fecha:" />
-                  <Label fx:id="lblDirectorTitulo" layoutX="22.0" layoutY="188.0" text="Director del Proyecto:" />
-                  <Label fx:id="lblCodirectorTitulo" layoutX="22.0" layoutY="219.0" text="Codirector del Proyecto:" />
-                  <Label fx:id="lblObjGeneralTitulo" layoutX="22.0" layoutY="252.0" text="Objetivo general:" />
-                  <Label fx:id="lblObjEspecificosTitulo" layoutX="21.0" layoutY="326.0" text="Objetivos específicos:" />
-
-                  <Label fx:id="lblEstadoValor" layoutX="86.0" layoutY="59.0" text="PRIMERA VERSIÓN" textFill="#111f63">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-
-                <Button fx:id="btnVerCorrecciones"
-                        layoutX="21.0" layoutY="426.0"
-                        mnemonicParsing="false"
-                        style="-fx-background-color: #111f63;"
-                        text="VER CORRECCIONES" textFill="WHITE"
-                        onAction="#onBtnVerCorreccionesClicked">
-                    <font>
-                        <Font name="System Bold" size="12.0" />
-                    </font>
-                </Button>
-
-                  <!-- Labels dinámicos -->
-                  <Label fx:id="lblFechaValor" layoutX="199.0" layoutY="156.0" text="Cargar Fecha" />
-                  <Label fx:id="lblDirectorValor" layoutX="199.0" layoutY="188.0" text="Cargar Director" />
-                  <Label fx:id="lblModalidadValor" layoutX="199.0" layoutY="124.0" text="Cargar Modalidad" />
-                  <Label fx:id="lblCodirectorValor" layoutX="199.0" layoutY="219.0" text="Cargar Codirector" />
-                  <TextArea fx:id="txtObjEspecificos" layoutX="197.0" layoutY="326.0" prefHeight="69.0" prefWidth="280.0" text="Cargar objetivos específicos" />
-                  <Label fx:id="lblTituloValor" layoutX="199.0" layoutY="93.0" text="Cargar Titulo" />
-                  <TextArea fx:id="txtObjGeneral" layoutX="197.0" layoutY="252.0" prefHeight="54.0" prefWidth="280.0" text="Cargar objetivo general" />
-                  <ImageView fitHeight="457.0" fitWidth="200.0" layoutX="227.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="695.0" fitWidth="291.0" layoutX="692.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/antorcha.png" />
                      </image>
                   </ImageView>
+                  <Label fx:id="lblTitulo" layoutX="49.0" layoutY="17.0" text="ESTADO DE PROPUESTA">
+                     <font>
+                        <Font name="System Bold" size="44.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblEstadoTitulo" layoutX="50.0" layoutY="82.0" text="ESTADO:">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lblTituloTrabajo" layoutX="50.0" layoutY="135.0" text="Título Trabajo de Grado:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblModalidadTitulo" layoutX="50.0" layoutY="185.0" text="Modalidad:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblFechaTitulo" layoutX="50.0" layoutY="235.0" text="Fecha:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblDirectorTitulo" layoutX="50.0" layoutY="285.0" text="Director del Proyecto:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblCodirectorTitulo" layoutX="50.0" layoutY="335.0" text="Codirector del Proyecto:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblObjGeneralTitulo" layoutX="50.0" layoutY="395.0" text="Objetivo general:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblObjEspecificosTitulo" layoutX="50.0" layoutY="515.0" text="Objetivos específicos:">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+
+                  <Label fx:id="lblEstadoValor" layoutX="177.0" layoutY="82.0" text="PRIMERA VERSIÓN" textFill="#111f63">
+                     <font>
+                        <Font name="System Bold" size="22.0" />
+                     </font>
+                  </Label>
+
+                <Button fx:id="btnVerCorrecciones" layoutX="50.0" layoutY="622.0" mnemonicParsing="false" onAction="#onBtnVerCorreccionesClicked" style="-fx-background-color: #111f63;" text="VER CORRECCIONES" textFill="WHITE">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Button>
+
+                  <!-- Labels dinámicos -->
+                  <Label fx:id="lblFechaValor" layoutX="407.0" layoutY="235.0" text="Cargar Fecha">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblDirectorValor" layoutX="407.0" layoutY="285.0" text="Cargar Director">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblModalidadValor" layoutX="407.0" layoutY="185.0" text="Cargar Modalidad">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <Label fx:id="lblCodirectorValor" layoutX="407.0" layoutY="335.0" text="Cargar Codirector">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <TextArea fx:id="txtObjEspecificos" layoutX="407.0" layoutY="515.0" prefHeight="111.0" prefWidth="558.0" text="Cargar objetivos específicos">
+                     <font>
+                        <Font size="16.0" />
+                     </font></TextArea>
+                  <Label fx:id="lblTituloValor" layoutX="407.0" layoutY="135.0" text="Cargar Titulo">
+                     <font>
+                        <Font size="16.0" />
+                     </font></Label>
+                  <TextArea fx:id="txtObjGeneral" layoutX="407.0" layoutY="395.0" prefHeight="71.0" prefWidth="558.0" text="Cargar objetivo general">
+                     <font>
+                        <Font size="16.0" />
+                     </font></TextArea>
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
 
-      <ImageView fx:id="imgLogo" fitHeight="43.0" fitWidth="97.0" layoutX="18.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgLogo" fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/logo.png" />
          </image>

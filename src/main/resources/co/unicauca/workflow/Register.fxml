@@ -7,6 +7,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,15 +17,15 @@
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.RegisterController">
 
    <children>
-      <Pane layoutX="-8.0" prefHeight="800.0" prefWidth="1540.0" style="-fx-background-color: #0F3FA5;">
+      <Pane layoutX="-8.0" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3FA5;">
          <children>
-            <ImageView fitHeight="594.0" fitWidth="458.0" layoutX="842.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="616.0" fitWidth="280.0" layoutX="884.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
                <image><Image url="@images/antorcha.png" /></image>
             </ImageView>
             <ImageView fitHeight="168.0" fitWidth="475.0" layoutY="632.0" pickOnBounds="true" preserveRatio="true">
                <image><Image url="@images/bandera.png" /></image>
             </ImageView>
-            <ImageView fitHeight="108.0" fitWidth="222.0" layoutX="8.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="96.0" fitWidth="184.0" layoutX="60.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                <image><Image url="@images/logo.png" /></image>
             </ImageView>
             
@@ -42,8 +43,11 @@
 
                   <!-- Roles -->
                   <Label layoutX="90.0" layoutY="215.0" text="Selecciona el rol:" />
-                  <RadioButton fx:id="rbEstudiante" layoutX="22.0" layoutY="240.0" mnemonicParsing="false" text="Soy Estudiante" textFill="#0f3ea4" toggleGroup="$rolesGroup">
+                  <RadioButton fx:id="rbEstudiante" layoutX="22.0" layoutY="240.0" mnemonicParsing="false" text="Soy Estudiante" textFill="#0f3ea4">
                      <font><Font name="System Bold" size="12.0" /></font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="rolesGroup" />
+                     </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="rbDocente" layoutX="144.0" layoutY="240.0" mnemonicParsing="false" text="Soy Docente" textFill="#821313" toggleGroup="$rolesGroup">
                      <font><Font name="System Bold" size="12.0" /></font>

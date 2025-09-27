@@ -13,47 +13,55 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementAdminController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementAdminController">
 
    <children>
       <Pane prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
          <children>
-            <SplitPane dividerPositions="0.2709030100334448" layoutY="61.0" prefHeight="804.0" prefWidth="1552.0">
+            <SplitPane dividerPositions="0.2709030100334448" layoutY="115.0" prefHeight="750.0" prefWidth="1552.0">
               <items>
                 <!-- Panel izquierdo -->
-                <AnchorPane prefHeight="804.0" prefWidth="0.0" style="-fx-background-color: fafafa;">
+                <AnchorPane prefHeight="732.0" prefWidth="467.0" style="-fx-background-color: fafafa;">
                      <children>
-                        <ImageView fitHeight="176.0" fitWidth="480.0" layoutY="663.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="176.0" fitWidth="480.0" layoutX="-1.0" layoutY="508.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
-                        <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Administrador" onAction="#onBtnUsuarioClicked"/>
-                        <ToggleButton fx:id="btnFormatoPropuesta" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Gestion de Coordinadores" />
+                        <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="467.0" text="Administrador" textFill="#111f63">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnFormatoPropuesta" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="467.0" text="Gestion de Coordinadores">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </ToggleButton>
                      </children>
                   </AnchorPane>
-
+      
                 <!-- Panel derecho -->
-                <AnchorPane prefHeight="599.0" prefWidth="582.0">
+                <AnchorPane prefHeight="690.0" prefWidth="1077.0">
                      <children>
-                        <Label layoutX="21.0" layoutY="14.0" text="GESTIÓN DE COORDINADORES">
+                        <Label layoutX="37.0" layoutY="14.0" text="GESTIÓN DE COORDINADORES">
                            <font>
-                              <Font name="System Bold" size="18.0" />
+                              <Font name="System Bold" size="44.0" />
                            </font>
                         </Label>
-
-                        <ImageView fitHeight="397.0" fitWidth="174.0" layoutX="158.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+      
+                        <ImageView fitHeight="657.0" fitWidth="377.0" layoutX="776.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/antorcha.png" />
                            </image>
                         </ImageView>
                         <HBox layoutX="21.0" layoutY="306.0" spacing="5" />
-                        <Button fx:id="btnGuardar" layoutX="323.0" layoutY="393.0" mnemonicParsing="false" onAction="#onGuardarCambios" style="-fx-background-color: #111F63;" text="GUARDAR CAMBIOS" textFill="WHITE">
+                        <Button fx:id="btnGuardar" layoutX="851.0" layoutY="607.0" mnemonicParsing="false" onAction="#onGuardarCambios" style="-fx-background-color: #111F63;" text="GUARDAR CAMBIOS" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
-                        <TableView fx:id="tblCoordinadores" layoutX="22.0" layoutY="88.0" prefHeight="254.0" prefWidth="434.0">
+                        <TableView fx:id="tblCoordinadores" layoutX="78.0" layoutY="96.0" prefHeight="470.0" prefWidth="920.0">
                           <columns>
                             <TableColumn fx:id="colCorreo" prefWidth="147.9999294281006" text="CORREO" />
                             <TableColumn fx:id="colNombre" prefWidth="151.20001220703125" text="NOMBRE" />
@@ -65,12 +73,12 @@
               </items>
             </SplitPane>
 
-            <ImageView fitHeight="45.0" fitWidth="88.0" layoutX="18.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/logo.png" />
                </image>
             </ImageView>
-            <Button layoutX="569.0" layoutY="11.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
+            <Button layoutX="1359.0" layoutY="35.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
          </children>
       </Pane>
    </children>

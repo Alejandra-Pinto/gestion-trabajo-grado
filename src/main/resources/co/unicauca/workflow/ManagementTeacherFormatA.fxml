@@ -20,7 +20,7 @@
    <children>
       <Pane prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
          <children>
-            <SplitPane dividerPositions="0.24654323880946796" layoutY="61.0" prefHeight="744.0" prefWidth="1552.0">
+            <SplitPane dividerPositions="0.24654323880946796" layoutY="61.0" prefHeight="600.0" prefWidth="1552.0">
               <items>
                 <!-- Panel izquierdo -->
                 <AnchorPane prefHeight="682.0" prefWidth="427.0" style="-fx-background-color: fafafa;">
@@ -40,7 +40,7 @@
                               </ImageView>
                            </graphic>
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </ToggleButton>
 
@@ -52,6 +52,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
                         </ToggleButton>
 
                         <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="204.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto">
@@ -62,6 +65,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
                         </ToggleButton>
                      </children>
                   </AnchorPane>
@@ -69,56 +75,89 @@
                 <!-- Panel derecho -->
                 <AnchorPane prefHeight="486.0" prefWidth="582.0">
                      <children>
-                        <Label layoutX="21.0" layoutY="14.0" text="GESTIÓN DE MI PROPUESTA">
+                        <Label layoutX="50.0" layoutY="30.0" text="GESTIÓN DE MI PROPUESTA">
                            <font>
-                              <Font name="System Bold" size="18.0" />
+                              <Font name="System Bold" size="44.0" />
                            </font>
                         </Label>
-                        <Label layoutX="23.0" layoutY="83.0" text="Título trabajo de grado" />
-                        <Label layoutX="23.0" layoutY="112.0" text="Modalidad" />
-                        <Label layoutX="22.0" layoutY="141.0" text="Fecha actual" />
-                        <Label layoutX="22.0" layoutY="170.0" text="Director" />
-                        <Label layoutX="22.0" layoutY="200.0" text="Codirector" />
-                        <Label layoutX="22.0" layoutY="228.0" text="Objetivo general" />
-                        <Label layoutX="22.0" layoutY="295.0" text="Objetivos específicos" />
-                        <Label layoutX="25.0" layoutY="390.0" text="Formato A*" />
+                        <Label layoutX="50.0" layoutY="160.0" text="Título trabajo de grado">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="210.0" text="Modalidad">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="260.0" text="Fecha actual">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="310.0" text="Director">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="360.0" text="Codirector">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="410.0" text="Objetivo general">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="490.0" text="Objetivos específicos">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <Label layoutX="50.0" layoutY="602.0" text="Formato A*">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
 
-                        <ImageView fitHeight="644.0" fitWidth="310.0" layoutX="332.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="678.0" fitWidth="353.0" layoutX="688.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/antorcha.png" />
                            </image>
                         </ImageView>
 
-                        <Button fx:id="btnAdjuntarDocumento" layoutX="451.0" layoutY="406.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" prefHeight="26.0" prefWidth="152.0" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
+                        <Button fx:id="btnAdjuntarDocumento" layoutX="520.0" layoutY="633.0" mnemonicParsing="false" onAction="#onAdjuntarDocumento" prefHeight="26.0" prefWidth="152.0" style="-fx-background-color: #111F63;" text="ADJUNTAR DOCUMENTO" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="11.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
 
-                        <TextField fx:id="txtTituloTrabajo" layoutX="262.0" layoutY="79.0" prefHeight="25.0" prefWidth="200.0" promptText="Título trabajo de grado*" />
-                        <ComboBox fx:id="cbModalidad" layoutX="262.0" layoutY="108.0" prefHeight="25.0" prefWidth="200.0" promptText="Modalidad*" />
-                        <DatePicker fx:id="dpFechaActual" layoutX="262.0" layoutY="137.0" prefHeight="25.0" prefWidth="200.0" promptText="Fecha actual*" />
-                        <ComboBox fx:id="cbDirector" layoutX="262.0" layoutY="166.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione director*" />
-                        <ComboBox fx:id="cbCodirector" layoutX="262.0" layoutY="195.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione codirector" />
+                        <TextField fx:id="txtTituloTrabajo" layoutX="520.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" promptText="Título trabajo de grado*" />
+                        <ComboBox fx:id="cbModalidad" layoutX="520.0" layoutY="210.0" prefHeight="25.0" prefWidth="200.0" promptText="Modalidad*" />
+                        <DatePicker fx:id="dpFechaActual" layoutX="520.0" layoutY="260.0" prefHeight="25.0" prefWidth="200.0" promptText="Fecha actual*" />
+                        <ComboBox fx:id="cbDirector" layoutX="520.0" layoutY="310.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione director*" />
+                        <ComboBox fx:id="cbCodirector" layoutX="520.0" layoutY="360.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione codirector" />
 
-                        <TextArea fx:id="txtObjetivoGeneral" layoutX="262.0" layoutY="224.0" prefHeight="60.0" prefWidth="290.0" promptText="Objetivo general*" wrapText="true" />
-                        <TextArea fx:id="txtObjetivosEspecificos" layoutX="262.0" layoutY="290.0" prefHeight="100.0" prefWidth="290.0" promptText="Objetivos específicos*" wrapText="true" />
+                        <TextArea fx:id="txtObjetivoGeneral" layoutX="520.0" layoutY="410.0" prefHeight="60.0" prefWidth="360.0" promptText="Objetivo general*" wrapText="true">
+                           <font>
+                              <Font size="16.0" />
+                           </font></TextArea>
+                        <TextArea fx:id="txtObjetivosEspecificos" layoutX="520.0" layoutY="490.0" prefHeight="100.0" prefWidth="362.0" promptText="Objetivos específicos*" wrapText="true">
+                           <font>
+                              <Font size="16.0" />
+                           </font></TextArea>
 
                         
-                        <HBox layoutX="23.0" layoutY="407.0" spacing="5">
-                            <TextField fx:id="txtArchivoAdjunto" editable="false" prefHeight="25.0" prefWidth="370.0" />
-                            <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" style="-fx-background-color: #ae2f2f;" text="Abrir" textFill="WHITE">
+                        <HBox layoutX="50.0" layoutY="633.0" spacing="5">
+                            <TextField fx:id="txtArchivoAdjunto" editable="false" layoutY="550.0" prefHeight="25.0" prefWidth="370.0" />
+                            <Button fx:id="btnAbrirArchivo" layoutY="550.0" onAction="#onAbrirArchivo" style="-fx-background-color: #ae2f2f;" text="Abrir" textFill="WHITE">
                               <font>
-                                 <Font name="System Bold" size="12.0" />
+                                 <Font name="System Bold" size="16.0" />
                               </font></Button>
                         </HBox>
 
-                        <Label layoutX="23.0" layoutY="55.0" text="Codigo estudiante" />
-                        <ComboBox fx:id="cbEstudiante" layoutX="262.0" layoutY="51.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione estudiante*" />
+                        <Label layoutX="50.0" layoutY="110.0" text="Codigo estudiante">
+                           <font>
+                              <Font size="16.0" />
+                           </font></Label>
+                        <ComboBox fx:id="cbEstudiante" layoutX="520.0" layoutY="110.0" prefHeight="25.0" prefWidth="200.0" promptText="Seleccione estudiante*" />
                         
-                        <Label fx:id="lblCartaAceptacion" layoutX="22.0" layoutY="479.0" prefHeight="18.0" prefWidth="206.0" text="Carta de aceptación de la empresa*" visible="false" />
+                        <Label fx:id="lblCartaAceptacion" layoutX="22.0" layoutY="570.0" prefHeight="18.0" prefWidth="206.0" text="Carta de aceptación de la empresa*" visible="false" />
 
-                        <HBox fx:id="hbCartaAceptacion" layoutX="20.0" layoutY="499.0" spacing="5" visible="false">
+                        <HBox fx:id="hbCartaAceptacion" layoutX="20.0" layoutY="623.0" spacing="5" visible="false">
                             <TextField fx:id="txtCartaAceptacion" editable="false" prefHeight="25.0" prefWidth="370.0" />
                             <Button fx:id="btnAbrirCarta" onAction="#onAbrirCarta" style="-fx-background-color: #ae2f2f;" text="Abrir" textFill="WHITE">
                               <font>
@@ -131,9 +170,9 @@
                         </HBox>
 
                         
-                        <Button fx:id="btnGuardar" layoutX="474.0" layoutY="541.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">
+                        <Button fx:id="btnGuardar" layoutX="897.0" layoutY="657.0" mnemonicParsing="false" onAction="#onGuardarFormato" style="-fx-background-color: #111F63;" text="GUARDAR" textFill="WHITE">
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </Button>
                      </children>
@@ -141,7 +180,7 @@
               </items>
             </SplitPane>
 
-            <ImageView fitHeight="45.0" fitWidth="88.0" layoutX="18.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="45.0" fitWidth="88.0" layoutX="64.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/logo.png" />
                </image>

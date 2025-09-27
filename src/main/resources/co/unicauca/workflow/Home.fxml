@@ -11,10 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0"
-            xmlns="http://javafx.com/javafx/24.0.1" 
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="co.unicauca.workflow.HomeController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.HomeController">
 
    <children>
       <Pane layoutX="0.0" layoutY="0.0" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
@@ -33,9 +30,7 @@
 
                <Pane HBox.hgrow="ALWAYS" />
 
-               <Button onAction="#handleLogout"
-                       style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;"
-                       text="Cerrar Sesión" />
+               <Button onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
             </HBox>
 
             <!-- Split principal -->
@@ -45,10 +40,7 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="682.0" prefWidth="427.0">
                      <children>
                         <!-- Botón Rol (único visible al inicio) -->
-                        <ToggleButton fx:id="btnRol" layoutX="3.0" mnemonicParsing="false"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Rol" textFill="#111f63" visible="true"
-                                      onAction="#onBtnRolClicked">
+                        <ToggleButton fx:id="btnRol" mnemonicParsing="false" onAction="#onBtnRolClicked" prefHeight="101.0" prefWidth="462.0" text="Rol" textFill="#111f63" visible="true">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -62,35 +54,37 @@
                         </ToggleButton>
 
                         <!-- Docente -->
-                        <ToggleButton fx:id="btnFormatoDocente" layoutX="3.0" layoutY="103.0"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Formato propuesta Docente" visible="false"
-                                      onAction="#onBtnFormatoDocenteClicked"/>
+                        <ToggleButton fx:id="btnFormatoDocente" layoutY="101.0" onAction="#onBtnFormatoDocenteClicked" prefHeight="101.0" prefWidth="462.0" text="Formato propuesta Docente" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font></ToggleButton>
 
-                        <ToggleButton fx:id="btnAnteproyectoDocente" layoutX="3.0" layoutY="206.0"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Anteproyecto Docente" visible="false"/>
+                        <ToggleButton fx:id="btnAnteproyectoDocente" layoutY="201.0" prefHeight="101.0" prefWidth="462.0" text="Anteproyecto Docente" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font></ToggleButton>
 
                         <!-- Estudiante -->
-                        <ToggleButton fx:id="btnFormatoEstudiante" layoutX="3.0" layoutY="309.0"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Formato propuesta Estudiante" visible="false"
-                                      onAction="#onBtnFormatoEstudianteClicked"/>
+                        <ToggleButton fx:id="btnFormatoEstudiante" layoutY="101.0" onAction="#onBtnFormatoEstudianteClicked" prefHeight="101.0" prefWidth="462.0" text="Formato propuesta Estudiante" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font></ToggleButton>
 
-                        <ToggleButton fx:id="btnAnteproyectoEstudiante" layoutX="3.0" layoutY="412.0"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Anteproyecto Estudiante" visible="false"/>
+                        <ToggleButton fx:id="btnAnteproyectoEstudiante" layoutY="201.0" prefHeight="101.0" prefWidth="462.0" text="Anteproyecto Estudiante" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font></ToggleButton>
 
                         <!-- Coordinador -->
-                        <ToggleButton fx:id="btnEvaluarPropuestas" layoutX="3.0" layoutY="515.0"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Evaluar propuestas" visible="false"
-                                      onAction="#onBtnEvaluarPropuestasClicked"/>
+                        <ToggleButton fx:id="btnEvaluarPropuestas" layoutY="101.0" onAction="#onBtnEvaluarPropuestasClicked" prefHeight="101.0" prefWidth="462.0" text="Evaluar propuestas" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font></ToggleButton>
 
-                        <ToggleButton fx:id="btnEvaluarAnteproyectos" layoutX="3.0" layoutY="618.0"
-                                      prefHeight="101.0" prefWidth="453.0"
-                                      text="Evaluar anteproyectos" visible="false"
-                                      onAction="#onBtnEvaluarAnteproyectosClicked"/>
+                        <ToggleButton fx:id="btnEvaluarAnteproyectos" layoutY="201.0" onAction="#onBtnEvaluarAnteproyectosClicked" prefHeight="101.0" prefWidth="462.0" text="Evaluar anteproyectos" visible="false">
+                           <font>
+                              <Font size="16.0" />
+                           </font></ToggleButton>
                      </children>
                   </AnchorPane>
 
