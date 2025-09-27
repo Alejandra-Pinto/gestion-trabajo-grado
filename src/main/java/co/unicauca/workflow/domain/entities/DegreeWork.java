@@ -17,8 +17,7 @@ public class DegreeWork {
     private String cartaAceptacionEmpresa; // solo si es práctica profesional
     private EstadoFormatoA estado;
     private int id;
-
-
+    private int noAprobadoCount; // Nuevo campo para contar intentos fallidos
 
     // Constructor
     public DegreeWork(String idEstudiante, String idProfesor, String tituloProyecto, Modalidad modalidad,
@@ -35,6 +34,7 @@ public class DegreeWork {
         this.objetivosEspecificos = objetivosEspecificos;
         this.archivoPdf = archivoPdf;
         this.estado = EstadoFormatoA.PRIMERA_EVALUACION; // estado inicial
+        this.noAprobadoCount = 0; // Inicializar conteo en 0
     }
 
     // Getters y Setters
@@ -81,6 +81,10 @@ public class DegreeWork {
     public EstadoFormatoA getEstado() { return estado; }
     public void setEstado(EstadoFormatoA estado) { this.estado = estado; }
 
+    public int getNoAprobadoCount() { return noAprobadoCount; }
+    public void setNoAprobadoCount(int noAprobadoCount) { this.noAprobadoCount = noAprobadoCount; }
+    public void incrementNoAprobadoCount() { this.noAprobadoCount++; } // Método para incrementar el conteo
+
     @Override
     public String toString() {
         return "FormatoA{" +
@@ -96,6 +100,7 @@ public class DegreeWork {
                 ", archivoPdf='" + archivoPdf + '\'' +
                 ", cartaAceptacionEmpresa='" + cartaAceptacionEmpresa + '\'' +
                 ", estado=" + estado +
+                ", noAprobadoCount=" + noAprobadoCount +
                 '}';
     }
 }
