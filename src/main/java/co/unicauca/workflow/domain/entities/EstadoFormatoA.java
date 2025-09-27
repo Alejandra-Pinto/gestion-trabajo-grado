@@ -5,5 +5,6 @@ public enum EstadoFormatoA {
     SEGUNDA_EVALUACION,
     TERCERA_EVALUACION,
     ACEPTADO,
-    RECHAZADO
+    RECHAZADO,
+    NO_ACEPTADO
 }
