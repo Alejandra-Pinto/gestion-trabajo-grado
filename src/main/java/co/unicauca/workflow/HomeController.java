@@ -1,9 +1,12 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.domain.entities.Teacher;
 import co.unicauca.workflow.domain.entities.Student;
+import co.unicauca.workflow.service.AdminService;
+import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,67 +50,65 @@ public class HomeController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("=== HomeController.initialize() ===");
         configurarBotones();
-        System.out.println("HomeController inicializado - Botones configurados");
     }
 
     public void setUsuario(User usuario) {
-        System.out.println("=== HomeController.setUsuario() llamado ===");
-        System.out.println("Usuario recibido: " + (usuario != null ? usuario.getClass().getSimpleName() : "null"));
-        System.out.println("Rol del usuario: " + (usuario != null ? usuario.getRole() : "null"));
-
         this.usuario = usuario;
         cargarUsuario();
     }
 
     private void cargarUsuario() {
-        System.out.println("=== HomeController.cargarUsuario() ===");
-
-        if (usuario == null) {
-            System.out.println("ERROR: usuario es null");
-            return;
-        }
+        if (usuario == null) return;
 
         String programa = usuario.getProgram() != null ? usuario.getProgram().toString() : "Sin programa";
-        System.out.println("Cargando usuario: " + usuario.getClass().getSimpleName() + ", Programa: " + programa);
-        System.out.println("Rol: " + usuario.getRole());
-
-        // Verificar instancia con instanceof
-        System.out.println("Es Teacher?: " + (usuario instanceof Teacher));
-        System.out.println("Es Student?: " + (usuario instanceof Student));
-        System.out.println("Es Coordinator?: " + (usuario instanceof Coordinator));
 
         if (usuario instanceof Teacher) {
-            System.out.println("Configurando botones para DOCENTE");
             btnRol.setText("Docente\n(" + programa + ")");
             btnAnteproyectoDocente.setVisible(true);
             btnFormatoDocente.setVisible(true);
 
-            // Verificar visibilidad de botones
-            System.out.println("btnAnteproyectoDocente visible: " + btnAnteproyectoDocente.isVisible());
-            System.out.println("btnFormatoDocente visible: " + btnFormatoDocente.isVisible());
-
         } else if (usuario instanceof Student) {
-            System.out.println("Configurando botones para ESTUDIANTE");
             btnRol.setText("Estudiante\n(" + programa + ")");
             btnFormatoEstudiante.setVisible(true);
             btnAnteproyectoEstudiante.setVisible(true);
 
         } else if (usuario instanceof Coordinator || "coordinador".equalsIgnoreCase(usuario.getRole())) {
-            System.out.println("Configurando botones para COORDINADOR");
             btnRol.setText("Coordinador\n(" + programa + ")");
             btnEvaluarPropuestas.setVisible(true);
             btnEvaluarAnteproyectos.setVisible(true);
-        } else {
-            System.out.println("Tipo de usuario no reconocido: " + usuario.getClass().getSimpleName());
         }
+    }
+    
+    @FXML
+    private void onBtnRolClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
+            Parent root = loader.load();
 
-        System.out.println("=== Fin cargarUsuario() ===");
+            RolController rolController = loader.getController();
+
+            // Crear servicios (usando las implementaciones reales de tus repositorios)
+            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
+
+            // Pasar usuario + servicios
+            if (usuario != null) {
+                rolController.setUsuario(usuario, userService, adminService);
+            }
+
+            Stage stage = (Stage) btnRol.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Información del Usuario");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), AlertType.ERROR);
+        }
     }
 
     /**
-     * MÉTODO DE LOGOUT INTEGRADO
+     * LOGOUT
      */
     @FXML
     private void handleLogout() {
@@ -120,72 +121,75 @@ public class HomeController implements Initializable {
             stage.setScene(new Scene(root));
             stage.setTitle("Login - Workflow");
 
-            System.out.println("Sesión cerrada exitosamente");
         } catch (IOException e) {
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), AlertType.ERROR);
         }
     }
 
+    // ===== BOTONES =====
+
     @FXML
     private void onBtnFormatoDocenteClicked() {
-        System.out.println("Clic en btnFormatoDocente");
-
         if (!(usuario instanceof Teacher)) {
             mostrarAlerta("Acceso denegado", "Solo los docentes pueden acceder a esta funcionalidad.", AlertType.WARNING);
             return;
         }
+        cargarVistaConUsuario("/co/unicauca/workflow/GestionPropuestaDocente.fxml", "Gestión de Propuestas Docente");
+    }
 
+    @FXML
+    private void onBtnFormatoEstudianteClicked() {
+        if (!(usuario instanceof Student)) {
+            mostrarAlerta("Acceso denegado", "Solo los estudiantes pueden acceder a esta funcionalidad.", AlertType.WARNING);
+            return;
+        }
+        cargarVistaConUsuario("/co/unicauca/workflow/ManagementStudentFormatA.fxml", "Gestión de Formatos - Estudiante");
+    }
+
+    @FXML
+    private void onBtnEvaluarPropuestasClicked() {
+        if (!(usuario instanceof Coordinator)) {
+            mostrarAlerta("Acceso denegado", "Solo los coordinadores pueden acceder a esta funcionalidad.", AlertType.WARNING);
+            return;
+        }
+        cargarVistaConUsuario("/co/unicauca/workflow/ManagementCoordinatorFormatA.fxml", "Gestión de Propuestas - Coordinador");
+    }
+
+    @FXML
+    private void onBtnEvaluarAnteproyectosClicked() {
+        if (!(usuario instanceof Coordinator)) {
+            mostrarAlerta("Acceso denegado", "Solo los coordinadores pueden acceder a esta funcionalidad.", AlertType.WARNING);
+            return;
+        }
+        cargarVistaConUsuario("/co/unicauca/workflow/ManagementCoordinatorFormatA.fxml", "Gestión de Anteproyectos - Coordinador");
+    }
+
+    // ==== MÉTODOS AUXILIARES ====
+
+    private void cargarVistaConUsuario(String fxml, String tituloVentana) {
         try {
-            // Cargar la interfaz completa
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("GestionPropuestaDocente.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
 
-            // Pasar el usuario
+            // Pasar usuario al nuevo controlador si existe setUsuario
             Object controller = loader.getController();
             if (controller != null) {
                 try {
                     controller.getClass().getMethod("setUsuario", User.class).invoke(controller, usuario);
                 } catch (Exception e) {
-                    // Ignorar si no tiene el método
+                    System.out.println("El controlador no tiene setUsuario(User): " + controller.getClass().getSimpleName());
                 }
             }
 
-            // Cambiar la escena actual
-            Stage stage = (Stage) btnFormatoDocente.getScene().getWindow();
+            Stage stage = (Stage) btnRol.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Gestión de Propuestas Docente");
+            stage.setTitle(tituloVentana);
 
         } catch (IOException e) {
             e.printStackTrace();
             mostrarAlerta("Error", "Error al cargar: " + e.getMessage(), AlertType.ERROR);
         }
-    }
-
-    // Métodos para otros botones (debes implementarlos similarmente)
-    @FXML
-    private void onBtnAnteproyectoDocenteClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnFormatoEstudianteClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnAnteproyectoEstudianteClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnEvaluarPropuestasClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
-    }
-
-    @FXML
-    private void onBtnEvaluarAnteproyectosClicked() {
-        // Implementar similar a onBtnFormatoDocenteClicked
     }
 
     private void configurarBotones() {

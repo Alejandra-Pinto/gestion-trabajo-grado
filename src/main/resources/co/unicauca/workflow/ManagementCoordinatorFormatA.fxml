@@ -67,7 +67,9 @@
                 <AnchorPane prefHeight="472.0" prefWidth="477.0">
                      <children>
                         
-                        <ImageView fitHeight="486.0" fitWidth="190.0" layoutX="145.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+
+                        <ImageView fitHeight="486.0" fitWidth="190.0" layoutX="200.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+
                            <image>
                               <Image url="@images/antorcha.png" />
                            </image>
