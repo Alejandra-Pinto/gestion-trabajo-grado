@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TextField?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.CoordinatorReviewFormatAController">
 
@@ -73,7 +74,27 @@
                         </Label>
                         <Label layoutX="21.0" layoutY="71.0" text="Solicitud de revisión " />
                         <Label fx:id="lblEstudiante" layoutX="180.0" layoutY="71.0" text="Estudiante 1 - Ingeniería de Sistemas" />
+                        
                         <Label layoutX="21.0" layoutY="111.0" text="Formato A adjuntado" />
+                        <TextField fx:id="txtArchivoAdjunto" layoutX="180.0" layoutY="107.0" prefWidth="200.0" editable="false" />
+
+                        <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" layoutX="390.0" layoutY="107.0" mnemonicParsing="false"
+                                style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+
+                        <Label fx:id="lblCartaEmpresa" layoutX="21.0" layoutY="151.0" text="Carta aceptación empresa" visible="false" />
+                        <TextField fx:id="txtCartaEmpresa" layoutX="180.0" layoutY="147.0" prefWidth="200.0" editable="false" visible="false" />
+                        <Button fx:id="btnAbrirCartaEmpresa" layoutX="390.0" layoutY="147.0" mnemonicParsing="false"
+                                style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE" visible="false">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        
+                        
                         <Label layoutX="21.0" layoutY="205.0" text="Actualizar estado :" />
                         <ComboBox fx:id="cmbEstado" layoutX="131.0" layoutY="201.0" prefWidth="150.0" promptText="EN REVISIÓN" style="-fx-background-color: FFFFFF;" />
                         <Label layoutX="21.0" layoutY="243.0" text="Correcciones">

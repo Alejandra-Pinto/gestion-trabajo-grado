@@ -129,20 +129,41 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         File archivoSeleccionado = fileChooser.showOpenDialog(null);
 
         if (archivoSeleccionado != null) {
-            // ✅ Guardamos solo la ruta en el TextField
-            txtArchivoAdjunto.setText(archivoSeleccionado.getAbsolutePath());
-            
+            try {
+                // Carpeta dentro del proyecto
+                File carpetaDestino = new File("Documents/formatos");
+                if (!carpetaDestino.exists()) {
+                    carpetaDestino.mkdirs();
+                }
 
-            mostrarAlerta("Documento cargado",
-                    "El documento \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
-                    Alert.AlertType.INFORMATION);
+                // Copiar el archivo
+                File destino = new File(carpetaDestino, archivoSeleccionado.getName());
+                java.nio.file.Files.copy(
+                        archivoSeleccionado.toPath(),
+                        destino.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                );
+
+                // ✅ Guardamos la ruta relativa (NO absolutePath)
+                String rutaRelativa = "formatos/" + archivoSeleccionado.getName();
+                txtArchivoAdjunto.setText(rutaRelativa);
+
+                mostrarAlerta("Documento cargado",
+                        "El documento \"" + archivoSeleccionado.getName() + "\" se copió correctamente al proyecto.",
+                        Alert.AlertType.INFORMATION);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "No se pudo copiar el archivo: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
         } else {
-            
             mostrarAlerta("Carga cancelada",
                     "No seleccionaste ningún archivo. Intenta nuevamente.",
                     Alert.AlertType.WARNING);
         }
     }
+
+
 
 
     @FXML
@@ -152,14 +173,16 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             mostrarAlerta("Sin archivo", "No hay ningún archivo seleccionado.", Alert.AlertType.WARNING);
             return;
         }
+
         File archivo = new File(ruta);
         if (!archivo.exists()) {
-            mostrarAlerta("Archivo no encontrado", "El archivo no existe en la ruta especificada.", Alert.AlertType.ERROR);
+            mostrarAlerta("Archivo no encontrado", "El archivo no existe en la ruta especificada: " + ruta, Alert.AlertType.ERROR);
             return;
         }
-        // abre en navegador por defecto
+
         hostServices.showDocument(archivo.toURI().toString());
     }
+
     
     @FXML
     private void onGuardarFormato(ActionEvent event) {
@@ -239,16 +262,38 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         File archivoSeleccionado = fileChooser.showOpenDialog(null);
 
         if (archivoSeleccionado != null) {
-            txtCartaAceptacion.setText(archivoSeleccionado.getAbsolutePath());
-            mostrarAlerta("Documento cargado",
-                    "La carta \"" + archivoSeleccionado.getName() + "\" se cargó correctamente.",
-                    Alert.AlertType.INFORMATION);
+            try {
+                File carpetaDestino = new File("Documents/cartas");
+                if (!carpetaDestino.exists()) {
+                    carpetaDestino.mkdirs();
+                }
+
+                File archivoDestino = new File(carpetaDestino, archivoSeleccionado.getName());
+                java.nio.file.Files.copy(
+                        archivoSeleccionado.toPath(),
+                        archivoDestino.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                );
+
+                // ✅ Guardamos la ruta relativa (NO absolutePath)
+                String rutaRelativa = "cartas/" + archivoSeleccionado.getName();
+                txtCartaAceptacion.setText(rutaRelativa);
+
+                mostrarAlerta("Documento cargado",
+                        "La carta \"" + archivoSeleccionado.getName() + "\" se copió a la carpeta del proyecto.",
+                        Alert.AlertType.INFORMATION);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "No se pudo copiar el archivo: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
         } else {
             mostrarAlerta("Carga cancelada",
                     "No seleccionaste ningún archivo. Intenta nuevamente.",
                     Alert.AlertType.WARNING);
         }
     }
+
 
     @FXML
     private void onAbrirCarta(ActionEvent event) {
