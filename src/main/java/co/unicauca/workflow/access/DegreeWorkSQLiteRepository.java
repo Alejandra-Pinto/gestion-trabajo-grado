@@ -29,11 +29,11 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         String sql = "CREATE TABLE IF NOT EXISTS degree_work ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "id_estudiante TEXT NOT NULL,"       // email del estudiante
-                + "id_profesor TEXT NOT NULL,"         // email del director
+                + "director_proyecto TEXT NOT NULL,"   // email del director
                 + "titulo_proyecto TEXT NOT NULL,"
                 + "modalidad TEXT NOT NULL,"
                 + "fecha_actual TEXT NOT NULL,"
-                + "director_proyecto TEXT NOT NULL,"   // redundante, lo puedes unificar con id_profesor
+                
                 + "codirector_proyecto TEXT,"          // email del codirector
                 + "objetivo_general TEXT NOT NULL,"
                 + "objetivos_especificos TEXT,"
