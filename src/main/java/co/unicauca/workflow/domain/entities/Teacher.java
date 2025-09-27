@@ -10,6 +10,10 @@ public class Teacher extends User {
         this.setStatus("ACEPTADO");
     }
 
+    public Teacher(){
+        super();
+    }
+    
     @Override
     public void showDashboard() {
         System.out.println("Acceso al panel de docente:");

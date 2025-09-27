@@ -5,13 +5,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.TextField?>
 
 <AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.CoordinatorReviewFormatAController">
 
@@ -76,19 +76,17 @@
                         <Label fx:id="lblEstudiante" layoutX="180.0" layoutY="71.0" text="Estudiante 1 - Ingeniería de Sistemas" />
                         
                         <Label layoutX="21.0" layoutY="111.0" text="Formato A adjuntado" />
-                        <TextField fx:id="txtArchivoAdjunto" layoutX="180.0" layoutY="107.0" prefWidth="200.0" editable="false" />
+                        <TextField fx:id="txtArchivoAdjunto" editable="false" layoutX="180.0" layoutY="107.0" prefWidth="200.0" />
 
-                        <Button fx:id="btnAbrirArchivo" onAction="#onAbrirArchivo" layoutX="390.0" layoutY="107.0" mnemonicParsing="false"
-                                style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE">
+                        <Button fx:id="btnAbrirArchivo" layoutX="390.0" layoutY="107.0" mnemonicParsing="false" onAction="#onAbrirArchivo" style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
                         </Button>
 
                         <Label fx:id="lblCartaEmpresa" layoutX="21.0" layoutY="151.0" text="Carta aceptación empresa" visible="false" />
-                        <TextField fx:id="txtCartaEmpresa" layoutX="180.0" layoutY="147.0" prefWidth="200.0" editable="false" visible="false" />
-                        <Button fx:id="btnAbrirCartaEmpresa" layoutX="390.0" layoutY="147.0" mnemonicParsing="false"
-                                style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE" visible="false">
+                        <TextField fx:id="txtCartaEmpresa" editable="false" layoutX="180.0" layoutY="147.0" prefWidth="200.0" visible="false" />
+                        <Button fx:id="btnAbrirCartaEmpresa" layoutX="390.0" layoutY="147.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE" visible="false">
                             <font>
                                 <Font name="System Bold" size="12.0" />
                             </font>
@@ -96,14 +94,14 @@
                         
                         
                         <Label layoutX="21.0" layoutY="205.0" text="Actualizar estado :" />
-                        <ComboBox fx:id="cmbEstado" layoutX="131.0" layoutY="201.0" prefWidth="150.0" promptText="EN REVISIÓN" style="-fx-background-color: FFFFFF;" />
+                        <ComboBox fx:id="cmbEstado" layoutX="131.0" layoutY="201.0" prefWidth="150.0" style="-fx-background-color: FFFFFF;" />
                         <Label layoutX="21.0" layoutY="243.0" text="Correcciones">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
                         <TextArea fx:id="txtCorrecciones" layoutX="21.0" layoutY="267.0" prefHeight="126.0" prefWidth="432.0" />
-                        <Button fx:id="btnEnviar" layoutX="308.0" layoutY="418.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ENVIAR CALIFICACIÓN" textFill="WHITE">
+                        <Button fx:id="btnEnviar" layoutX="308.0" layoutY="418.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ENVIAR CALIFICACIÓN" textFill="WHITE" onAction="#onEnviarCorrecciones">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>

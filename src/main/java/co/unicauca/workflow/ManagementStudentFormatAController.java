@@ -58,7 +58,8 @@ public class ManagementStudentFormatAController implements Initializable {
             List<DegreeWork> formatos = service.listarDegreeWorks();
 
             DegreeWork formato = formatos.stream()
-                    .filter(f -> f.getIdEstudiante().equalsIgnoreCase(usuarioActual.getEmail()))
+                    .filter(f -> f.getEstudiante() != null
+                    && f.getEstudiante().getEmail().equalsIgnoreCase(usuarioActual.getEmail()))
                     .findFirst()
                     .orElse(null);
 
@@ -66,8 +67,13 @@ public class ManagementStudentFormatAController implements Initializable {
                 lblTituloValor.setText(formato.getTituloProyecto());
                 lblModalidadValor.setText(formato.getModalidad().toString());
                 lblFechaValor.setText(formato.getFechaActual().toString());
-                lblDirectorValor.setText(formato.getDirectorProyecto());
-                lblCodirectorValor.setText(formato.getCodirectorProyecto() != null ? formato.getCodirectorProyecto() : "-");
+                lblDirectorValor.setText(
+                        formato.getDirectorProyecto() != null ? formato.getDirectorProyecto().getEmail() : "-"
+                );
+                lblCodirectorValor.setText(
+                        formato.getCodirectorProyecto()!= null ? formato.getCodirectorProyecto().getEmail() : "-"
+                );
+
                 txtObjGeneral.setText(formato.getObjetivoGeneral());
                 txtObjEspecificos.setText(String.join("; ", formato.getObjetivosEspecificos()));
                 lblEstadoValor.setText(formato.getEstado().toString());

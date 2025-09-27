@@ -1,6 +1,7 @@
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.service.DegreeWorkService;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +15,14 @@ import javafx.geometry.Insets;
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
+
 
 public class CoordinatorReviewFormatAController implements Initializable, Hostable {
 
@@ -39,6 +48,15 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
 
     @FXML
     private Button btnAbrirCartaEmpresa;
+    
+    @FXML
+    private TextArea txtCorrecciones;
+
+    @FXML
+    private Button btnEnviar;
+    
+    @FXML
+    private ComboBox<String> cmbEstado;
 
 
     @Override
@@ -53,13 +71,80 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
 
         btnAbrirArchivo.setOnAction(e -> onAbrirArchivo());
         btnAbrirCartaEmpresa.setOnAction(e -> onAbrirCartaEmpresa());
+        
+        cmbEstado.getItems().clear();
+        cmbEstado.getItems().addAll("ACEPTADO", "NO ACEPTADO");
+
+        // Si ya tiene 3 intentos fallidos, habilitamos RECHAZADO
+        if (formato != null && formato.getNoAprobadoCount() >= 3) {
+            cmbEstado.getItems().add("RECHAZADO");
+        }
+
+        // Personalizar estilos de cada opción
+        cmbEstado.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> param) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item == null || empty) {
+                            setText(null);
+                            setStyle("");
+                        } else {
+                            setText(item);
+                            switch (item) {
+                                case "ACEPTADO":
+                                    setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+                                    break;
+                                case "NO ACEPTADO":
+                                    setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                                    break;
+                                case "RECHAZADO":
+                                    setStyle("-fx-text-fill: darkred; -fx-font-weight: bold;");
+                                    break;
+                                default:
+                                    setStyle("");
+                            }
+                        }
+                    }
+                };
+            }
+        });
+
+        // Para que se vea igual en el área seleccionada
+        cmbEstado.setButtonCell(cmbEstado.getCellFactory().call(null));
+
+        // Por defecto, nada seleccionado
+        cmbEstado.getSelectionModel().clearSelection();
+        
+        txtCorrecciones.setDisable(true);
+
+        cmbEstado.setOnAction(e -> {
+            String selected = cmbEstado.getValue();
+            if ("NO ACEPTADO".equals(selected)) {
+                txtCorrecciones.setDisable(false);
+            } else {
+                txtCorrecciones.setDisable(true);
+            }
+        });
+  
     }
 
+    
+    private DegreeWorkService degreeWorkService;
 
+    public void setDegreeWorkService(DegreeWorkService service) {
+        this.degreeWorkService = service;
+    }
+
+    
+    
     public void setFormato(DegreeWork formato) {
         this.formato = formato;
         if (formato != null) {
-            String estudiante = formato.getIdEstudiante() != null ? formato.getIdEstudiante() : "";
+            String estudiante = formato.getEstudiante() != null ? formato.getEstudiante().getEmail() : "";
+
             String modalidad = formato.getModalidad() != null ? formato.getModalidad().name() : "";
             lblEstudiante.setText(estudiante + (modalidad.isEmpty() ? "" : " - " + modalidad));
 
@@ -132,6 +217,76 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             mostrarAlerta("Error", "No se pudo abrir el archivo (HostServices no inicializado).", Alert.AlertType.ERROR);
         }
     }
+
+    
+    @FXML
+    private void onEnviarCorrecciones() {
+        if (formato == null) {
+            mostrarAlerta("Error", "No hay un formato cargado.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        String estadoSeleccionado = cmbEstado.getValue();
+        if (estadoSeleccionado == null || estadoSeleccionado.isEmpty()) {
+            mostrarAlerta("Advertencia", "Debes seleccionar un estado.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        // Guardar correcciones solo si es NO ACEPTADO
+        if ("NO ACEPTADO".equals(estadoSeleccionado)) {
+            String correcciones = txtCorrecciones.getText();
+            if (correcciones == null || correcciones.trim().isEmpty()) {
+                mostrarAlerta("Advertencia", "Debes escribir correcciones para un NO ACEPTADO.", Alert.AlertType.WARNING);
+                return;
+            }
+            formato.setCorrecciones(correcciones); // 🔥 actualiza en el mismo objeto
+            formato.incrementNoAprobadoCount();
+        }
+
+        // Mapear a EstadoFormatoA real
+        switch (estadoSeleccionado) {
+            case "ACEPTADO":
+                formato.setEstado(co.unicauca.workflow.domain.entities.EstadoFormatoA.ACEPTADO);
+                break;
+            case "NO ACEPTADO":
+                formato.setEstado(co.unicauca.workflow.domain.entities.EstadoFormatoA.NO_ACEPTADO);
+                break;
+            case "RECHAZADO":
+                formato.setEstado(co.unicauca.workflow.domain.entities.EstadoFormatoA.RECHAZADO);
+                break;
+        }
+
+        
+        boolean exito = degreeWorkService.actualizarFormato(formato);
+        if (exito) {
+            // Mostrar mensaje
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("Éxito");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Correcciones enviadas y estado actualizado.");
+            alerta.showAndWait();
+
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementCoordinatorFormatA.fxml"));
+                Parent root = loader.load();
+
+                // Recuperar el controller para recargar la tabla
+                ManagementCoordinatorFormatAController controller = loader.getController();
+                controller.initialize(null, null); // fuerza recarga de la tabla
+
+                // Redirigir
+                txtCorrecciones.getScene().setRoot(root);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarAlerta("Error", "No se pudo volver a la vista de gestión.", Alert.AlertType.ERROR);
+            }
+        } else {
+            mostrarAlerta("Error", "No se pudo actualizar el estado.", Alert.AlertType.ERROR);
+        }
+
+    }
+
 
 
     
