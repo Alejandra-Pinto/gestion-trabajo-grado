@@ -1,9 +1,6 @@
 package co.unicauca.workflow.access;
 
-import co.unicauca.workflow.domain.entities.DegreeWork;
-import co.unicauca.workflow.domain.entities.EstadoFormatoA;
-import co.unicauca.workflow.domain.entities.Modalidad;
-
+import co.unicauca.workflow.domain.entities.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,18 +28,19 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
     private void createTableIfNotExists() {
         String sql = "CREATE TABLE IF NOT EXISTS degree_work ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "id_estudiante TEXT NOT NULL,"
-                + "id_profesor TEXT NOT NULL,"
+                + "id_estudiante TEXT NOT NULL,"       // email del estudiante
+                + "id_profesor TEXT NOT NULL,"         // email del director
                 + "titulo_proyecto TEXT NOT NULL,"
                 + "modalidad TEXT NOT NULL,"
                 + "fecha_actual TEXT NOT NULL,"
-                + "director_proyecto TEXT NOT NULL,"
-                + "codirector_proyecto TEXT,"
+                + "director_proyecto TEXT NOT NULL,"   // redundante, lo puedes unificar con id_profesor
+                + "codirector_proyecto TEXT,"          // email del codirector
                 + "objetivo_general TEXT NOT NULL,"
                 + "objetivos_especificos TEXT,"
                 + "archivo_pdf TEXT,"
                 + "carta_aceptacion_empresa TEXT,"
-                + "estado TEXT NOT NULL"
+                + "estado TEXT NOT NULL,"
+                + "correcciones TEXT"
                 + ");";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
@@ -54,22 +52,23 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
     @Override
     public boolean save(DegreeWork formato) {
         String sql = "INSERT INTO degree_work(id_estudiante, id_profesor, titulo_proyecto, modalidad, "
-                   + "fecha_actual, director_proyecto, codirector_proyecto, objetivo_general, "
-                   + "objetivos_especificos, archivo_pdf, carta_aceptacion_empresa, estado) "
-                   + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "fecha_actual, director_proyecto, codirector_proyecto, objetivo_general, "
+                + "objetivos_especificos, archivo_pdf, carta_aceptacion_empresa, estado, correcciones) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, formato.getIdEstudiante());
-            pstmt.setString(2, formato.getIdProfesor());
+            pstmt.setString(1, formato.getEstudiante().getEmail());
+            pstmt.setString(2, formato.getDirectorProyecto().getEmail());
             pstmt.setString(3, formato.getTituloProyecto());
             pstmt.setString(4, formato.getModalidad().name());
             pstmt.setString(5, formato.getFechaActual().toString());
-            pstmt.setString(6, formato.getDirectorProyecto());
-            pstmt.setString(7, formato.getCodirectorProyecto());
+            pstmt.setString(6, formato.getDirectorProyecto().getEmail()); // redundante
+            pstmt.setString(7, formato.getCodirectorProyecto() != null ? formato.getCodirectorProyecto().getEmail() : null);
             pstmt.setString(8, formato.getObjetivoGeneral());
             pstmt.setString(9, serializeObjetivos(formato.getObjetivosEspecificos()));
             pstmt.setString(10, formato.getArchivoPdf());
             pstmt.setString(11, formato.getCartaAceptacionEmpresa());
             pstmt.setString(12, formato.getEstado().name());
+            pstmt.setString(13, formato.getCorrecciones());
 
             int affected = pstmt.executeUpdate();
             if (affected == 0) return false;
@@ -120,22 +119,23 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         String sql = "UPDATE degree_work SET "
                 + "id_estudiante=?, id_profesor=?, titulo_proyecto=?, modalidad=?, fecha_actual=?, "
                 + "director_proyecto=?, codirector_proyecto=?, objetivo_general=?, objetivos_especificos=?, "
-                + "archivo_pdf=?, carta_aceptacion_empresa=?, estado=? "
+                + "archivo_pdf=?, carta_aceptacion_empresa=?, estado=?, correcciones=? "
                 + "WHERE id=?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, formato.getIdEstudiante());
-            pstmt.setString(2, formato.getIdProfesor());
+            pstmt.setString(1, formato.getEstudiante().getEmail());
+            pstmt.setString(2, formato.getDirectorProyecto().getEmail());
             pstmt.setString(3, formato.getTituloProyecto());
             pstmt.setString(4, formato.getModalidad().name());
             pstmt.setString(5, formato.getFechaActual().toString());
-            pstmt.setString(6, formato.getDirectorProyecto());
-            pstmt.setString(7, formato.getCodirectorProyecto());
+            pstmt.setString(6, formato.getDirectorProyecto().getEmail());
+            pstmt.setString(7, formato.getCodirectorProyecto() != null ? formato.getCodirectorProyecto().getEmail() : null);
             pstmt.setString(8, formato.getObjetivoGeneral());
             pstmt.setString(9, serializeObjetivos(formato.getObjetivosEspecificos()));
             pstmt.setString(10, formato.getArchivoPdf());
             pstmt.setString(11, formato.getCartaAceptacionEmpresa());
             pstmt.setString(12, formato.getEstado().name());
-            pstmt.setInt(13, formato.getId());
+            pstmt.setString(13, formato.getCorrecciones());
+            pstmt.setInt(14, formato.getId());
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -158,14 +158,27 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
 
     // Helpers
     private DegreeWork buildFromResultSet(ResultSet rs) throws SQLException {
+        // 🔹 Reconstruir objetos
+        Student estudiante = new Student();
+        estudiante.setEmail(rs.getString("id_estudiante"));
+
+        Teacher director = new Teacher();
+        director.setEmail(rs.getString("id_profesor"));
+
+        Teacher codirector = null;
+        String codirectorEmail = rs.getString("codirector_proyecto");
+        if (codirectorEmail != null && !codirectorEmail.isEmpty()) {
+            codirector = new Teacher();
+            codirector.setEmail(codirectorEmail);
+        }
+
         DegreeWork f = new DegreeWork(
-                rs.getString("id_estudiante"),
-                rs.getString("id_profesor"),
+                estudiante,
+                director,
                 rs.getString("titulo_proyecto"),
                 Modalidad.valueOf(rs.getString("modalidad")),
                 LocalDate.parse(rs.getString("fecha_actual")),
-                rs.getString("director_proyecto"),
-                rs.getString("codirector_proyecto"),
+                codirector,
                 rs.getString("objetivo_general"),
                 deserializeObjetivos(rs.getString("objetivos_especificos")),
                 rs.getString("archivo_pdf")
@@ -173,6 +186,7 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         f.setId(rs.getInt("id"));
         f.setEstado(EstadoFormatoA.valueOf(rs.getString("estado")));
         f.setCartaAceptacionEmpresa(rs.getString("carta_aceptacion_empresa"));
+        f.setCorrecciones(rs.getString("correcciones"));
         return f;
     }
 

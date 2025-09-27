@@ -3,6 +3,7 @@ package co.unicauca.workflow;
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.domain.entities.Student;
 import co.unicauca.workflow.service.DegreeWorkService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -64,25 +65,29 @@ public class ManagementCoordinatorFormatAController implements Initializable {
     }
     
     private void configurarColumnas() {
-        // Importante: usa SimpleStringProperty (import javafx.beans.property.SimpleStringProperty)
+        
         colTitulo.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 Optional.ofNullable(data.getValue().getTituloProyecto()).orElse("")));
-        colEstudiante.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
-                Optional.ofNullable(data.getValue().getIdEstudiante()).orElse("")));
+        colEstudiante.setCellValueFactory(data -> new SimpleStringProperty(
+                Optional.ofNullable(data.getValue().getEstudiante())
+                        .map(Student::getEmail)
+                        .orElse("")
+        ));
+
         // Convertimos el enum Modalidad a String (name() o toString())
         colModalidad.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 data.getValue().getModalidad() != null ? data.getValue().getModalidad().name() : ""));
-        // Fecha (LocalDate) -> String, con null-check
+        
         colFecha.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 data.getValue().getFechaActual() != null ? data.getValue().getFechaActual().toString() : ""));
 
-        // Columna con botón (uso TableCell<DegreeWork, Void> explícito)
+        // Columna con botón
         colAccion.setCellFactory(param -> new TableCell<DegreeWork, Void>() {
             private final Button btn = new Button("Revisar");
 
             {
                 btn.setOnAction(event -> {
-                    // Obtener el item directamente desde la TableRow: más robusto que getIndex()
+                    
                     DegreeWork seleccionado = (DegreeWork) getTableRow().getItem();
                     if (seleccionado != null) {
                         abrirVentanaRevision(seleccionado);
@@ -112,16 +117,14 @@ public class ManagementCoordinatorFormatAController implements Initializable {
     
     private void abrirVentanaRevision(DegreeWork formato) {
         try {
-            // carga la vista
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/CoordinatorReviewFormatA.fxml"));
             Parent root = loader.load();
 
-            // obtiene el controller y le pasa HostServices y el DegreeWork
             CoordinatorReviewFormatAController controller = loader.getController();
-            controller.setHostServices(App.getHostServicesInstance()); // importante
-            controller.setFormato(formato); // importante: este método debe existir en el controller
+            controller.setHostServices(App.getHostServicesInstance());
+            controller.setFormato(formato);
+            controller.setDegreeWorkService(service); // 🔥 aquí inyectas el service
 
-            // REEMPLAZAR la escena de la ventana actual (evita abrir una nueva)
             Stage currentStage = (Stage) tableFormatos.getScene().getWindow();
             currentStage.setScene(new Scene(root));
             currentStage.show();
@@ -130,6 +133,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
             e.printStackTrace();
         }
     }
+
 
 
 
@@ -157,9 +161,9 @@ public class ManagementCoordinatorFormatAController implements Initializable {
                     break;
 
                 case "Programa académico":
-                    // ⚠️ tu entidad no tiene "programa", así que por ahora ordeno por idEstudiante
+                    
                     List<DegreeWork> porPrograma = todosLosFormatos.stream()
-                            .sorted(Comparator.comparing(DegreeWork::getIdEstudiante))
+                            .sorted(Comparator.comparing(f -> f.getEstudiante() != null ? f.getEstudiante().getEmail() : ""))
                             .collect(Collectors.toList());
                     tableFormatos.getItems().setAll(porPrograma);
                     break;

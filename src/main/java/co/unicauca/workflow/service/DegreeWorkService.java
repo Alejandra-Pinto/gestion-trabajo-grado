@@ -77,4 +77,21 @@ public class DegreeWorkService extends Subject {
     public boolean rechazar(int id) {
         return cambiarEstado(id, EstadoFormatoA.RECHAZADO);
     }
+    
+    // Guardar correcciones de un formato específico
+    public boolean guardarCorrecciones(int id, String correcciones) {
+        DegreeWork formato = repository.findById(id);
+        if (formato == null) {
+            return false;
+        }
+
+        formato.setCorrecciones(correcciones);
+
+        boolean updated = repository.update(formato);
+        if (updated) {
+            this.notifyAllObserves(); // notificar cambios a observadores
+        }
+        return updated;
+    }
+
 }

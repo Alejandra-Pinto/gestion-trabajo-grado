@@ -1,24 +1,20 @@
 package co.unicauca.workflow.infra;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Subject {
-    ArrayList<Observer> observers;
-
-    public void Subject() {
-
-    }
+    private final List<Observer> observers = new ArrayList<>();
 
     /**
      * Agrega un observador
      *
-     * @param obs
+     * @param obs observador a registrar
      */
     public void addObserver(Observer obs) {
-        if (observers == null) {
-            observers = new ArrayList<>();
+        if (obs != null && !observers.contains(obs)) {
+            observers.add(obs);
         }
-        observers.add(obs);
     }
 
     /**

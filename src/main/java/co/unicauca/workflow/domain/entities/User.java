@@ -22,6 +22,8 @@ public abstract class User {
         this.status =  "ACEPTADO";
     }
     
+    public User(){}
+    
     // 🔹 Métodos getters/setters
     public String getFirstName() {
         return firstName;

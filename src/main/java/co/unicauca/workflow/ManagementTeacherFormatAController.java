@@ -202,18 +202,34 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
         try {
             // Construir objeto DegreeWork
+            
+            Student estudiante = new Student();
+            estudiante.setEmail(cbEstudiante.getValue());
+
+            Teacher director = new Teacher();
+            director.setEmail(cbDirector.getValue());
+
+            Teacher codirector = null;
+            if (cbCodirector.getValue() != null && !cbCodirector.getValue().isEmpty()) {
+                codirector = new Teacher();
+                codirector.setEmail(cbCodirector.getValue());
+            }
+
+            
             DegreeWork formato = new DegreeWork(
-                    cbEstudiante.getValue(), // estudiante (correo)
-                    usuarioActual != null ? usuarioActual.getEmail() : "docente@default.com",
+                    estudiante,
+                    director,
                     txtTituloTrabajo.getText(),
                     Modalidad.valueOf(cbModalidad.getValue()),
                     dpFechaActual.getValue(),
-                    cbDirector.getValue(), // director (correo)
-                    cbCodirector.getValue(), // codirector (correo o null)
+                    codirector,
                     txtObjetivoGeneral.getText(),
                     Arrays.asList(txtObjetivosEspecificos.getText().split(";")),
                     txtArchivoAdjunto.getText()
             );
+
+            
+            
             if ("PRACTICA_PROFESIONAL".equals(cbModalidad.getValue())) {
                 formato.setCartaAceptacionEmpresa(txtCartaAceptacion.getText());
             }
@@ -232,7 +248,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                 System.out.println("📋 Formatos guardados en la base de datos:");
                 for (DegreeWork dw : lista) {
                     System.out.println("ID: " + dw.getId()
-                            + " | Estudiante: " + dw.getIdEstudiante()
+                            + " | Estudiante: " + dw.getEstudiante().getEmail()
                             + " | Título: " + dw.getTituloProyecto()
                             + " | Director: " + dw.getDirectorProyecto()
                             + " | Carta: " + dw.getCartaAceptacionEmpresa()

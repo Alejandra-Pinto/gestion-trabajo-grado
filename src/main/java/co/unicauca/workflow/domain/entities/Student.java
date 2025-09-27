@@ -9,7 +9,9 @@ public class Student extends User {
         this.setStatus("ACEPTADO");
     }
 
-    
+    public Student() {
+        super();
+    }
 
     @Override
     public void showDashboard() {
