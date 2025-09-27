@@ -29,7 +29,7 @@
                            </image>
                         </ImageView>
                         
-                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Coordinador" textFill="#111f63">
+                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Coordinador" textFill="#111f63" onAction="#onBtnUsuarioClicked">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -116,6 +116,7 @@
                   <Image url="@images/logo.png" />
                </image>
             </ImageView>
+            <Button layoutX="580.0" layoutY="10.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
          </children>
       </Pane>
    </children>

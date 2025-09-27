@@ -1,7 +1,12 @@
 package co.unicauca.workflow;
 
+import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.domain.entities.User;
+import co.unicauca.workflow.service.AdminService;
 import co.unicauca.workflow.service.DegreeWorkService;
+import co.unicauca.workflow.service.SessionManager;
+import co.unicauca.workflow.service.UserService;
 import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,14 +18,18 @@ import javafx.scene.layout.VBox;
 import javafx.geometry.Insets;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ToggleButton;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 
@@ -57,6 +66,13 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
     
     @FXML
     private ComboBox<String> cmbEstado;
+    @FXML private ToggleButton btnUsuario;
+    
+    private User usuarioActual;
+
+    public void setUsuarioActual(User usuario) {
+        this.usuarioActual = usuario;
+    }
 
 
     @Override
@@ -286,8 +302,49 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
         }
 
     }
+    @FXML
+    private void handleLogout() {
+        try {
+            SessionManager.clearSession();
 
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login - Workflow");
 
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    @FXML
+    private void onBtnUsuarioClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
+            Parent root = loader.load();
+
+            RolController rolController = loader.getController();
+
+            // Crear servicios
+            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
+
+            // Pasar usuario + servicios al controller
+            if (usuarioActual != null) {
+                rolController.setUsuario(usuarioActual, userService, adminService);
+            }
+
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Información del Usuario");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
 
     
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
