@@ -3,13 +3,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -137,7 +137,7 @@
                            </font>
                         </Label>
                         <ComboBox fx:id="comboClasificar" layoutX="198.0" layoutY="153.0" prefWidth="150.0" />
-                        <VBox fx:id="pnEstadoFormato" layoutX="97.0" layoutY="211.0" prefHeight="421.0" prefWidth="947.0" spacing="10" style="-fx-padding: 10;" />
+                        <TableView layoutX="85.0" layoutY="254.0" prefHeight="318.0" prefWidth="906.0" />
                      </children>
                   </AnchorPane>
               </items>

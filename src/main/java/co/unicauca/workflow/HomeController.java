@@ -18,8 +18,6 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -63,6 +61,7 @@ public class HomeController implements Initializable {
         btnEvaluarPropuestas.setVisible(false);
         btnEvaluarAnteproyectos.setVisible(false);
         System.out.println("HomeController inicializado");
+        cargarHome(); // Cargar la interfaz inicial
     }
 
     public void setUsuario(User usuario) {
@@ -89,6 +88,36 @@ public class HomeController implements Initializable {
         }
     }
 
+    private void cargarHome() {
+        try {
+            URL fxmlUrl = getClass().getResource("HomeContent.fxml");
+            if (fxmlUrl == null) {
+                System.err.println("Error: No se encontró HomeContent.fxml");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No se pudo encontrar el archivo HomeContent.fxml");
+                alert.showAndWait();
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            Parent homeContent = loader.load();
+            contentPane.getChildren().setAll(homeContent);
+            AnchorPane.setTopAnchor(homeContent, 0.0);
+            AnchorPane.setBottomAnchor(homeContent, 0.0);
+            AnchorPane.setLeftAnchor(homeContent, 0.0);
+            AnchorPane.setRightAnchor(homeContent, 0.0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar HomeContent.fxml: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Error al cargar la interfaz inicial: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     @FXML
     private void onBtnFormatoDocenteClicked() {
         System.out.println("Clic en btnFormatoDocente");
@@ -103,7 +132,6 @@ public class HomeController implements Initializable {
         }
 
         try {
-            // Verificar la ruta del FXML
             URL fxmlUrl = getClass().getResource("GestionPropuestaDocente.fxml");
             if (fxmlUrl == null) {
                 System.err.println("Error: No se encontró GestionPropuestaDocente.fxml");
@@ -114,19 +142,60 @@ public class HomeController implements Initializable {
                 alert.showAndWait();
                 return;
             }
-
-            // Cargar el FXML con el controlador asignado manualmente
-            System.out.println("Cargando GestionPropuestaDocente.fxml desde: " + fxmlUrl);
             FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            GestionPropuestaDocenteController controller = new GestionPropuestaDocenteController(usuario);
+            GestionPropuestaDocenteController controller = new GestionPropuestaDocenteController(usuario, contentPane);
             loader.setController(controller);
-            Parent newRoot = loader.load();
+            Parent newContent = loader.load();
+            contentPane.getChildren().setAll(newContent);
+            AnchorPane.setTopAnchor(newContent, 0.0);
+            AnchorPane.setBottomAnchor(newContent, 0.0);
+            AnchorPane.setLeftAnchor(newContent, 0.0);
+            AnchorPane.setRightAnchor(newContent, 0.0);
+            System.out.println("Contenido cargado exitosamente");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar GestionPropuestaDocente.fxml: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Error al cargar la interfaz de gestión de propuestas: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
 
-            // Obtener la escena actual y reemplazar su raíz
-            Stage stage = (Stage) btnFormatoDocente.getScene().getWindow();
-            Scene currentScene = stage.getScene();
-            currentScene.setRoot(newRoot);
+    @FXML
+    private void onBtnAnteproyectoDocenteClicked() {
+        System.out.println("Clic en btnAnteproyectoDocente");
+        if (!(usuario instanceof Teacher)) {
+            System.out.println("Usuario no es docente, no se carga GestionPropuestaDocente.fxml");
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Acceso denegado");
+            alert.setHeaderText(null);
+            alert.setContentText("Solo los docentes pueden acceder a esta funcionalidad.");
+            alert.showAndWait();
+            return;
+        }
 
+        try {
+            URL fxmlUrl = getClass().getResource("GestionPropuestaDocente.fxml"); // Usamos el mismo FXML por ahora
+            if (fxmlUrl == null) {
+                System.err.println("Error: No se encontró GestionPropuestaDocente.fxml");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("No se pudo encontrar el archivo GestionPropuestaDocente.fxml");
+                alert.showAndWait();
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            GestionPropuestaDocenteController controller = new GestionPropuestaDocenteController(usuario, contentPane);
+            loader.setController(controller);
+            Parent newContent = loader.load();
+            contentPane.getChildren().setAll(newContent);
+            AnchorPane.setTopAnchor(newContent, 0.0);
+            AnchorPane.setBottomAnchor(newContent, 0.0);
+            AnchorPane.setLeftAnchor(newContent, 0.0);
+            AnchorPane.setRightAnchor(newContent, 0.0);
             System.out.println("Contenido cargado exitosamente");
         } catch (IOException e) {
             e.printStackTrace();
