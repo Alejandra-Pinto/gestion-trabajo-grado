@@ -76,14 +76,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private Button btnAbrirCarta;
 
-    // TableView para listar anteproyectos
-    @FXML
-    private TableView<DegreeWork> tableAnteproyectos;
-    @FXML
-    private TableColumn<DegreeWork, String> colTitulo;
-    @FXML
-    private TableColumn<DegreeWork, String> colEstado;
-
     private User usuarioActual;
     private File archivoAdjunto;
     private DegreeWork formatoActual;
@@ -104,9 +96,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         cbDirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
         cbCodirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
 
-        // Configurar TableView
-        colTitulo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTituloProyecto()));
-        colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado().name()));
 
         cbModalidad.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("PRACTICA_PROFESIONAL".equals(newVal)) {
@@ -118,11 +107,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                 txtCartaAceptacion.clear();
             }
         });
-
-        // Cargar anteproyectos si el usuario ya está set (por si initialize se llama después)
-        if (usuarioActual instanceof Teacher) {
-            cargarAnteproyectos(((Teacher) usuarioActual).getEmail());
-        }
     }
 
     public void setUsuario(User usuario) {
@@ -134,11 +118,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         } else {
             btnUsuario.setText(usuario.getFirstName());
         }
-
-        // Cargar anteproyectos al setear usuario si es docente
-        if (usuario instanceof Teacher) {
-            cargarAnteproyectos(((Teacher) usuario).getEmail());
-        }
     }
 
     public void setFormato(DegreeWork formato) {
@@ -148,28 +127,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         }
     }
 
-    public void setFormatos(List<DegreeWork> formatos) {
-        this.formatos = formatos;
-        actualizarTableView();
-    }
-
-    private void cargarAnteproyectos(String teacherEmail) {
-        try {
-            List<DegreeWork> anteproyectos = service.listarDegreeWorksPorDocente(teacherEmail);
-            this.formatos = anteproyectos;
-            actualizarTableView();
-            System.out.println("Anteproyectos cargados para docente " + teacherEmail + ": " + anteproyectos.size());
-        } catch (Exception e) {
-            System.err.println("Error cargando anteproyectos: " + e.getMessage());
-            mostrarAlerta("Error", "No se pudieron cargar los anteproyectos: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
-
-    private void actualizarTableView() {
-        if (tableAnteproyectos != null && formatos != null) {
-            tableAnteproyectos.setItems(FXCollections.observableArrayList(formatos));
-        }
-    }
 
     private void cargarDatosFormato(DegreeWork formato) {
         cbEstudiante.setValue(formato.getEstudiante().getEmail());

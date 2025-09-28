@@ -47,12 +47,14 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         } catch (SQLException e) {
             System.out.println("Error creando tabla: " + e.getMessage());
         }
+        /*
         String addColumnSql = "ALTER TABLE degree_work ADD COLUMN no_aprobado_count INTEGER DEFAULT 0;";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(addColumnSql);
         } catch (SQLException e) {
             System.out.println("Error añadiendo columna: " + e.getMessage());
         }
+        */
     }
 
     @Override
