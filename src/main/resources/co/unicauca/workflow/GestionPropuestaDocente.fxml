@@ -30,7 +30,7 @@
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
-                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" visible="false">
+                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" visible="false" onAction="#onBtnUsuarioClicked">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -141,9 +141,9 @@
                         <ComboBox fx:id="comboClasificar" layoutX="198.0" layoutY="153.0" prefWidth="150.0" />
                         <TableView fx:id="tblEstadosFormato" layoutX="97.0" layoutY="211.0" prefHeight="421.0" prefWidth="947.0">
                             <columns>
-                                <TableColumn fx:id="colNumeroFormato" text="Número de Formato" prefWidth="373.5" />
-                                <TableColumn fx:id="colEstado" text="Estado" prefWidth="373.5" />
-                                <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="200" />
+                                <TableColumn fx:id="colNumeroFormato" prefWidth="373.5" text="Número de Formato" />
+                                <TableColumn fx:id="colEstado" prefWidth="373.5" text="Estado" />
+                                <TableColumn fx:id="colAcciones" prefWidth="200" text="Acciones" />
                             </columns>
                         </TableView>
                         <Button fx:id="btnAgregarPropuesta" layoutX="923.0" layoutY="642.0" mnemonicParsing="false" onAction="#onAgregarPropuesta" style="-fx-background-color: #111F63;" text="AGREGAR PROPUESTA" textFill="WHITE" />
@@ -156,6 +156,7 @@
                   <Image url="@images/logo.png" />
                </image>
             </ImageView>
+            <Button layoutX="1389.0" layoutY="44.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
          </children>
       </Pane>
    </children>

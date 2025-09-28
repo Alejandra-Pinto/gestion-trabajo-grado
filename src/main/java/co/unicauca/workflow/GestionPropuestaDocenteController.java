@@ -10,6 +10,9 @@ import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.service.DegreeWorkService;
 import co.unicauca.workflow.domain.entities.DegreeWork;
 import co.unicauca.workflow.domain.entities.EstadoFormatoA;
+import co.unicauca.workflow.service.AdminService;
+import co.unicauca.workflow.service.SessionManager;
+import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,13 +28,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -83,6 +89,7 @@ public class GestionPropuestaDocenteController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("Inicializando GestionPropuestaDocenteController");
         // Configurar visibilidad de botones según el rol
+        usuario = (User) SessionManager.getCurrentUser();
         if (usuario instanceof Teacher) {
             btnRol.setVisible(true);
             btnFormatoDocente.setVisible(true);
@@ -261,5 +268,66 @@ public class GestionPropuestaDocenteController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    @FXML
+    private void handleLogout() {
+        try {
+            SessionManager.clearSession();
+
+            Stage stage = (Stage) btnRol.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login - Workflow");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    @FXML
+    private void onBtnUsuarioClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
+            Parent root = loader.load();
+
+            RolController rolController = loader.getController();
+
+            // Crear servicios
+            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
+
+            // Pasar usuario + servicios al controller
+            if (usuario != null) {
+                rolController.setUsuario(usuario, userService, adminService);
+            }
+
+            Stage stage = (Stage) btnRol.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Información del Usuario");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    
+    private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+
+        Label etiqueta = new Label(mensaje);
+        etiqueta.setWrapText(true);
+        etiqueta.setStyle("-fx-font-family: 'Segoe UI'; -fx-font-size: 14px; -fx-text-fill: #2c3e50;");
+
+        VBox contenedor = new VBox(etiqueta);
+        contenedor.setSpacing(10);
+        contenedor.setPadding(new Insets(10));
+
+        alerta.getDialogPane().setContent(contenedor);
+        alerta.showAndWait();
     }
 }

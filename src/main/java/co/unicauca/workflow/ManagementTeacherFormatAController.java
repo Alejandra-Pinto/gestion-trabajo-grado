@@ -3,9 +3,12 @@ package co.unicauca.workflow;
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.domain.entities.*;
+import co.unicauca.workflow.service.AdminService;
 import co.unicauca.workflow.service.DegreeWorkService;
+import co.unicauca.workflow.service.SessionManager;
 import co.unicauca.workflow.service.UserService;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
@@ -17,7 +20,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.application.HostServices;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class ManagementTeacherFormatAController implements Initializable, Hostable {
     private HostServices hostServices;
@@ -74,7 +81,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        usuarioActual = (User) SessionManager.getCurrentUser();
 
         cbModalidad.getItems().setAll("INVESTIGACION", "PRACTICA_PROFESIONAL");
 
@@ -309,7 +316,33 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                     Alert.AlertType.WARNING);
         }
     }
+    @FXML
+    private void onBtnUsuarioClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
+            Parent root = loader.load();
 
+            RolController rolController = loader.getController();
+
+            // Crear servicios
+            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
+
+            // Pasar usuario + servicios al controller
+            if (usuarioActual != null) {
+                rolController.setUsuario(usuarioActual, userService, adminService);
+            }
+
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Información del Usuario");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
 
     @FXML
     private void onAbrirCarta(ActionEvent event) {
@@ -325,9 +358,32 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         }
         hostServices.showDocument(archivo.toURI().toString());
     }
+    
+    @FXML
+    private void handleLogout() {
+        try {
+            SessionManager.clearSession();
 
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+            Parent root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login - Workflow");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }  
     
-    
+    @FXML
+    private void onBtnFormatoDocenteClicked() {
+        if (!(usuarioActual instanceof Teacher)) {
+            mostrarAlerta("Acceso denegado", "Solo los docentes pueden acceder a esta funcionalidad.", Alert.AlertType.WARNING);
+            return;
+        }
+        cargarVistaConUsuario("/co/unicauca/workflow/GestionPropuestaDocente.fxml", "Gestión de Propuestas Docente");
+    }
     
     private void limpiarCampos() {
         cbEstudiante.getSelectionModel().clearSelection(); // ✅ ComboBox en vez de TextField
@@ -358,5 +414,30 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
         alerta.getDialogPane().setContent(contenedor);
         alerta.showAndWait();
+    }
+    
+    private void cargarVistaConUsuario(String fxml, String tituloVentana) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+            Parent root = loader.load();
+
+            // Pasar usuario al nuevo controlador si existe setUsuario
+            Object controller = loader.getController();
+            if (controller != null) {
+                try {
+                    controller.getClass().getMethod("setUsuario", User.class).invoke(controller, usuarioActual);
+                } catch (Exception e) {
+                    System.out.println("El controlador no tiene setUsuario(User): " + controller.getClass().getSimpleName());
+                }
+            }
+
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle(tituloVentana);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "Error al cargar: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }
