@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.GestionPropuestaDocenteController">
+<AnchorPane id="AnchorPane" fx:id="mainAnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.GestionPropuestaDocenteController">
    <children>
       <Pane layoutX="0.0" layoutY="0.0" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
          <effect>
@@ -30,7 +30,7 @@
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
-                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" visible="false" onAction="#onBtnUsuarioClicked">
+                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" visible="false" onAction="#onBtnRolClicked">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -42,7 +42,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnAnteproyectoDocente" graphicTextGap="20" layoutX="3.0" layoutY="206.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Docente" visible="false">
+                        <ToggleButton fx:id="btnAnteproyectoDocente" graphicTextGap="20" layoutX="3.0" layoutY="206.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Docente" visible="false" onAction="#onBtnAnteproyectoDocenteClicked">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -54,7 +54,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnFormatoDocente" graphicTextGap="20" layoutX="3.0" layoutY="103.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Docente" visible="false">
+                        <ToggleButton fx:id="btnFormatoDocente" graphicTextGap="20" layoutX="3.0" layoutY="103.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Docente" visible="false" onAction="#onBtnFormatoDocenteClicked">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -66,7 +66,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnFormatoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="309.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Estudiante" visible="false">
+                        <ToggleButton fx:id="btnFormatoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="309.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Estudiante" visible="false" onAction="#onBtnFormatoEstudianteClicked">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -78,7 +78,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnAnteproyectoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="412.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Estudiante" visible="false">
+                        <ToggleButton fx:id="btnAnteproyectoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="412.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Estudiante" visible="false" onAction="#onBtnAnteproyectoEstudianteClicked">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -90,7 +90,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnEvaluarPropuestas" graphicTextGap="20" layoutX="3.0" layoutY="515.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar propuestas" visible="false">
+                        <ToggleButton fx:id="btnEvaluarPropuestas" graphicTextGap="20" layoutX="3.0" layoutY="515.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar propuestas" visible="false" onAction="#onBtnEvaluarPropuestasClicked">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -102,7 +102,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnEvaluarAnteproyectos" graphicTextGap="20" layoutX="3.0" layoutY="618.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar anteproyectos" visible="false">
+                        <ToggleButton fx:id="btnEvaluarAnteproyectos" graphicTextGap="20" layoutX="3.0" layoutY="618.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar anteproyectos" visible="false" onAction="#onBtnEvaluarAnteproyectosClicked">
                            <font>
                               <Font size="16.0" />
                            </font>
