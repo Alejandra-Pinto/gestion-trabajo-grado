@@ -46,7 +46,11 @@ public class DegreeWorkService extends Subject {
         DegreeWork formato = repository.findById(id);
         if (formato != null) {
             formato.setEstado(nuevoEstado);
-            return repository.update(formato);
+            boolean updated = repository.update(formato);
+            if (updated) {
+                this.notifyAllObserves(); // 🔔 notificar
+            }
+            return updated;
         }
         return false;
     }
@@ -54,7 +58,9 @@ public class DegreeWorkService extends Subject {
     // Avanzar evaluación
     public boolean avanzarEvaluacion(int id) {
         DegreeWork formato = repository.findById(id);
-        if (formato == null) return false;
+        if (formato == null) {
+            return false;
+        }
 
         switch (formato.getEstado()) {
             case PRIMERA_EVALUACION:
@@ -70,13 +76,23 @@ public class DegreeWorkService extends Subject {
                 System.out.println("El formato ya fue evaluado: " + formato.getEstado());
                 return false;
         }
-        return repository.update(formato);
+
+        boolean updated = repository.update(formato);
+        if (updated) {
+            this.notifyAllObserves(); // 🔔 notificar
+        }
+        return updated;
     }
 
     // Rechazar
     public boolean rechazar(int id) {
-        return cambiarEstado(id, EstadoFormatoA.RECHAZADO);
+        boolean updated = cambiarEstado(id, EstadoFormatoA.RECHAZADO);
+        if (updated) {
+            this.notifyAllObserves(); // 🔔 notificar
+        }
+        return updated;
     }
+
     
     // Guardar correcciones de un formato específico
     public boolean guardarCorrecciones(int id, String correcciones) {
