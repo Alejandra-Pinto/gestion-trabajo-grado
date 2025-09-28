@@ -28,7 +28,6 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.Button;
 import java.util.Optional;
 
-
 public class ManagementCoordinatorFormatAController implements Initializable {
 
     @FXML
@@ -67,8 +66,6 @@ public class ManagementCoordinatorFormatAController implements Initializable {
         this.usuarioActual = usuario;
     }
 
-    
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
@@ -81,7 +78,6 @@ public class ManagementCoordinatorFormatAController implements Initializable {
     }
 
     private void configurarColumnas() {
-        
         colTitulo.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 Optional.ofNullable(data.getValue().getTituloProyecto()).orElse("")));
         colEstudiante.setCellValueFactory(data -> new SimpleStringProperty(
@@ -107,7 +103,6 @@ public class ManagementCoordinatorFormatAController implements Initializable {
 
             {
                 btn.setOnAction(event -> {
-                    
                     DegreeWork seleccionado = (DegreeWork) getTableRow().getItem();
                     if (seleccionado != null) {
                         abrirVentanaRevision(seleccionado);
@@ -123,7 +118,6 @@ public class ManagementCoordinatorFormatAController implements Initializable {
         });
     }
 
-    
     private void cargarFormatos() {
         try {
             todosLosFormatos = service.listarDegreeWorks();
@@ -137,13 +131,18 @@ public class ManagementCoordinatorFormatAController implements Initializable {
                     ));
 
             List<DegreeWork> ultimos = new ArrayList<>(ultimosPorEstudiante.values());
-
+            // Aplicar lógica de estados al cargar
+            for (DegreeWork formato : ultimos) {
+                service.aplicarLogicaEstados(formato);
+                service.actualizarFormato(formato); // Guardar cambios si aplica
+            }
             tableFormatos.getItems().setAll(ultimos);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void onBtnUsuarioClicked() {
         try {
@@ -191,10 +190,6 @@ public class ManagementCoordinatorFormatAController implements Initializable {
         }
     }
 
-
-
-
-    
     private void inicializarComboBox() {
         comboClasificar.getItems().addAll(
                 "Todos",
@@ -213,8 +208,6 @@ public class ManagementCoordinatorFormatAController implements Initializable {
             aplicarFiltro(comboClasificar.getValue());
         });
     }
-
-
 
     private void aplicarFiltro(String opcion) {
         if (opcion == null) {
@@ -285,6 +278,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
                 break;
         }
     }
+
     @FXML
     private void handleLogout() {
         try {
@@ -301,6 +295,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
             mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

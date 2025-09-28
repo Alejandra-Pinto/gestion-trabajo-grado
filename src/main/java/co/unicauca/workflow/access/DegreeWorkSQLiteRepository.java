@@ -28,19 +28,19 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
     private void createTableIfNotExists() {
         String sql = "CREATE TABLE IF NOT EXISTS degree_work ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "id_estudiante TEXT NOT NULL,"       // email del estudiante
-                + "director_proyecto TEXT NOT NULL,"   // email del director
+                + "id_estudiante TEXT NOT NULL,"
+                + "director_proyecto TEXT NOT NULL,"
                 + "titulo_proyecto TEXT NOT NULL,"
                 + "modalidad TEXT NOT NULL,"
                 + "fecha_actual TEXT NOT NULL,"
-                
-                + "codirector_proyecto TEXT,"          // email del codirector
+                + "codirector_proyecto TEXT,"
                 + "objetivo_general TEXT NOT NULL,"
                 + "objetivos_especificos TEXT,"
                 + "archivo_pdf TEXT,"
                 + "carta_aceptacion_empresa TEXT,"
                 + "estado TEXT NOT NULL,"
-                + "correcciones TEXT"
+                + "correcciones TEXT,"
+                + "no_aprobado_count INTEGER DEFAULT 0"
                 + ");";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
@@ -53,15 +53,14 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
     public boolean save(DegreeWork formato) {
         String sql = "INSERT INTO degree_work(id_estudiante, titulo_proyecto, modalidad, "
                 + "fecha_actual, director_proyecto, codirector_proyecto, objetivo_general, "
-                + "objetivos_especificos, archivo_pdf, carta_aceptacion_empresa, estado, correcciones) "
+                + "objetivos_especificos, archivo_pdf, carta_aceptacion_empresa, estado, correcciones, no_aprobado_count) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, formato.getEstudiante().getEmail());
-            
             pstmt.setString(2, formato.getTituloProyecto());
             pstmt.setString(3, formato.getModalidad().name());
             pstmt.setString(4, formato.getFechaActual().toString());
-            pstmt.setString(5, formato.getDirectorProyecto().getEmail()); // redundante
+            pstmt.setString(5, formato.getDirectorProyecto().getEmail());
             pstmt.setString(6, formato.getCodirectorProyecto() != null ? formato.getCodirectorProyecto().getEmail() : null);
             pstmt.setString(7, formato.getObjetivoGeneral());
             pstmt.setString(8, serializeObjetivos(formato.getObjetivosEspecificos()));
@@ -69,6 +68,7 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
             pstmt.setString(10, formato.getCartaAceptacionEmpresa());
             pstmt.setString(11, formato.getEstado().name());
             pstmt.setString(12, formato.getCorrecciones());
+            pstmt.setInt(13, formato.getNoAprobadoCount());
 
             int affected = pstmt.executeUpdate();
             if (affected == 0) return false;
@@ -114,12 +114,28 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         return list;
     }
 
+    
+    public List<DegreeWork> listByTeacher(String teacherEmail) {
+        List<DegreeWork> list = new ArrayList<>();
+        String sql = "SELECT * FROM degree_work WHERE director_proyecto = ? ORDER BY id";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, teacherEmail);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                list.add(buildFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error listando DegreeWork por docente: " + e.getMessage());
+        }
+        return list;
+    }
+
     @Override
     public boolean update(DegreeWork formato) {
         String sql = "UPDATE degree_work SET "
                 + "id_estudiante=?, titulo_proyecto=?, modalidad=?, fecha_actual=?, "
                 + "director_proyecto=?, codirector_proyecto=?, objetivo_general=?, objetivos_especificos=?, "
-                + "archivo_pdf=?, carta_aceptacion_empresa=?, estado=?, correcciones=? "
+                + "archivo_pdf=?, carta_aceptacion_empresa=?, estado=?, correcciones=?, no_aprobado_count=? "
                 + "WHERE id=?";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, formato.getEstudiante().getEmail());
@@ -134,7 +150,8 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
             pstmt.setString(10, formato.getCartaAceptacionEmpresa());
             pstmt.setString(11, formato.getEstado().name());
             pstmt.setString(12, formato.getCorrecciones());
-            pstmt.setInt(13, formato.getId());
+            pstmt.setInt(13, formato.getNoAprobadoCount());
+            pstmt.setInt(14, formato.getId());
 
             return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -155,9 +172,22 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         }
     }
 
-    // Helpers
+    @Override
+    public DegreeWork findLatestByStudent(String studentEmail) {
+        String sql = "SELECT * FROM degree_work WHERE id_estudiante = ? ORDER BY id DESC LIMIT 1";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentEmail);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return buildFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error consultando última versión: " + e.getMessage());
+        }
+        return null;
+    }
+
     private DegreeWork buildFromResultSet(ResultSet rs) throws SQLException {
-        // 🔹 Reconstruir objetos
         Student estudiante = new Student();
         estudiante.setEmail(rs.getString("id_estudiante"));
 
@@ -186,6 +216,7 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         f.setEstado(EstadoFormatoA.valueOf(rs.getString("estado")));
         f.setCartaAceptacionEmpresa(rs.getString("carta_aceptacion_empresa"));
         f.setCorrecciones(rs.getString("correcciones"));
+        f.setNoAprobadoCount(rs.getInt("no_aprobado_count"));
         return f;
     }
 

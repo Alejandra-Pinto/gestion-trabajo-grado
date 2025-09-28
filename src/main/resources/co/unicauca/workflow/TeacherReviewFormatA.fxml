@@ -87,10 +87,17 @@
 
                   <TextArea fx:id="txtCorrecciones" layoutX="63.0" layoutY="226.0" prefHeight="300.0" prefWidth="940.0" />
 
+                  <Button fx:id="btnResubir" layoutX="63.0" layoutY="540.0" mnemonicParsing="false" onAction="#onResubirFormato" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #111F63;" text="Re-subir formato corregido" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Button>
+
                   <Label fx:id="lblComite" layoutX="845.0" layoutY="556.0" text="Comité Evaluador">
                      <font>
                         <Font size="16.0" />
-                     </font></Label>
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
         </items>

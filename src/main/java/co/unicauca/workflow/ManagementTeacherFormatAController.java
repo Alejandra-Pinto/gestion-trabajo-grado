@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.application.HostServices;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,11 +30,13 @@ import javafx.stage.Stage;
 
 public class ManagementTeacherFormatAController implements Initializable, Hostable {
     private HostServices hostServices;
+    private List<DegreeWork> formatos; // Lista de formatos para mostrar
 
     @Override
     public void setHostServices(HostServices hs) {
         this.hostServices = hs;
     }
+
     // Botones principales
     @FXML
     private Button btnAdjuntarDocumento;
@@ -60,7 +64,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private TextField txtArchivoAdjunto;
 
-    //para la carta de aceptación
+    // Para la carta de aceptación
     @FXML
     private Label lblCartaAceptacion;
     @FXML
@@ -72,32 +76,38 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private Button btnAbrirCarta;
 
+    // TableView para listar anteproyectos
+    @FXML
+    private TableView<DegreeWork> tableAnteproyectos;
+    @FXML
+    private TableColumn<DegreeWork, String> colTitulo;
+    @FXML
+    private TableColumn<DegreeWork, String> colEstado;
 
     private User usuarioActual;
-    
     private File archivoAdjunto;
-
+    private DegreeWork formatoActual;
     private DegreeWorkService service;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        usuarioActual = (User) SessionManager.getCurrentUser();
-
         cbModalidad.getItems().setAll("INVESTIGACION", "PRACTICA_PROFESIONAL");
 
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
         service = new DegreeWorkService(repo);
 
-        // 🔹 Cargar estudiantes y profesores
         UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
-
         List<User> estudiantes = userService.listarPorRol("STUDENT");
         List<User> profesores = userService.listarPorRol("TEACHER");
 
         cbEstudiante.getItems().setAll(estudiantes.stream().map(User::getEmail).toList());
         cbDirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
         cbCodirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
-        
+
+        // Configurar TableView
+        colTitulo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTituloProyecto()));
+        colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado().name()));
+
         cbModalidad.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("PRACTICA_PROFESIONAL".equals(newVal)) {
                 lblCartaAceptacion.setVisible(true);
@@ -109,8 +119,11 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             }
         });
 
+        // Cargar anteproyectos si el usuario ya está set (por si initialize se llama después)
+        if (usuarioActual instanceof Teacher) {
+            cargarAnteproyectos(((Teacher) usuarioActual).getEmail());
+        }
     }
-
 
     public void setUsuario(User usuario) {
         this.usuarioActual = usuario;
@@ -120,6 +133,60 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             btnUsuario.setText("Docente: " + usuario.getFirstName());
         } else {
             btnUsuario.setText(usuario.getFirstName());
+        }
+
+        // Cargar anteproyectos al setear usuario si es docente
+        if (usuario instanceof Teacher) {
+            cargarAnteproyectos(((Teacher) usuario).getEmail());
+        }
+    }
+
+    public void setFormato(DegreeWork formato) {
+        this.formatoActual = formato;
+        if (formato != null) {
+            cargarDatosFormato(formato);
+        }
+    }
+
+    public void setFormatos(List<DegreeWork> formatos) {
+        this.formatos = formatos;
+        actualizarTableView();
+    }
+
+    private void cargarAnteproyectos(String teacherEmail) {
+        try {
+            List<DegreeWork> anteproyectos = service.listarDegreeWorksPorDocente(teacherEmail);
+            this.formatos = anteproyectos;
+            actualizarTableView();
+            System.out.println("Anteproyectos cargados para docente " + teacherEmail + ": " + anteproyectos.size());
+        } catch (Exception e) {
+            System.err.println("Error cargando anteproyectos: " + e.getMessage());
+            mostrarAlerta("Error", "No se pudieron cargar los anteproyectos: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private void actualizarTableView() {
+        if (tableAnteproyectos != null && formatos != null) {
+            tableAnteproyectos.setItems(FXCollections.observableArrayList(formatos));
+        }
+    }
+
+    private void cargarDatosFormato(DegreeWork formato) {
+        cbEstudiante.setValue(formato.getEstudiante().getEmail());
+        cbDirector.setValue(formato.getDirectorProyecto().getEmail());
+        if (formato.getCodirectorProyecto() != null) {
+            cbCodirector.setValue(formato.getCodirectorProyecto().getEmail());
+        }
+        txtTituloTrabajo.setText(formato.getTituloProyecto());
+        cbModalidad.setValue(formato.getModalidad().name());
+        dpFechaActual.setValue(formato.getFechaActual());
+        txtObjetivoGeneral.setText(formato.getObjetivoGeneral());
+        txtObjetivosEspecificos.setText(String.join(";", formato.getObjetivosEspecificos()));
+        txtArchivoAdjunto.setText(formato.getArchivoPdf());
+        if ("PRACTICA_PROFESIONAL".equals(formato.getModalidad().name())) {
+            txtCartaAceptacion.setText(formato.getCartaAceptacionEmpresa());
+            lblCartaAceptacion.setVisible(true);
+            hbCartaAceptacion.setVisible(true);
         }
     }
 
@@ -137,13 +204,11 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
         if (archivoSeleccionado != null) {
             try {
-                // Carpeta dentro del proyecto
                 File carpetaDestino = new File("Documents/formatos");
                 if (!carpetaDestino.exists()) {
                     carpetaDestino.mkdirs();
                 }
 
-                // Copiar el archivo
                 File destino = new File(carpetaDestino, archivoSeleccionado.getName());
                 java.nio.file.Files.copy(
                         archivoSeleccionado.toPath(),
@@ -151,7 +216,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                         java.nio.file.StandardCopyOption.REPLACE_EXISTING
                 );
 
-                // ✅ Guardamos la ruta relativa (NO absolutePath)
                 String rutaRelativa = "formatos/" + archivoSeleccionado.getName();
                 txtArchivoAdjunto.setText(rutaRelativa);
 
@@ -170,9 +234,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         }
     }
 
-
-
-
     @FXML
     private void onAbrirArchivo(ActionEvent event) {
         String ruta = txtArchivoAdjunto.getText();
@@ -180,20 +241,16 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             mostrarAlerta("Sin archivo", "No hay ningún archivo seleccionado.", Alert.AlertType.WARNING);
             return;
         }
-
         File archivo = new File(ruta);
         if (!archivo.exists()) {
             mostrarAlerta("Archivo no encontrado", "El archivo no existe en la ruta especificada: " + ruta, Alert.AlertType.ERROR);
             return;
         }
-
         hostServices.showDocument(archivo.toURI().toString());
     }
 
-    
     @FXML
     private void onGuardarFormato(ActionEvent event) {
-        // Validaciones
         if (cbEstudiante.getValue() == null
                 || txtTituloTrabajo.getText().isEmpty()
                 || cbModalidad.getValue() == null
@@ -202,14 +259,11 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                 || txtObjetivoGeneral.getText().isEmpty()
                 || txtObjetivosEspecificos.getText().isEmpty()
                 || txtArchivoAdjunto.getText().isEmpty()) {
-
             mostrarAlerta("Campos incompletos", "Por favor llene todos los campos obligatorios (*)", Alert.AlertType.WARNING);
             return;
         }
 
         try {
-            // Construir objeto DegreeWork
-            
             Student estudiante = new Student();
             estudiante.setEmail(cbEstudiante.getValue());
 
@@ -222,7 +276,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                 codirector.setEmail(cbCodirector.getValue());
             }
 
-            
             DegreeWork formato = new DegreeWork(
                     estudiante,
                     director,
@@ -235,34 +288,44 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                     txtArchivoAdjunto.getText()
             );
 
-            
-            
             if ("PRACTICA_PROFESIONAL".equals(cbModalidad.getValue())) {
                 formato.setCartaAceptacionEmpresa(txtCartaAceptacion.getText());
             }
 
+            // Si es una re-subida, mantener el estado actual o resetear a PRIMERA_EVALUACION
+            if (formatoActual != null) {
+                // 🔹 Re-subida → mantiene ID y contador
+                formato.setId(formatoActual.getId());
 
-            formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
+                // Acumular intentos si ya había NO_APROBADO
+                if (formatoActual.getEstado() == EstadoFormatoA.NO_ACEPTADO) {
+                    formato.setNoAprobadoCount(formatoActual.getNoAprobadoCount() + 1);
 
-            boolean creado = service.registrarFormato(formato);
+                    // Si ya alcanzó 3 intentos fallidos → RECHAZADO
+                    if (formato.getNoAprobadoCount() >= 3) {
+                        formato.setEstado(EstadoFormatoA.RECHAZADO);
+                    } else {
+                        formato.setEstado(EstadoFormatoA.NO_ACEPTADO); // sigue en no aprobado
+                    }
+                } else {
+                    // Si es una nueva evaluación, resetear estado pero conservar contador
+                    formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
+                    formato.setNoAprobadoCount(formatoActual.getNoAprobadoCount());
+                }
+
+            } else {
+                // 🔹 Nuevo formato
+                formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
+                formato.setNoAprobadoCount(0);
+            }
+
+            boolean creado = service.actualizarFormato(formato); // Usar actualizar para re-subida
 
             if (creado) {
-                mostrarAlerta("Éxito", "Formato A registrado correctamente", Alert.AlertType.CONFIRMATION);
+                mostrarAlerta("Éxito", "Formato A " + (formatoActual != null ? "actualizado" : "registrado") + " correctamente", Alert.AlertType.CONFIRMATION);
                 limpiarCampos();
-
-                // 🔹 Aquí agregamos la consulta a la BD para verificar
-                List<DegreeWork> lista = service.listarDegreeWorks();
-                System.out.println("📋 Formatos guardados en la base de datos:");
-                for (DegreeWork dw : lista) {
-                    System.out.println("ID: " + dw.getId()
-                            + " | Estudiante: " + dw.getEstudiante().getEmail()
-                            + " | Título: " + dw.getTituloProyecto()
-                            + " | Director: " + dw.getDirectorProyecto()
-                            + " | Carta: " + dw.getCartaAceptacionEmpresa()
-                            + " | ObjEsp: " + dw.getObjetivosEspecificos());
-                }
             } else {
-                mostrarAlerta("Error", "No se pudo registrar el Formato A", Alert.AlertType.ERROR);
+                mostrarAlerta("Error", "No se pudo " + (formatoActual != null ? "actualizar" : "registrar") + " el Formato A", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -270,8 +333,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         }
     }
 
-
-    //métodos para la carta de aceptación
     @FXML
     private void onAdjuntarCarta(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -298,7 +359,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                         java.nio.file.StandardCopyOption.REPLACE_EXISTING
                 );
 
-                // ✅ Guardamos la ruta relativa (NO absolutePath)
                 String rutaRelativa = "cartas/" + archivoSeleccionado.getName();
                 txtCartaAceptacion.setText(rutaRelativa);
 
@@ -316,6 +376,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                     Alert.AlertType.WARNING);
         }
     }
+
     @FXML
     private void onBtnUsuarioClicked() {
         try {
@@ -324,11 +385,9 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
             RolController rolController = loader.getController();
 
-            // Crear servicios
             UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
             AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
 
-            // Pasar usuario + servicios al controller
             if (usuarioActual != null) {
                 rolController.setUsuario(usuarioActual, userService, adminService);
             }
@@ -358,7 +417,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         }
         hostServices.showDocument(archivo.toURI().toString());
     }
-    
+
     @FXML
     private void handleLogout() {
         try {
@@ -374,8 +433,8 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             e.printStackTrace();
             mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
         }
-    }  
-    
+    }
+
     @FXML
     private void onBtnFormatoDocenteClicked() {
         if (!(usuarioActual instanceof Teacher)) {
@@ -384,20 +443,19 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         }
         cargarVistaConUsuario("/co/unicauca/workflow/GestionPropuestaDocente.fxml", "Gestión de Propuestas Docente");
     }
-    
+
     private void limpiarCampos() {
-        cbEstudiante.getSelectionModel().clearSelection(); // ✅ ComboBox en vez de TextField
+        cbEstudiante.getSelectionModel().clearSelection();
         txtTituloTrabajo.clear();
         cbModalidad.getSelectionModel().clearSelection();
         dpFechaActual.setValue(LocalDate.now());
         cbDirector.getSelectionModel().clearSelection();
-        cbCodirector.getSelectionModel().clearSelection();;
+        cbCodirector.getSelectionModel().clearSelection();
         txtObjetivoGeneral.clear();
         txtObjetivosEspecificos.clear();
         txtArchivoAdjunto.clear();
         archivoAdjunto = null;
     }
-
 
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
@@ -415,13 +473,12 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         alerta.getDialogPane().setContent(contenedor);
         alerta.showAndWait();
     }
-    
+
     private void cargarVistaConUsuario(String fxml, String tituloVentana) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
 
-            // Pasar usuario al nuevo controlador si existe setUsuario
             Object controller = loader.getController();
             if (controller != null) {
                 try {

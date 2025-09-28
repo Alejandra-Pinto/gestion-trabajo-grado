@@ -13,4 +13,8 @@ public interface IDegreeWorkRepository {
     boolean update(DegreeWork formato);
 
     boolean delete(int id);
+
+    DegreeWork findLatestByStudent(String studentEmail);
+
+    List<DegreeWork> listByTeacher(String teacherEmail);
 }

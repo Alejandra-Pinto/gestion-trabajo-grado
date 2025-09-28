@@ -154,7 +154,8 @@ public class GestionPropuestaDocenteController implements Initializable {
             cargarEstados(filtro);
         });
     }
-
+    
+    //polimorfismo¿?
     private void cargarEstados() {
         cargarEstados("Todos");
     }
@@ -253,22 +254,29 @@ public class GestionPropuestaDocenteController implements Initializable {
     }
 
     public void onAgregarPropuesta(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementTeacherFormatA.fxml"));
-            Parent root = loader.load();
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementTeacherFormatA.fxml"));
+        Parent root = loader.load();
 
-            // Cambiar toda la escena
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            ManagementTeacherFormatAController teacherController = loader.getController();
-            teacherController.setHostServices(App.getHostServicesInstance());
-            stage.setTitle("Gestión de propuestas");
-            stage.show();
+        ManagementTeacherFormatAController teacherController = loader.getController();
+        teacherController.setHostServices(App.getHostServicesInstance());
+        teacherController.setUsuario(usuario); // ✅ PASAR usuario
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Si es edición de un formato seleccionado
+        DegreeWork formatoSeleccionado = tblEstadosFormato.getSelectionModel().getSelectedItem();
+        if (formatoSeleccionado != null) {
+            teacherController.setFormato(formatoSeleccionado); // ✅ PASAR formato
         }
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Gestión de propuestas");
+        stage.show();
+
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
     
     @FXML
     private void handleLogout() {
