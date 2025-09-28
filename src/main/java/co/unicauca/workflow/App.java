@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 public class App extends Application {
     private static Scene scene;
-    private static Stage primaryStage; // ✅ conservar
+    private static Stage primaryStage; 
     private static HostServices hostServices;
 
     @Override

@@ -111,7 +111,7 @@ public class GestionPropuestaDocenteController implements Initializable {
                 btnCorrections.setOnAction(event -> {
                     DegreeWork formato = getTableRow().getItem();
                     if (formato != null && (formato.getEstado() == EstadoFormatoA.NO_ACEPTADO || formato.getEstado() == EstadoFormatoA.RECHAZADO)) {
-                        mostrarCorrecciones(formato);
+                        mostrarCorrecciones(formato, (Node) event.getSource());
                     } else {
                         Alert alert = new Alert(AlertType.WARNING);
                         alert.setTitle("Acción no permitida");
@@ -171,8 +171,8 @@ public class GestionPropuestaDocenteController implements Initializable {
             ObservableList<DegreeWork> filteredList = todosLosFormatos.stream()
                     .filter(formato -> filtro.equals("Todos") || 
                             (filtro.equals("Pendiente") && formato.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION) ||
-                            (filtro.equals("Aceptado") && formato.getEstado() == EstadoFormatoA.ACEPTADO) ||
-                            (filtro.equals("No aceptado") && formato.getEstado() == EstadoFormatoA.NO_ACEPTADO) ||
+                            (filtro.equals("Aprobado") && formato.getEstado() == EstadoFormatoA.ACEPTADO) ||
+                            (filtro.equals("No aprobado") && formato.getEstado() == EstadoFormatoA.NO_ACEPTADO) ||
                             (filtro.equals("Rechazado") && formato.getEstado() == EstadoFormatoA.RECHAZADO))
                     .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
 
@@ -210,21 +210,20 @@ public class GestionPropuestaDocenteController implements Initializable {
         }
     }
 
-    private void mostrarCorrecciones(DegreeWork formato) {
+    private void mostrarCorrecciones(DegreeWork formato, Node source) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/CorrectionsView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/TeacherReviewFormatA.fxml"));
             Parent root = loader.load();
 
-            //CorrectionsViewController controller = loader.getController();
-            //controller.setFormato(formato); // Pasar el formato al controlador de correcciones
+            TeacherReviewFormatAController controller = loader.getController();
+            controller.setUsuarioYFormato(usuario, formato); // Pasar el usuario y el formato
 
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
+            Stage stage = (Stage) source.getScene().getWindow();
+            stage.getScene().setRoot(root);
             stage.setTitle("Correcciones para " + formato.getTituloProyecto());
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Error al cargar CorrectionsView.fxml: " + e.getMessage());
+            System.err.println("Error al cargar TeacherReviewFormatA.fxml: " + e.getMessage());
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
