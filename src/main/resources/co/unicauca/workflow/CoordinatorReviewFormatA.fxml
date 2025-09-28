@@ -13,12 +13,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.CoordinatorReviewFormatAController">
+<AnchorPane id="AnchorPane" prefHeight="701.0" prefWidth="1011.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.CoordinatorReviewFormatAController">
 
    <children>
-      <Pane prefHeight="537.0" prefWidth="691.0" style="-fx-background-color: #0F3EA4;">
+      <Pane prefHeight="707.0" prefWidth="1011.0" style="-fx-background-color: #0F3EA4;">
          <children>
-            <SplitPane dividerPositions="0.2709030100334448" layoutY="61.0" prefHeight="486.0" prefWidth="691.0">
+            <SplitPane dividerPositions="0.2709030100334448" layoutY="61.0" prefHeight="666.0" prefWidth="1007.0">
               <items>
                 <!-- Panel izquierdo -->
                 <AnchorPane prefHeight="454.0" prefWidth="210.0" style="-fx-background-color: fafafa;">
@@ -29,7 +29,7 @@
                            </image>
                         </ImageView>
                         
-                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Coordinador" textFill="#111f63" onAction="#onBtnUsuarioClicked">
+                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="45.0" prefWidth="206.0" text="Coordinador" textFill="#111f63">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -42,7 +42,7 @@
                            </font>
                         </ToggleButton>
 
-                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta" onAction="#onBtnEvaluarPropuestasClicked">
+                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" onAction="#onBtnEvaluarPropuestasClicked" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -65,7 +65,7 @@
                   </AnchorPane>
 
                 <!-- Panel derecho -->
-                <AnchorPane prefHeight="472.0" prefWidth="477.0">
+                <AnchorPane prefHeight="665.0" prefWidth="738.0">
                      <children>
                         <Label layoutX="21.0" layoutY="33.0" text="GESTIÓN DE PROPUESTAS">
                            <font>
@@ -101,7 +101,7 @@
                            </font>
                         </Label>
                         <TextArea fx:id="txtCorrecciones" layoutX="21.0" layoutY="267.0" prefHeight="126.0" prefWidth="432.0" />
-                        <Button fx:id="btnEnviar" layoutX="308.0" layoutY="418.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ENVIAR CALIFICACIÓN" textFill="WHITE" onAction="#onEnviarCorrecciones">
+                        <Button fx:id="btnEnviar" layoutX="308.0" layoutY="418.0" mnemonicParsing="false" onAction="#onEnviarCorrecciones" style="-fx-background-color: #111F63;" text="ENVIAR CALIFICACIÓN" textFill="WHITE">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -116,7 +116,7 @@
                   <Image url="@images/logo.png" />
                </image>
             </ImageView>
-            <Button layoutX="580.0" layoutY="10.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
+            <Button layoutX="889.0" layoutY="14.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
          </children>
       </Pane>
    </children>

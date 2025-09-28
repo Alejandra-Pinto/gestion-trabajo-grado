@@ -147,6 +147,8 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             }
         });
   
+        // Abrir la ventana de estadísticas
+        javafx.application.Platform.runLater(() -> mostrarVentanaEstadisticas());
     }
 
     
@@ -188,7 +190,47 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             }
         }
     }
+    
+    private void mostrarVentanaEstadisticas() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Statistics.fxml"));
+            Parent root = loader.load();
 
+            Stage estadisticasStage = new Stage();
+            estadisticasStage.setScene(new Scene(root));
+            estadisticasStage.setTitle("Estadísticas");
+
+            // Que no bloquee la interacción
+            estadisticasStage.initOwner(btnUsuario.getScene().getWindow());
+            estadisticasStage.setResizable(false);
+
+            // Obtener posición de la ventana principal
+            Stage mainStage = (Stage) btnUsuario.getScene().getWindow();
+            // Mostrar estadísticas "superpuestas" un poco a la derecha de la principal
+            estadisticasStage.setX(mainStage.getX() + mainStage.getWidth() * 0.65);
+            estadisticasStage.setY(mainStage.getY() + 50);
+
+            estadisticasStage.show();
+            
+            StatisticsController statsController = loader.getController();
+            statsController.setService(degreeWorkService); // 👈 pasa el servicio al observer
+
+            // Hacer que se mueva junto con la principal
+            mainStage.xProperty().addListener((obs, oldVal, newVal)
+                    -> estadisticasStage.setX(newVal.doubleValue() + mainStage.getWidth() + 10)
+            );
+            mainStage.yProperty().addListener((obs, oldVal, newVal)
+                    -> estadisticasStage.setY(newVal.doubleValue())
+            );
+            mainStage.widthProperty().addListener((obs, oldVal, newVal)
+                    -> estadisticasStage.setX(mainStage.getX() + newVal.doubleValue() + 10)
+            );
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la ventana de estadísticas: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
 
     @FXML
     private void onAbrirArchivo() {
@@ -250,60 +292,40 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             return;
         }
 
-        // Guardar correcciones solo si es NO ACEPTADO
-        if ("NO ACEPTADO".equals(estadoSeleccionado)) {
-            String correcciones = txtCorrecciones.getText();
-            if (correcciones == null || correcciones.trim().isEmpty()) {
-                mostrarAlerta("Advertencia", "Debes escribir correcciones para un NO ACEPTADO.", Alert.AlertType.WARNING);
-                return;
-            }
-            formato.setCorrecciones(correcciones); // 🔥 actualiza en el mismo objeto
-            formato.incrementNoAprobadoCount();
-        }
+        boolean exito = false;
 
-        // Mapear a EstadoFormatoA real
         switch (estadoSeleccionado) {
             case "ACEPTADO":
-                formato.setEstado(co.unicauca.workflow.domain.entities.EstadoFormatoA.ACEPTADO);
+                exito = degreeWorkService.cambiarEstado(formato.getId(),
+                        co.unicauca.workflow.domain.entities.EstadoFormatoA.ACEPTADO);
                 break;
+
             case "NO ACEPTADO":
-                formato.setEstado(co.unicauca.workflow.domain.entities.EstadoFormatoA.NO_ACEPTADO);
+                String correcciones = txtCorrecciones.getText();
+                if (correcciones == null || correcciones.trim().isEmpty()) {
+                    mostrarAlerta("Advertencia", "Debes escribir correcciones para un NO ACEPTADO.", Alert.AlertType.WARNING);
+                    return;
+                }
+                formato.incrementNoAprobadoCount();
+                exito = degreeWorkService.guardarCorrecciones(formato.getId(), correcciones);
+                // Además se marca como NO ACEPTADO
+                degreeWorkService.cambiarEstado(formato.getId(),
+                        co.unicauca.workflow.domain.entities.EstadoFormatoA.NO_ACEPTADO);
                 break;
+
             case "RECHAZADO":
-                formato.setEstado(co.unicauca.workflow.domain.entities.EstadoFormatoA.RECHAZADO);
+                exito = degreeWorkService.rechazar(formato.getId());
                 break;
         }
 
-        
-        boolean exito = degreeWorkService.actualizarFormato(formato);
         if (exito) {
-            // Mostrar mensaje
-            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Éxito");
-            alerta.setHeaderText(null);
-            alerta.setContentText("Correcciones enviadas y estado actualizado.");
-            alerta.showAndWait();
-
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementCoordinatorFormatA.fxml"));
-                Parent root = loader.load();
-
-                // Recuperar el controller para recargar la tabla
-                ManagementCoordinatorFormatAController controller = loader.getController();
-                controller.initialize(null, null); // fuerza recarga de la tabla
-
-                // Redirigir
-                txtCorrecciones.getScene().setRoot(root);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                mostrarAlerta("Error", "No se pudo volver a la vista de gestión.", Alert.AlertType.ERROR);
-            }
+            mostrarAlerta("Éxito", "Correcciones enviadas y estado actualizado.", Alert.AlertType.INFORMATION);
         } else {
             mostrarAlerta("Error", "No se pudo actualizar el estado.", Alert.AlertType.ERROR);
         }
-
     }
+
+    
     @FXML
     private void handleLogout() {
         try {
