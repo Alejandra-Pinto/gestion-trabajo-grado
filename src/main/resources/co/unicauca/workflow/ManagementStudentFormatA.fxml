@@ -12,7 +12,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementStudentFormatAController">
    <children>
-      <SplitPane fx:id="splitMain" dividerPositions="0.30523255813953487" layoutY="109.0" prefHeight="696.0" prefWidth="1553.0">
+      <SplitPane fx:id="splitMain" dividerPositions="0.30523255813953487" layoutY="115.0" prefHeight="705.0" prefWidth="1553.0">
         <items>
           <!-- Panel izquierdo -->
           <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -30,7 +30,7 @@
                      </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Formato propuesta">
+                  <ToggleButton fx:id="btnFormatoPropuesta" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Formato de Propuesta">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -43,7 +43,7 @@
                      </font>
                   </ToggleButton>
 
-                  <ToggleButton fx:id="btnAnteproyecto" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Anteproyecto">
+                  <ToggleButton fx:id="btnAnteproyecto" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Anteproyecto">
                      <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                            <image>
@@ -56,7 +56,7 @@
                      </font>
                   </ToggleButton>
 
-                  <ImageView fx:id="imgBandera" fitHeight="196.0" fitWidth="474.0" layoutX="-4.0" layoutY="515.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="imgBandera" fitHeight="196.0" fitWidth="474.0" layoutX="-4.0" layoutY="525.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/bandera.png" />
                      </image>
@@ -67,7 +67,7 @@
           <!-- Panel derecho -->
           <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="686.0" prefWidth="1075.0">
                <children>
-                  <ImageView fitHeight="695.0" fitWidth="291.0" layoutX="692.0" layoutY="36.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="695.0" fitWidth="291.0" layoutX="692.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@images/antorcha.png" />
                      </image>
@@ -157,11 +157,11 @@
         </items>
       </SplitPane>
 
-      <ImageView fx:id="imgLogo" fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgLogo" fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/logo.png" />
          </image>
       </ImageView>
-      <Button layoutX="1359.0" layoutY="35.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
+      <Button layoutX="1370.0" layoutY="40.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
    </children>
 </AnchorPane>

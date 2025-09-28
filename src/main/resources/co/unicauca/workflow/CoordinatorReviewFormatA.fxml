@@ -13,23 +13,23 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="701.0" prefWidth="1011.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.CoordinatorReviewFormatAController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.CoordinatorReviewFormatAController">
 
    <children>
-      <Pane prefHeight="707.0" prefWidth="1011.0" style="-fx-background-color: #0F3EA4;">
+      <Pane prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
          <children>
-            <SplitPane dividerPositions="0.2709030100334448" layoutY="61.0" prefHeight="666.0" prefWidth="1007.0">
+            <SplitPane dividerPositions="0.2709030100334448" layoutY="111.0" prefHeight="694.0" prefWidth="1553.0">
               <items>
                 <!-- Panel izquierdo -->
                 <AnchorPane prefHeight="454.0" prefWidth="210.0" style="-fx-background-color: fafafa;">
                      <children>
-                        <ImageView fitHeight="78.0" fitWidth="213.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="208.0" fitWidth="463.0" layoutY="525.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
                         
-                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="45.0" prefWidth="206.0" text="Coordinador" textFill="#111f63">
+                        <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="468.0" text="Coordinador" textFill="#111f63">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -38,11 +38,11 @@
                               </ImageView>
                            </graphic>
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </ToggleButton>
 
-                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="45.0" mnemonicParsing="false" onAction="#onBtnEvaluarPropuestasClicked" prefHeight="45.0" prefWidth="206.0" text="Formato de Propuesta">
+                        <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="101.0" mnemonicParsing="false" onAction="#onBtnEvaluarPropuestasClicked" prefHeight="101.0" prefWidth="468.0" text="Formato de Propuesta">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -50,9 +50,12 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
                         </ToggleButton>
 
-                        <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="90.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="206.0" text="Anteproyecto">
+                        <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Anteproyecto">
                            <graphic>
                               <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
                                  <image>
@@ -60,6 +63,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <font>
+                              <Font size="16.0" />
+                           </font>
                         </ToggleButton>
                      </children>
                   </AnchorPane>
@@ -67,56 +73,150 @@
                 <!-- Panel derecho -->
                 <AnchorPane prefHeight="665.0" prefWidth="738.0">
                      <children>
-                        <Label layoutX="21.0" layoutY="33.0" text="GESTIÓN DE PROPUESTAS">
+                        <ImageView fitHeight="695.0" fitWidth="291.0" layoutX="692.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@images/antorcha.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="lblTituloGestion" layoutX="57.0" layoutY="41.0" text="GESTIÓN DE PROPUESTAS">
+                           <font>
+                              <Font name="System Bold" size="44.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblSolicitudRevision" layoutX="57.0" layoutY="106.0" text="Solicitud de revisión " textFill="#111f63">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font></Label>
+                        <Label fx:id="lblEstudiante" layoutX="233.0" layoutY="106.0" text="Estudiante 1 - Ingeniería de Sistemas" textFill="#111f63">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font></Label>
+                        
+                        <Label fx:id="lblFormatoAdjunto" layoutX="57.0" layoutY="310.0" text="Formato A adjuntado:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font></Label>
+                        <TextField fx:id="txtArchivoAdjunto" editable="false" layoutX="270.0" layoutY="310.0" prefWidth="270.0" />
+
+                        <Button fx:id="btnAbrirArchivo" layoutX="560.0" layoutY="310.0" mnemonicParsing="false" onAction="#onAbrirArchivo" style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+
+                        <Label fx:id="lblCartaEmpresa" layoutX="57.0" layoutY="340.0" text="Carta aceptación empresa:" visible="true">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font></Label>
+                        <TextField fx:id="txtCartaEmpresa" editable="false" layoutX="270.0" layoutY="340.0" prefHeight="25.0" prefWidth="270.0" visible="true" />
+                        <Button fx:id="btnAbrirCartaEmpresa" layoutX="560.0" layoutY="340.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE" visible="true">
+                            <font>
+                                <Font name="System Bold" size="12.0" />
+                            </font>
+                        </Button>
+                        
+                        
+                        <Label fx:id="lblActualizarEstado" layoutX="57.0" layoutY="370.0" text="Actualizar estado:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font></Label>
+                        <ComboBox fx:id="cmbEstado" layoutX="270.0" layoutY="370.0" prefWidth="150.0" style="-fx-background-color: FFFFFF;" />
+                        <Label fx:id="lblCorrecciones" layoutX="57.0" layoutY="413.0" text="Correcciones" textFill="#a01f18">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label layoutX="21.0" layoutY="71.0" text="Solicitud de revisión " />
-                        <Label fx:id="lblEstudiante" layoutX="180.0" layoutY="71.0" text="Estudiante 1 - Ingeniería de Sistemas" />
-                        
-                        <Label layoutX="21.0" layoutY="111.0" text="Formato A adjuntado" />
-                        <TextField fx:id="txtArchivoAdjunto" editable="false" layoutX="180.0" layoutY="107.0" prefWidth="200.0" />
-
-                        <Button fx:id="btnAbrirArchivo" layoutX="390.0" layoutY="107.0" mnemonicParsing="false" onAction="#onAbrirArchivo" style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Button>
-
-                        <Label fx:id="lblCartaEmpresa" layoutX="21.0" layoutY="151.0" text="Carta aceptación empresa" visible="false" />
-                        <TextField fx:id="txtCartaEmpresa" editable="false" layoutX="180.0" layoutY="147.0" prefWidth="200.0" visible="false" />
-                        <Button fx:id="btnAbrirCartaEmpresa" layoutX="390.0" layoutY="147.0" mnemonicParsing="false" style="-fx-background-color: #111F63;" text="ABRIR" textFill="WHITE" visible="false">
-                            <font>
-                                <Font name="System Bold" size="12.0" />
-                            </font>
-                        </Button>
-                        
-                        
-                        <Label layoutX="21.0" layoutY="205.0" text="Actualizar estado :" />
-                        <ComboBox fx:id="cmbEstado" layoutX="131.0" layoutY="201.0" prefWidth="150.0" style="-fx-background-color: FFFFFF;" />
-                        <Label layoutX="21.0" layoutY="243.0" text="Correcciones">
+                        <TextArea fx:id="txtCorrecciones" layoutX="57.0" layoutY="444.0" prefHeight="175.0" prefWidth="730.0" />
+                        <Button fx:id="btnEnviar" layoutX="830.0" layoutY="630.0" mnemonicParsing="false" onAction="#onEnviarCorrecciones" style="-fx-background-color: #111F63;" text="ENVIAR CALIFICACIÓN" textFill="WHITE">
                            <font>
-                              <Font size="13.0" />
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Button>
+
+                        <!-- Etiquetas informativas con fx:id -->
+                        <Label fx:id="lblTituloTrabajo" layoutX="57.0" layoutY="140.0" text="Título Trabajo de Grado:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="txtCorrecciones" layoutX="21.0" layoutY="267.0" prefHeight="126.0" prefWidth="432.0" />
-                        <Button fx:id="btnEnviar" layoutX="308.0" layoutY="418.0" mnemonicParsing="false" onAction="#onEnviarCorrecciones" style="-fx-background-color: #111F63;" text="ENVIAR CALIFICACIÓN" textFill="WHITE">
+                        <Label fx:id="lblModalidad" layoutX="600.0" layoutY="140.0" text="Modalidad:">
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font>
-                        </Button>
+                        </Label>
+                        <Label fx:id="lblFecha" layoutX="57.0" layoutY="170.0" text="Fecha:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblDirector" layoutX="57.0" layoutY="200.0" text="Director del Proyecto:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCodirector" layoutX="600.0" layoutY="200.0" text="Codirector del Proyecto:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblObjetivoGeneral" layoutX="57.0" layoutY="230.0" text="Objetivo general:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblObjetivosEspecificos" layoutX="57.0" layoutY="260.0" text="Objetivos específicos:">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+
+                        <!-- Labels dinámicos -->
+                        <Label fx:id="lblCargarTitulo" layoutX="270.0" layoutY="140.0" text="Cargar titulo">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCargarFecha" layoutX="270.0" layoutY="170.0" text="Cargar fecha">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCargarDirector" layoutX="270.0" layoutY="200.0" text="Cargar director">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCargarObjetivoGeneral" layoutX="270.0" layoutY="230.0" prefHeight="25.0" prefWidth="715.0" text="Cargar objetivo general">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCargarCodirector" layoutX="800.0" layoutY="200.0" text="Cargar codirector">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCargarModalidad" layoutX="800.0" layoutY="140.0" text="Cargar modalidad">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCargarObjetivosEspecificos" layoutX="270.0" layoutY="260.0" prefHeight="25.0" prefWidth="715.0" text="Cargar objetivos específicos">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
               </items>
             </SplitPane>
 
-            <ImageView fitHeight="45.0" fitWidth="88.0" layoutX="18.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/logo.png" />
                </image>
             </ImageView>
-            <Button layoutX="889.0" layoutY="14.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
+            <Button layoutX="1370.0" layoutY="40.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
          </children>
       </Pane>
    </children>

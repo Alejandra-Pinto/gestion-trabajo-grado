@@ -61,6 +61,27 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
     
     @FXML
     private TextArea txtCorrecciones;
+    
+    @FXML 
+    private Label lblCargarTitulo;
+    
+    @FXML 
+    private Label lblCargarModalidad;
+    
+    @FXML 
+    private Label lblCargarFecha;
+    
+    @FXML 
+    private Label lblCargarDirector;
+    
+    @FXML 
+    private Label lblCargarCodirector;
+    
+    @FXML 
+    private Label lblCargarObjetivoGeneral;
+    
+    @FXML 
+    private Label lblCargarObjetivosEspecificos;
 
     @FXML
     private Button btnEnviar;
@@ -188,6 +209,15 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
                 txtCartaEmpresa.setVisible(false);
                 btnAbrirCartaEmpresa.setVisible(false);
             }
+          
+            lblCargarTitulo.setText(formato.getTituloProyecto() != null ? formato.getTituloProyecto() : "No hay trabajo registrado");
+            lblCargarModalidad.setText(formato.getModalidad() != null ? formato.getModalidad().toString() : "No disponible");
+            lblCargarFecha.setText(formato.getFechaActual() != null ? formato.getFechaActual().toString() : "No registrada");
+            lblCargarDirector.setText(formato.getDirectorProyecto() != null ? formato.getDirectorProyecto().getEmail() : "No definido");
+            lblCargarCodirector.setText(formato.getCodirectorProyecto() != null ? formato.getCodirectorProyecto().getEmail() : "No definido");
+            lblCargarObjetivoGeneral.setText(formato.getObjetivoGeneral() != null ? formato.getObjetivoGeneral() : "No definido");
+            lblCargarObjetivosEspecificos.setText((formato.getObjetivosEspecificos() != null && !formato.getObjetivosEspecificos().isEmpty())
+            ? String.join("; ", formato.getObjetivosEspecificos()): "No disponibles");
         }
     }
     

@@ -35,6 +35,7 @@ public class StudentReviewFormatAController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Inicialización si hace falta
+        usuarioActual = (User) SessionManager.getCurrentUser();
     }
 
     /**

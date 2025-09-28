@@ -19,10 +19,10 @@
    <children>
       <Pane layoutX="-8.0" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3FA5;">
          <children>
-            <ImageView fitHeight="616.0" fitWidth="280.0" layoutX="884.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="757.0" fitWidth="490.0" layoutX="930.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
                <image><Image url="@images/antorcha.png" /></image>
             </ImageView>
-            <ImageView fitHeight="168.0" fitWidth="475.0" layoutY="632.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="169.0" fitWidth="671.0" layoutY="636.0" pickOnBounds="true" preserveRatio="true">
                <image><Image url="@images/bandera.png" /></image>
             </ImageView>
             <ImageView fitHeight="96.0" fitWidth="184.0" layoutX="60.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
@@ -30,7 +30,7 @@
             </ImageView>
             
             <!-- Contenedor principal del formulario -->
-            <Pane layoutX="550.0" layoutY="218.0" prefHeight="399.0" prefWidth="382.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
+            <Pane layoutX="600.0" layoutY="215.0" prefHeight="415.0" prefWidth="382.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
                <children>
                   <Label layoutX="142.0" layoutY="14.0" text="Registro" textFill="#a01f18">
                      <font><Font name="System Bold" size="25.0" /></font>
@@ -58,10 +58,10 @@
 
                   <PasswordField fx:id="txt_password" layoutX="90.0" layoutY="274.0" prefHeight="25.0" prefWidth="200.0" promptText="Contraseña*" />
                   <PasswordField fx:id="txt_confirmPassword" layoutX="90.0" layoutY="307.0" prefHeight="25.0" prefWidth="200.0" promptText="Confirmar contraseña*" />
-                  <Button fx:id="btn_register" layoutX="109.0" layoutY="344.0" mnemonicParsing="false" onAction="#onRegister" style="-fx-background-color: #111F63;" text="REGISTRAR USUARIO" textFill="WHITE">
+                  <Button fx:id="btn_register" layoutX="109.0" layoutY="348.0" mnemonicParsing="false" onAction="#onRegister" style="-fx-background-color: #111F63;" text="REGISTRAR USUARIO" textFill="WHITE">
                      <font><Font name="System Bold" size="14.0" /></font>
                   </Button>
-                  <Hyperlink fx:id="hpl_login" layoutX="105.0" layoutY="373.0" onAction="#onGoToLogin" text="¿Ya tienes cuenta? Inicia sesión" />
+                  <Hyperlink fx:id="hpl_login" layoutX="102.0" layoutY="378.0" onAction="#onGoToLogin" text="¿Ya tienes cuenta? Inicia sesión" />
                </children>
             </Pane>
          </children>
