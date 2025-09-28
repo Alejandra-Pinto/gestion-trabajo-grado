@@ -85,9 +85,8 @@ public class UserService {
             throw new RuntimeException("Error en cifrado de contraseña", e);
         }
     }
-    
-    public List<User> listarPorRol(String role) {
-        return repository.listByRole(role);
+    public List<User> listarPorRol(String rol) {
+        return repository.listByRole(rol);
     }
 
 }

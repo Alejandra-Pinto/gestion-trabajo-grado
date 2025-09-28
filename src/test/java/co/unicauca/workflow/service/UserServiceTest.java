@@ -1,37 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
- */
 package co.unicauca.workflow.service;
 
 import co.unicauca.workflow.access.IUsersRepository;
 import co.unicauca.workflow.access.UserSQLiteRepository;
 import co.unicauca.workflow.domain.entities.User;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
+import co.unicauca.workflow.service.UserService;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 /**
- *
- * @author USUARIO
+ * Pruebas unitarias para UserService
+ * 
+ * Se validan los siguientes casos:
+ * - Registro con datos válidos
+ * - Registro inválido por email
+ * - Registro inválido por password (corta, sin número, sin mayúscula, sin carácter especial)
+ * - Login válido
+ * - Login inválido
+ * - Listar usuarios por rol
+ * - Verificación de que la contraseña se almacena encriptada
  */
 public class UserServiceTest {
-    
+
     public UserServiceTest() {
     }
-    
+
     @Test
     public void testRegistrarUsuarioValido() throws Exception {
         System.out.println("registrarUsuarioValido");
         User nuevoUsuario = new User("Pedro", "Perez", "3216549870", "Ingeniería de Sistemas",
-                                     "pedro3@unicauca.edu.co", "@Pedro123!", "STUDENT") {
+                                     "pedro5@unicauca.edu.co", "@Pedro123!", "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
         IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
@@ -46,9 +46,7 @@ public class UserServiceTest {
         User nuevoUsuario = new User("Maria", "Lopez", "3149876543", "Ingeniería de Sistemas",
                                      "maria@gmail.com", "Maria123!", "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
         IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
@@ -63,9 +61,7 @@ public class UserServiceTest {
         User nuevoUsuario = new User("Laura", "Rodriguez", "3001112233", "Ingeniería de Sistemas",
                                      "laura@unicauca.edu.co", "L1!", "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
         IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
@@ -80,9 +76,7 @@ public class UserServiceTest {
         User nuevoUsuario = new User("Andres", "Gomez", "3012223344", "Ingeniería de Sistemas",
                                      "andres@unicauca.edu.co", "Password!", "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
         IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
@@ -97,9 +91,7 @@ public class UserServiceTest {
         User nuevoUsuario = new User("Camilo", "Diaz", "3023334455", "Ingeniería de Sistemas",
                                      "camilo@unicauca.edu.co", "password123!", "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
         IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
@@ -114,9 +106,7 @@ public class UserServiceTest {
         User nuevoUsuario = new User("Luisa", "Martinez", "3034445566", "Ingeniería de Sistemas",
                                      "luisa@unicauca.edu.co", "Luisa123", "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
         IUsersRepository repository = new UserSQLiteRepository();
         UserService instance = new UserService(repository);
@@ -133,9 +123,7 @@ public class UserServiceTest {
         User nuevoUsuario = new User("Juan", "Lopez", "3112223344", "Ingeniería de Sistemas",
                                      email, password, "STUDENT") {
             @Override
-            public void showDashboard() {
-                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-            }
+            public void showDashboard() {}
         };
 
         IUsersRepository repository = new UserSQLiteRepository();
@@ -160,5 +148,53 @@ public class UserServiceTest {
         User result = instance.login(email, password);
         assertEquals(expResult, result);
     }
-}
 
+    @Test
+    public void testListarPorRol() throws Exception {
+        System.out.println("listarPorRol");
+        IUsersRepository repository = new UserSQLiteRepository();
+        UserService instance = new UserService(repository);
+
+        User estudiante = new User("Carlos", "Ruiz", "3201112233", "Ingeniería de Sistemas",
+                                   "carlos3@unicauca.edu.co", "Carlos123!", "STUDENT") {
+            @Override
+            public void showDashboard() {}
+        };
+        User profesor = new User("Ana", "Torres", "3211112233", "Ingeniería de Sistemas",
+                                  "ana3@unicauca.edu.co", "Ana123!", "TEACHER") {
+            @Override
+            public void showDashboard() {}
+        };
+
+        instance.register(estudiante);
+        instance.register(profesor);
+
+        List<User> estudiantes = instance.listarPorRol("STUDENT");
+
+        assertTrue(estudiantes.stream().anyMatch(u -> u.getEmail().equals("carlos3@unicauca.edu.co")));
+        assertTrue(estudiantes.stream().noneMatch(u -> u.getEmail().equals("ana3@unicauca.edu.co")));
+    }
+
+    @Test
+    public void testPasswordSeEncripta() throws Exception {
+        System.out.println("passwordSeEncripta");
+        String email = "sofia@unicauca.edu.co";
+        String password = "Sofia123!";
+
+        User nuevoUsuario = new User("Sofia", "Mora", "3223334455", "Ingeniería de Sistemas",
+                                     email, password, "STUDENT") {
+            @Override
+            public void showDashboard() {}
+        };
+
+        IUsersRepository repository = new UserSQLiteRepository();
+        UserService instance = new UserService(repository);
+
+        instance.register(nuevoUsuario);
+
+        // Verificar que la contraseña almacenada en BD no es igual a la original
+        User result = instance.login(email, password);
+        assertNotNull(result);
+        assertNotEquals(password, result.getPassword());
+    }
+}
