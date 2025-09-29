@@ -1,24 +1,30 @@
-/*
- * Click nbproject://nbproject/nbproject.properties to edit this template
- */
 package co.unicauca.workflow;
 
 import co.unicauca.workflow.domain.entities.User;
 import co.unicauca.workflow.domain.entities.Teacher;
+import co.unicauca.workflow.domain.entities.Coordinator;
 import co.unicauca.workflow.access.Factory;
 import co.unicauca.workflow.access.IDegreeWorkRepository;
 import co.unicauca.workflow.service.DegreeWorkService;
 import co.unicauca.workflow.domain.entities.DegreeWork;
 import co.unicauca.workflow.domain.entities.EstadoFormatoA;
 import co.unicauca.workflow.service.AdminService;
-import co.unicauca.workflow.service.SessionManager;
 import co.unicauca.workflow.service.UserService;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -30,13 +36,9 @@ import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -48,6 +50,9 @@ import javafx.stage.Stage;
 public class GestionPropuestaDocenteController implements Initializable {
 
     @FXML
+    private AnchorPane mainAnchorPane; // Añadido para cambiar el contenido
+
+    @FXML
     private TableView<DegreeWork> tblEstadosFormato;
 
     @FXML
@@ -57,7 +62,7 @@ public class GestionPropuestaDocenteController implements Initializable {
     private TableColumn<DegreeWork, String> colEstado;
 
     @FXML
-    private TableColumn<DegreeWork, Void> colAcciones; // Nueva columna para botones
+    private TableColumn<DegreeWork, Void> colAcciones;
 
     @FXML
     private ComboBox<String> comboClasificar;
@@ -71,16 +76,51 @@ public class GestionPropuestaDocenteController implements Initializable {
     @FXML
     private ToggleButton btnAnteproyectoDocente;
 
+    @FXML
+    private ToggleButton btnFormatoEstudiante;
+
+    @FXML
+    private ToggleButton btnAnteproyectoEstudiante;
+
+    @FXML
+    private ToggleButton btnEvaluarPropuestas;
+
+    @FXML
+    private ToggleButton btnEvaluarAnteproyectos;
+
+    @FXML
+    private Button btnAgregarPropuesta;
+
     private User usuario;
     private DegreeWorkService service;
     private ObservableList<DegreeWork> todosLosFormatos;
+    
+    private Teacher docenteActual;
 
-    // Constructor que recibe el usuario
+    
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
+        if (usuario instanceof Teacher) {
+            this.docenteActual = (Teacher) usuario;
+            
+            btnRol.setVisible(true);
+            btnFormatoDocente.setVisible(true);
+            btnAnteproyectoDocente.setVisible(true);
+            System.out.println("Usuario es Docente, mostrando botones");
+            
+            cargarEstados("Todos");
+            
+        }else {
+            System.out.println("Usuario no es Docente, botones ocultos");
+        }
+        
+    }
+
+
     public GestionPropuestaDocenteController(User usuario) {
         this.usuario = usuario;
     }
 
-    // Constructor por defecto necesario para FXML (aunque no se usará)
     public GestionPropuestaDocenteController() {
         this.usuario = null;
     }
@@ -88,28 +128,30 @@ public class GestionPropuestaDocenteController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         System.out.println("Inicializando GestionPropuestaDocenteController");
-        // Configurar visibilidad de botones según el rol
-        usuario = (User) SessionManager.getCurrentUser();
-        if (usuario instanceof Teacher) {
-            btnRol.setVisible(true);
-            btnFormatoDocente.setVisible(true);
-            btnAnteproyectoDocente.setVisible(true);
-            System.out.println("Usuario es Docente, mostrando botones");
-        } else {
-            System.out.println("Usuario no es Docente, botones ocultos");
-        }
 
-        // Inicializar el servicio
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
         service = new DegreeWorkService(repo);
 
-        // Configurar el ComboBox con opciones de clasificación mapeadas al enum
-        comboClasificar.getItems().addAll("Todos", "Pendiente", "Aprobado", "No aprobado", "Rechazado");
+        comboClasificar.getItems().addAll(
+                "Todos",
+                "Aceptado",
+                "No aceptado",
+                "Primera evaluación",
+                "Segunda evaluación",
+                "Tercera evaluación",
+                "Rechazado",
+                "Fecha más reciente",
+                "Fecha más antigua"
+        );
         comboClasificar.setValue("Todos");
 
-        // Configurar las columnas de la TableView
+        comboClasificar.setOnAction(event -> aplicarFiltro(comboClasificar.getValue()));
+
+        // Configurar columnas
         colNumeroFormato.setCellValueFactory(new PropertyValueFactory<>("tituloProyecto"));
-        colEstado.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEstado().toString()));
+        colEstado.setCellValueFactory(cellData
+                -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEstado().toString()));
+
         colAcciones.setCellFactory(col -> new TableCell<DegreeWork, Void>() {
             private final Button btnCorrections = new Button("Ver Correcciones");
 
@@ -118,9 +160,9 @@ public class GestionPropuestaDocenteController implements Initializable {
                 btnCorrections.setOnAction(event -> {
                     DegreeWork formato = getTableRow().getItem();
                     if (formato != null && (formato.getEstado() == EstadoFormatoA.NO_ACEPTADO || formato.getEstado() == EstadoFormatoA.RECHAZADO)) {
-                        mostrarCorrecciones(formato, (Node) event.getSource());
+                        mostrarCorrecciones(formato);
                     } else {
-                        Alert alert = new Alert(AlertType.WARNING);
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Acción no permitida");
                         alert.setHeaderText(null);
                         alert.setContentText("Solo se pueden ver correcciones para estados 'No aprobado' o 'Rechazado'.");
@@ -145,93 +187,146 @@ public class GestionPropuestaDocenteController implements Initializable {
             }
         });
 
-        // Cargar los estados al iniciar
-        cargarEstados();
-
-        // Listener para el ComboBox
-        comboClasificar.setOnAction(event -> {
-            String filtro = comboClasificar.getValue();
-            cargarEstados(filtro);
-        });
+        
     }
 
-    private void cargarEstados() {
-        cargarEstados("Todos");
-    }
-
+    
     private void cargarEstados(String filtro) {
-        try {
-            // Obtener todos los formatos de la base de datos
-            todosLosFormatos = FXCollections.observableArrayList(service.listarDegreeWorks());
+        if (docenteActual == null) {
+            System.out.println("⚠️ El docenteActual es null. No se pueden cargar los estados.");
+            return;
+        }
 
-            // Actualizar estados basados en la lógica: Rechazado si No aprobado 3 veces
-            for (DegreeWork formato : todosLosFormatos) {
-                if (formato.getNoAprobadoCount() >= 3 && formato.getEstado() != EstadoFormatoA.RECHAZADO) {
-                    formato.setEstado(EstadoFormatoA.RECHAZADO);
-                } else if (formato.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION && formato.getNoAprobadoCount() > 0) {
-                    formato.setEstado(EstadoFormatoA.NO_ACEPTADO);
-                }
-                // Si está en PRIMERA_EVALUACION y no tiene intentos, se mantiene como está
-            }
+        // Traer todos los trabajos de grado del docente
+        List<DegreeWork> todos = service.listarDegreeWorksPorDocente(docenteActual.getEmail());
 
-            // Filtrar según el ComboBox
-            ObservableList<DegreeWork> filteredList = todosLosFormatos.stream()
-                    .filter(formato -> filtro.equals("Todos") || 
-                            (filtro.equals("Pendiente") && formato.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION) ||
-                            (filtro.equals("Aprobado") && formato.getEstado() == EstadoFormatoA.ACEPTADO) ||
-                            (filtro.equals("No aprobado") && formato.getEstado() == EstadoFormatoA.NO_ACEPTADO) ||
-                            (filtro.equals("Rechazado") && formato.getEstado() == EstadoFormatoA.RECHAZADO))
-                    .collect(Collectors.collectingAndThen(Collectors.toList(), FXCollections::observableArrayList));
+        // Agrupar por estudiante y quedarnos solo con el de mayor id (último guardado)
+        Map<String, DegreeWork> ultimosPorEstudiante = todos.stream()
+                .filter(f -> f.getEstudiante() != null)
+                .collect(Collectors.toMap(
+                        f -> f.getEstudiante().getEmail(),
+                        f -> f,
+                        (f1, f2) -> f1.getId() > f2.getId() ? f1 : f2
+                ));
 
-            // Aplicar el estilo a las filas según el estado
-            tblEstadosFormato.setRowFactory(tv -> new javafx.scene.control.TableRow<DegreeWork>() {
-                @Override
-                protected void updateItem(DegreeWork item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setStyle("");
-                    } else {
-                        String color;
-                        if (item.getEstado() == EstadoFormatoA.ACEPTADO) {
-                            color = "#4CAF50";
-                        } else if (item.getEstado() == EstadoFormatoA.RECHAZADO) {
-                            color = "#F44336";
-                        } else { // Incluye PRIMERA_EVALUACION y NO_APROBADO
-                            color = "#e0e0e0";
-                        }
-                        setStyle("-fx-background-color: " + color + "; " +
-                                "-fx-padding: 10; " +
-                                "-fx-font-size: 14px; " +
-                                "-fx-text-fill: white; " +
-                                "-fx-border-radius: 5; " +
-                                "-fx-background-radius: 5;");
-                    }
-                }
-            });
+        List<DegreeWork> ultimos = new ArrayList<>(ultimosPorEstudiante.values());
 
-            // Actualizar la TableView con los datos filtrados
-            tblEstadosFormato.setItems(filteredList);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error al cargar estados desde la base de datos: " + e.getMessage());
+        // 🔹 Guardar lista base para filtros posteriores
+        todosLosFormatos = FXCollections.observableArrayList(ultimos);
+
+        // Aplicar filtro inicial
+        ObservableList<DegreeWork> filtrados = FXCollections.observableArrayList(
+                ultimos.stream()
+                        .filter(f -> filtro.equals("Todos")
+                        || f.getEstado().toString().equalsIgnoreCase(filtro))
+                        .collect(Collectors.toList())
+        );
+
+        // Cargar en la tabla
+        tblEstadosFormato.setItems(filtrados);
+    }
+
+
+
+    
+    private void aplicarFiltro(String opcion) {
+        if (opcion == null) {
+            return;
+        }
+
+        List<DegreeWork> base = new ArrayList<>(todosLosFormatos);
+
+        switch (opcion) {
+            case "Todos":
+                tblEstadosFormato.getItems().setAll(base);
+                break;
+
+            case "Aceptado":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.ACEPTADO)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "No aceptado":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.NO_ACEPTADO)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Primera evaluación":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Segunda evaluación":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.SEGUNDA_EVALUACION)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Tercera evaluación":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.TERCERA_EVALUACION)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Rechazado":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .filter(f -> f.getEstado() == EstadoFormatoA.RECHAZADO)
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Fecha más reciente":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .sorted(Comparator.comparing(DegreeWork::getFechaActual).reversed())
+                                .collect(Collectors.toList())
+                );
+                break;
+
+            case "Fecha más antigua":
+                tblEstadosFormato.getItems().setAll(
+                        base.stream()
+                                .sorted(Comparator.comparing(DegreeWork::getFechaActual))
+                                .collect(Collectors.toList())
+                );
+                break;
         }
     }
 
-    private void mostrarCorrecciones(DegreeWork formato, Node source) {
+    
+    private void mostrarCorrecciones(DegreeWork formato) {
         try {
+            // Cargar el FXML de correcciones
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/TeacherReviewFormatA.fxml"));
-            Parent root = loader.load();
-
+            Parent reviewContent = loader.load();
             TeacherReviewFormatAController controller = loader.getController();
-            controller.setUsuarioYFormato(usuario, formato); // Pasar el usuario y el formato
+            controller.setUsuarioYFormato(usuario, formato);
 
-            Stage stage = (Stage) source.getScene().getWindow();
-            stage.getScene().setRoot(root);
-            stage.setTitle("Correcciones para " + formato.getTituloProyecto());
+            // Reemplazar el contenido del AnchorPane principal
+            mainAnchorPane.getChildren().clear();
+            mainAnchorPane.getChildren().add(reviewContent);
+            AnchorPane.setTopAnchor(reviewContent, 0.0);
+            AnchorPane.setLeftAnchor(reviewContent, 0.0);
+            AnchorPane.setRightAnchor(reviewContent, 0.0);
+            AnchorPane.setBottomAnchor(reviewContent, 0.0);
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error al cargar TeacherReviewFormatA.fxml: " + e.getMessage());
-            Alert alert = new Alert(AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("No se pudo cargar la vista de correcciones.");
@@ -239,55 +334,11 @@ public class GestionPropuestaDocenteController implements Initializable {
         }
     }
 
-    // Método para establecer el usuario desde HomeController (opcional, ya que se usa el constructor)
-    public void setUsuario(User usuario) {
-        this.usuario = usuario;
-        // Actualizar visibilidad de botones si ya está inicializado
-        if (btnRol != null && btnFormatoDocente != null && btnAnteproyectoDocente != null) {
-            boolean esDocente = usuario instanceof Teacher;
-            btnRol.setVisible(esDocente);
-            btnFormatoDocente.setVisible(esDocente);
-            btnAnteproyectoDocente.setVisible(esDocente);
-            System.out.println("setUsuario: esDocente=" + esDocente);
-        }
-    }
-
-    public void onAgregarPropuesta(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementTeacherFormatA.fxml"));
-            Parent root = loader.load();
-
-            // Cambiar toda la escena
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            ManagementTeacherFormatAController teacherController = loader.getController();
-            teacherController.setHostServices(App.getHostServicesInstance());
-            stage.setTitle("Gestión de propuestas");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     
-    @FXML
-    private void handleLogout() {
-        try {
-            SessionManager.clearSession();
 
-            Stage stage = (Stage) btnRol.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
-            Parent root = loader.load();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Login - Workflow");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo cerrar sesión: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
     @FXML
-    private void onBtnUsuarioClicked() {
+    private void onBtnRolClicked() {
+        System.out.println("Botón Rol clicked");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
             Parent root = loader.load();
@@ -313,6 +364,72 @@ public class GestionPropuestaDocenteController implements Initializable {
             mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
+    @FXML
+    private void onBtnFormatoDocenteClicked() {
+        System.out.println("Botón Formato Docente clicked");
+        // Lógica para Formato Docente (puedes implementarla)
+    }
+
+
+    @FXML
+    private void onBtnFormatoEstudianteClicked() {
+        System.out.println("Botón Formato Estudiante clicked");
+        // Lógica para estudiante (oculta para docentes)
+    }
+
+    @FXML
+    private void onBtnAnteproyectoEstudianteClicked() {
+        System.out.println("Botón Anteproyecto Estudiante clicked");
+        // Lógica para estudiante (oculta para docentes)
+    }
+
+    @FXML
+    private void onBtnEvaluarPropuestasClicked() {
+        System.out.println("Botón Evaluar Propuestas clicked");
+        // Lógica para evaluar propuestas (puedes implementarla)
+    }
+
+    @FXML
+    private void onBtnEvaluarAnteproyectosClicked() {
+        System.out.println("Botón Evaluar Anteproyectos clicked");
+        // Lógica para evaluar anteproyectos (puedes implementarla)
+    }
+
+    @FXML
+    private void onAgregarPropuesta(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/ManagementTeacherFormatA.fxml"));
+            Parent root = loader.load();
+            ManagementTeacherFormatAController controller = loader.getController();
+            controller.setUsuario(usuario);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Agregar Propuesta");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar ManagementTeacherFormatA.fxml: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnAgregarPropuesta.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
+
+            System.out.println("Sesión cerrada, volviendo al login");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar Login.fxml: " + e.getMessage());
+        }
+    }
+    
     
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alerta = new Alert(tipo);
@@ -330,4 +447,5 @@ public class GestionPropuestaDocenteController implements Initializable {
         alerta.getDialogPane().setContent(contenedor);
         alerta.showAndWait();
     }
+
 }
