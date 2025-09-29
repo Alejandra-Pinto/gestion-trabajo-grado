@@ -39,6 +39,8 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
     private HostServices hostServices;
     private DegreeWork formato; // guardamos el seleccionado
     private static final String BASE_PATH = "Documents";
+    private Stage estadisticasStage;
+
 
 
     @FXML
@@ -218,6 +220,19 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             lblCargarObjetivoGeneral.setText(formato.getObjetivoGeneral() != null ? formato.getObjetivoGeneral() : "No definido");
             lblCargarObjetivosEspecificos.setText((formato.getObjetivosEspecificos() != null && !formato.getObjetivosEspecificos().isEmpty())
             ? String.join("; ", formato.getObjetivosEspecificos()): "No disponibles");
+            
+            // Habilitar o deshabilitar el botón Enviar según el estado actual
+            if (formato.getEstado() == co.unicauca.workflow.domain.entities.EstadoFormatoA.PRIMERA_EVALUACION
+                    || formato.getEstado() == co.unicauca.workflow.domain.entities.EstadoFormatoA.SEGUNDA_EVALUACION
+                    || formato.getEstado() == co.unicauca.workflow.domain.entities.EstadoFormatoA.TERCERA_EVALUACION
+                    || formato.getEstado() == co.unicauca.workflow.domain.entities.EstadoFormatoA.NO_ACEPTADO) {
+                btnEnviar.setDisable(false); 
+                cmbEstado.setDisable(false); 
+            } else {
+                btnEnviar.setDisable(true);  
+                cmbEstado.setDisable(true); 
+            }
+
         }
     }
     
@@ -226,7 +241,7 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/Statistics.fxml"));
             Parent root = loader.load();
 
-            Stage estadisticasStage = new Stage();
+            estadisticasStage = new Stage();
             estadisticasStage.setScene(new Scene(root));
             estadisticasStage.setTitle("Estadísticas");
 
@@ -426,6 +441,11 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
     }
     private void cargarVistaConUsuario(String fxml, String tituloVentana) {
         try {
+            // Cerrar la ventana de estadísticas si está abierta
+            if (estadisticasStage != null && estadisticasStage.isShowing()) {
+                estadisticasStage.close();
+            }
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
             Parent root = loader.load();
 

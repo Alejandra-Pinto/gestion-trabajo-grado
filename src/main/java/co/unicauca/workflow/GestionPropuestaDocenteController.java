@@ -42,11 +42,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-/**
- * FXML Controller class
- *
- * @author Dana Isabella
- */
+
 public class GestionPropuestaDocenteController implements Initializable {
 
     @FXML
@@ -57,6 +53,12 @@ public class GestionPropuestaDocenteController implements Initializable {
 
     @FXML
     private TableColumn<DegreeWork, String> colNumeroFormato;
+    
+    @FXML
+    private TableColumn<DegreeWork, String> colEmailEstudiante;
+
+    @FXML
+    private TableColumn<DegreeWork, String> colFechaActual;
 
     @FXML
     private TableColumn<DegreeWork, String> colEstado;
@@ -151,6 +153,29 @@ public class GestionPropuestaDocenteController implements Initializable {
         colNumeroFormato.setCellValueFactory(new PropertyValueFactory<>("tituloProyecto"));
         colEstado.setCellValueFactory(cellData
                 -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getEstado().toString()));
+        
+        // Email del estudiante
+        colEmailEstudiante.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getEstudiante() != null) {
+                return new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().getEstudiante().getEmail()
+                );
+            } else {
+                return new javafx.beans.property.SimpleStringProperty("Sin estudiante");
+            }
+        });
+
+        // Fecha actual
+        colFechaActual.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getFechaActual() != null) {
+                return new javafx.beans.property.SimpleStringProperty(
+                        cellData.getValue().getFechaActual().toString()
+                );
+            } else {
+                return new javafx.beans.property.SimpleStringProperty("N/A");
+            }
+        });
+
 
         colAcciones.setCellFactory(col -> new TableCell<DegreeWork, Void>() {
             private final Button btnCorrections = new Button("Ver Correcciones");
