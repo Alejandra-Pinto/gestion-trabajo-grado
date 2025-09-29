@@ -74,7 +74,7 @@ public abstract class User {
         return email;
     }
     public void setEmail(String email) {
-        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+        if (email == null) {
             throw new IllegalArgumentException("El correo electrónico no es válido.");
         }
         this.email = email.trim().toLowerCase();
@@ -94,8 +94,7 @@ public abstract class User {
         return role;
     }
     public void setRole(String role) {
-        if (role == null || 
-           !(role.equals("STUDENT") || role.equals("PROFESSOR") || role.equals("COORDINATOR"))) {
+        if (role == null) {
             throw new IllegalArgumentException("Rol inválido. Debe ser STUDENT, PROFESSOR o COORDINATOR.");
         }
         this.role = role;
