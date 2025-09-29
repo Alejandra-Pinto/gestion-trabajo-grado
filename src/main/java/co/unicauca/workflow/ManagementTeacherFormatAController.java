@@ -113,9 +113,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             btnUsuario.setText("Estudiante: " + usuario.getFirstName());
         } else if (usuario.getRole().equalsIgnoreCase("docente")) {
             btnUsuario.setText("Docente: " + usuario.getFirstName());
-        } else {
-            btnUsuario.setText(usuario.getFirstName());
-        }
+        } 
     }
 
     public void setFormato(DegreeWork formato) {
