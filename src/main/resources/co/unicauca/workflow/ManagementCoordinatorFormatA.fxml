@@ -31,7 +31,7 @@
                         
                         <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="468.0" text="Coordinador" textFill="#111f63">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/gente2.png" />
                                  </image>
@@ -44,7 +44,7 @@
 
                         <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Formato de Propuesta">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/carpeta2.png" />
                                  </image>
@@ -57,7 +57,7 @@
 
                         <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Anteproyecto">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/birrete2.png" />
                                  </image>
