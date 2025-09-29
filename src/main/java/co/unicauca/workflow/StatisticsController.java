@@ -22,7 +22,7 @@ public class StatisticsController implements Observer {
 
     public void setService(DegreeWorkService service) {
         this.service = service;
-        service.addObserver(this); // 👈 Se registra como observador
+        service.addObserver(this); 
         actualizarEstadisticas();
     }
 

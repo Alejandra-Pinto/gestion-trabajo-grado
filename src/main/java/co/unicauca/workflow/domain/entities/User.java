@@ -110,6 +110,6 @@ public abstract class User {
         this.status = status;
     }
 
-    // 🔹 Método abstracto: comportamiento que dependerá del rol
+    //Método abstracto: comportamiento que dependerá del rol
     public abstract void showDashboard();
 }

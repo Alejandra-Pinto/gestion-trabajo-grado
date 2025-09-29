@@ -258,7 +258,7 @@ public class CoordinatorReviewFormatAController implements Initializable, Hostab
             estadisticasStage.show();
             
             StatisticsController statsController = loader.getController();
-            statsController.setService(degreeWorkService); // 👈 pasa el servicio al observer
+            statsController.setService(degreeWorkService); 
 
             // Hacer que se mueva junto con la principal
             mainStage.xProperty().addListener((obs, oldVal, newVal)

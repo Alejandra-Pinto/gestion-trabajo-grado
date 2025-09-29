@@ -18,7 +18,7 @@ public class UserSQLiteRepository implements IUsersRepository {
         }
     }
 
-    // 🔹 Crear tabla si no existe
+    //Crear tabla si no existe
     private void createUsersTableIfNotExists() throws SQLException {
         String sqlUsers = "CREATE TABLE IF NOT EXISTS users (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -34,7 +34,7 @@ public class UserSQLiteRepository implements IUsersRepository {
         stmt1.execute(sqlUsers);
     }
 
-    // Intentar agregar columna status si no existe
+    //Intentar agregar columna status si no existe
     private void addStatusColumnIfNotExists() {
         try (Statement stmt = conn.createStatement()) {
             stmt.execute("ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'ACEPTADO'");
@@ -90,7 +90,6 @@ public class UserSQLiteRepository implements IUsersRepository {
             pstmt.setString(2, password);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                // ⚠️ Ya no bloqueamos aquí al coordinador
                 return buildUserFromResultSet(rs);
             }
         } catch (SQLException e) {

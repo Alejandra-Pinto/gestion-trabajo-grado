@@ -218,7 +218,7 @@ public class GestionPropuestaDocenteController implements Initializable {
     
     private void cargarEstados(String filtro) {
         if (docenteActual == null) {
-            System.out.println("⚠️ El docenteActual es null. No se pueden cargar los estados.");
+            System.out.println("⚠️ El docente actual es null. No se pueden cargar los estados.");
             return;
         }
 
@@ -236,7 +236,7 @@ public class GestionPropuestaDocenteController implements Initializable {
 
         List<DegreeWork> ultimos = new ArrayList<>(ultimosPorEstudiante.values());
 
-        // 🔹 Guardar lista base para filtros posteriores
+        // Guardar lista base para filtros posteriores
         todosLosFormatos = FXCollections.observableArrayList(ultimos);
 
         // Aplicar filtro inicial

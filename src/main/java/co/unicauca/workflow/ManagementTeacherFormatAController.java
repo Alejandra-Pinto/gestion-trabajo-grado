@@ -325,7 +325,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
 
             formato.setEstado(nuevoEstado);
 
-            // 🔹 Guardar SIEMPRE como nuevo registro (NO update)
             boolean creado = service.registrarFormato(formato);
 
             if (creado) {

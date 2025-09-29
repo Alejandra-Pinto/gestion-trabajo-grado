@@ -74,7 +74,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
 
         configurarColumnas();
         cargarFormatos();
-        inicializarComboBox(); // aquí ya queda conectado el evento setOnAction
+        inicializarComboBox(); //aquí ya queda conectado el evento setOnAction
     }
 
     private void configurarColumnas() {
@@ -154,7 +154,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
             CoordinatorReviewFormatAController controller = loader.getController();
             controller.setHostServices(App.getHostServicesInstance());
             controller.setFormato(formato);
-            controller.setDegreeWorkService(service); // 🔥 aquí inyectas el service
+            controller.setDegreeWorkService(service); 
 
             Stage currentStage = (Stage) tableFormatos.getScene().getWindow();
             currentStage.setScene(new Scene(root));

@@ -48,19 +48,18 @@ public class ManagementAdminController {
     public void initialize() {
         repo = new UserSQLiteRepository();
 
-        // ✅ Tomar el usuario desde la sesión
         SuperAdmin current = (SuperAdmin)SessionManager.getCurrentUser();
         if (current instanceof SuperAdmin) {
             usuario = (SuperAdmin) current;
         }
 
-        // Configurar columnas
+        //Configuramos las columnas
         colCorreo.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEmail()));
         colNombre.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 data.getValue().getFirstName() + " " + data.getValue().getLastName()
         ));
 
-        // Columna de estado con ComboBox
+        //Columna de estado con ComboBox
         colEstado.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getStatus()));
         colEstado.setCellFactory(col -> {
             return new TableCell<Coordinator, String>() {
@@ -118,7 +117,6 @@ public class ManagementAdminController {
             mostrarAlerta("Aviso", "No se realizaron cambios en los estados.", Alert.AlertType.WARNING);
         }
 
-        // 🔄 Recargar tabla desde BD
         cargarCoordinadores();
     }
 

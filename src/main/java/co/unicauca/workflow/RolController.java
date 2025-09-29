@@ -153,7 +153,7 @@ public class RolController {
     }
 
     /**
-     * Acción del botón "Volver" → Regresa a Home.fxml
+     * Acción del botón "Volver" Regresa a Home.fxml
      */
     @FXML
     private void handleVolver() {
@@ -177,7 +177,7 @@ public class RolController {
     }
 
     /**
-     * Acción del botón "Cerrar Sesión" → Regresa al Login.fxml
+     * Acción del botón "Cerrar Sesión" Regresa al Login.fxml
      */
     @FXML
     private void handleLogout() {
@@ -206,10 +206,6 @@ public class RolController {
             cargarInformacionUsuario();
         }
     }
-
-    // ===========================
-    // IMPLEMENTACIÓN DE BOTONES
-    // ===========================
 
     @FXML
     private void onBtnFormatoDocenteClicked() {

@@ -36,14 +36,13 @@ public class ManagementStudentFormatAController implements Initializable {
     
     private DegreeWorkService service;
     private User usuarioActual;
-    private DegreeWork formatoActual; // 🔹 Guardamos el formato encontrado
+    private DegreeWork formatoActual; 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         IDegreeWorkRepository repo = Factory.getInstance().getDegreeWorkRepository("sqlite");
         service = new DegreeWorkService(repo);
 
-        // ✅ Tomar usuario de sesión
         usuarioActual = (User) SessionManager.getCurrentUser();
         cargarFormatoA();
     }
