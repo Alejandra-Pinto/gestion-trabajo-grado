@@ -29,7 +29,7 @@
                         </ImageView>
                         <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="468.0" text="Administrador" textFill="#111f63">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/gente2.png" />
                                  </image>
@@ -41,7 +41,7 @@
                         </ToggleButton>
                         <ToggleButton fx:id="btnCoordinadores" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="468.0" text="Gestión de Coordinadores">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/acceso.png" />
                                  </image>

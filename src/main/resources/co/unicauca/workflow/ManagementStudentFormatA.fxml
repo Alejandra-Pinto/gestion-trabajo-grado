@@ -19,7 +19,7 @@
                <children>
                   <ToggleButton fx:id="btnUsuario" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="470.0" text="Estudiante" textFill="#111f63">
                      <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                        <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                            <image>
                               <Image url="@images/gente2.png" />
                            </image>
@@ -32,7 +32,7 @@
 
                   <ToggleButton fx:id="btnFormatoPropuesta" layoutY="101.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Formato de Propuesta">
                      <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                        <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                            <image>
                               <Image url="@images/carpeta2.png" />
                            </image>
@@ -45,7 +45,7 @@
 
                   <ToggleButton fx:id="btnAnteproyecto" layoutY="202.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="470.0" text="Anteproyecto">
                      <graphic>
-                        <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                        <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                            <image>
                               <Image url="@images/birrete2.png" />
                            </image>

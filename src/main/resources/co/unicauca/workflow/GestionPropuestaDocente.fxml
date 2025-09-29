@@ -30,7 +30,7 @@
                               <Image url="@images/bandera.png" />
                            </image>
                         </ImageView>
-                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Docente" visible="false" onAction="#onBtnRolClicked">
+                        <ToggleButton fx:id="btnRol" graphicTextGap="20" layoutX="3.0" mnemonicParsing="false" onAction="#onBtnRolClicked" prefHeight="101.0" prefWidth="453.0" text="Docente" visible="false">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
@@ -54,7 +54,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnFormatoDocente" graphicTextGap="20" layoutX="3.0" layoutY="103.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Docente" visible="false" onAction="#onBtnFormatoDocenteClicked">
+                        <ToggleButton fx:id="btnFormatoDocente" graphicTextGap="20" layoutX="3.0" layoutY="103.0" mnemonicParsing="false" onAction="#onBtnFormatoDocenteClicked" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Docente" visible="false">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -66,7 +66,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnFormatoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="309.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Estudiante" visible="false" onAction="#onBtnFormatoEstudianteClicked">
+                        <ToggleButton fx:id="btnFormatoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="309.0" mnemonicParsing="false" onAction="#onBtnFormatoEstudianteClicked" prefHeight="101.0" prefWidth="453.0" text="Formato propuesta Estudiante" visible="false">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -78,7 +78,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnAnteproyectoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="412.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Estudiante" visible="false" onAction="#onBtnAnteproyectoEstudianteClicked">
+                        <ToggleButton fx:id="btnAnteproyectoEstudiante" graphicTextGap="20" layoutX="3.0" layoutY="412.0" mnemonicParsing="false" onAction="#onBtnAnteproyectoEstudianteClicked" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Estudiante" visible="false">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -90,7 +90,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnEvaluarPropuestas" graphicTextGap="20" layoutX="3.0" layoutY="515.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar propuestas" visible="false" onAction="#onBtnEvaluarPropuestasClicked">
+                        <ToggleButton fx:id="btnEvaluarPropuestas" graphicTextGap="20" layoutX="3.0" layoutY="515.0" mnemonicParsing="false" onAction="#onBtnEvaluarPropuestasClicked" prefHeight="101.0" prefWidth="453.0" text="Evaluar propuestas" visible="false">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -102,7 +102,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnEvaluarAnteproyectos" graphicTextGap="20" layoutX="3.0" layoutY="618.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Evaluar anteproyectos" visible="false" onAction="#onBtnEvaluarAnteproyectosClicked">
+                        <ToggleButton fx:id="btnEvaluarAnteproyectos" graphicTextGap="20" layoutX="3.0" layoutY="618.0" mnemonicParsing="false" onAction="#onBtnEvaluarAnteproyectosClicked" prefHeight="101.0" prefWidth="453.0" text="Evaluar anteproyectos" visible="false">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -141,9 +141,11 @@
                         <ComboBox fx:id="comboClasificar" layoutX="198.0" layoutY="153.0" prefWidth="150.0" />
                         <TableView fx:id="tblEstadosFormato" layoutX="97.0" layoutY="211.0" prefHeight="421.0" prefWidth="947.0">
                             <columns>
-                                <TableColumn fx:id="colNumeroFormato" prefWidth="373.5" text="Número de Formato" />
-                                <TableColumn fx:id="colEstado" prefWidth="373.5" text="Estado" />
-                                <TableColumn fx:id="colAcciones" prefWidth="200" text="Acciones" />
+                                <TableColumn fx:id="colNumeroFormato" prefWidth="209.59996795654297" text="Número de Formato" />
+                                <TableColumn fx:id="colEmailEstudiante" prefWidth="244.00003051757812" text="Email Estudiante" />
+                                <TableColumn fx:id="colFechaActual" text="Fecha Actual" />
+                                <TableColumn fx:id="colEstado" prefWidth="222.4000244140625" text="Estado" />
+                                <TableColumn fx:id="colAcciones" prefWidth="222.4000244140625" text="Acciones" />
                             </columns>
                         </TableView>
                         <Button fx:id="btnAgregarPropuesta" layoutX="923.0" layoutY="642.0" mnemonicParsing="false" onAction="#onAgregarPropuesta" style="-fx-background-color: #111F63;" text="AGREGAR PROPUESTA" textFill="WHITE" />

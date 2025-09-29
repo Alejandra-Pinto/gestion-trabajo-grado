@@ -120,56 +120,31 @@ public class ManagementCoordinatorFormatAController implements Initializable {
 
     private void cargarFormatos() {
         try {
-            todosLosFormatos = service.listarDegreeWorks();
+            List<DegreeWork> crudos = service.listarDegreeWorks();
 
-            // Agrupar por estudiante y quedarnos solo con el de mayor id
-            Map<String, DegreeWork> ultimosPorEstudiante = todosLosFormatos.stream()
+            Map<String, DegreeWork> ultimosPorEstudiante = crudos.stream()
                     .collect(Collectors.toMap(
                             f -> f.getEstudiante().getEmail(),
                             f -> f,
                             (f1, f2) -> f1.getId() > f2.getId() ? f1 : f2
                     ));
 
-            List<DegreeWork> ultimos = new ArrayList<>(ultimosPorEstudiante.values());
-            // Aplicar lógica de estados al cargar
-            for (DegreeWork formato : ultimos) {
+            todosLosFormatos = new ArrayList<>(ultimosPorEstudiante.values());
+
+            for (DegreeWork formato : todosLosFormatos) {
                 service.aplicarLogicaEstados(formato);
-                service.actualizarFormato(formato); // Guardar cambios si aplica
+                service.actualizarFormato(formato);
             }
-            tableFormatos.getItems().setAll(ultimos);
+
+            tableFormatos.getItems().setAll(todosLosFormatos);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @FXML
-    private void onBtnUsuarioClicked() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
-            Parent root = loader.load();
 
-            RolController rolController = loader.getController();
-
-            // Crear servicios
-            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
-            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
-
-            // Pasar usuario + servicios al controller
-            if (usuarioActual != null) {
-                rolController.setUsuario(usuarioActual, userService, adminService);
-            }
-
-            Stage stage = (Stage) btnUsuario.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Información del Usuario");
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-    }
+    
     
     private void abrirVentanaRevision(DegreeWork formato) {
         try {
@@ -203,7 +178,7 @@ public class ManagementCoordinatorFormatAController implements Initializable {
         );
         comboClasificar.getSelectionModel().selectFirst(); // por defecto "Todos"
 
-        // 🔥 Evento que se dispara al cambiar de opción
+        
         comboClasificar.setOnAction(event -> {
             aplicarFiltro(comboClasificar.getValue());
         });
@@ -276,9 +251,44 @@ public class ManagementCoordinatorFormatAController implements Initializable {
                                 .collect(Collectors.toList())
                 );
                 break;
+
+            default:
+                // Por si llega un valor inesperado
+                tableFormatos.getItems().setAll(base);
+                break;
         }
     }
 
+
+    
+    @FXML
+    private void onBtnUsuarioClicked() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/co/unicauca/workflow/RolView.fxml"));
+            Parent root = loader.load();
+
+            RolController rolController = loader.getController();
+
+            // Crear servicios
+            UserService userService = new UserService(Factory.getInstance().getUserRepository("sqlite"));
+            AdminService adminService = new AdminService(Factory.getInstance().getAdminRepository("sqlite"));
+
+            // Pasar usuario + servicios al controller
+            if (usuarioActual != null) {
+                rolController.setUsuario(usuarioActual, userService, adminService);
+            }
+
+            Stage stage = (Stage) btnUsuario.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Información del Usuario");
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo cargar la vista de Rol: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    
     @FXML
     private void handleLogout() {
         try {

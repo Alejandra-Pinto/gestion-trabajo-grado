@@ -43,7 +43,7 @@
                         <!-- Docente -->
                         <ToggleButton fx:id="btnFormatoDocente" layoutY="101.0" onAction="#onBtnFormatoDocenteClicked" prefHeight="101.0" prefWidth="468.0" text="Formato de Propuesta" visible="false">
                           <graphic>
-                             <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                             <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                 <image>
                                    <Image url="@images/carpeta2.png" />
                                 </image>
@@ -56,7 +56,7 @@
 
                        <ToggleButton fx:id="btnAnteproyectoDocente" layoutY="202.0" prefHeight="101.0" prefWidth="468.0" text="Anteproyecto" visible="false">
                           <graphic>
-                             <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                             <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                 <image>
                                    <Image url="@images/birrete2.png" />
                                 </image>
@@ -70,7 +70,7 @@
                        <!-- Estudiante -->
                        <ToggleButton fx:id="btnFormatoEstudiante" layoutY="101.0" onAction="#onBtnFormatoEstudianteClicked" prefHeight="101.0" prefWidth="468.0" text="Formato de Propuesta" visible="false">
                           <graphic>
-                             <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                             <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                 <image>
                                    <Image url="@images/carpeta2.png" />
                                 </image>
@@ -83,7 +83,7 @@
 
                        <ToggleButton fx:id="btnAnteproyectoEstudiante" layoutY="202.0" prefHeight="101.0" prefWidth="468.0" text="Anteproyecto" visible="false">
                           <graphic>
-                             <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                             <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                 <image>
                                    <Image url="@images/birrete2.png" />
                                 </image>
@@ -97,7 +97,7 @@
                        <!-- Coordinador -->
                        <ToggleButton fx:id="btnEvaluarPropuestas" layoutY="101.0" onAction="#onBtnEvaluarPropuestasClicked" prefHeight="101.0" prefWidth="468.0" text="Evaluar Propuestas" visible="false">
                           <graphic>
-                             <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                             <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                 <image>
                                    <Image url="@images/carpeta2.png" />
                                 </image>
@@ -110,7 +110,7 @@
 
                        <ToggleButton fx:id="btnEvaluarAnteproyectos" layoutY="202.0" onAction="#onBtnEvaluarAnteproyectosClicked" prefHeight="101.0" prefWidth="468.0" text="Evaluar Anteproyectos" visible="false">
                           <graphic>
-                             <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                             <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                 <image>
                                    <Image url="@images/birrete2.png" />
                                 </image>

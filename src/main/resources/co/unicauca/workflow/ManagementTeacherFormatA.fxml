@@ -12,18 +12,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementTeacherFormatAController">
+<AnchorPane id="AnchorPane" prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0f3ea4;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.unicauca.workflow.ManagementTeacherFormatAController">
 
    <children>
-      <Pane prefHeight="804.0" prefWidth="1552.0" style="-fx-background-color: #0F3EA4;">
-         <children>
-            <SplitPane dividerPositions="0.24654323880946796" layoutY="61.0" prefHeight="600.0" prefWidth="1552.0">
+            <SplitPane fx:id="splitMain" dividerPositions="0.30523255813953487" layoutY="115.0" prefHeight="705.0" prefWidth="1553.0">
               <items>
                 <!-- Panel izquierdo -->
-                <AnchorPane prefHeight="682.0" prefWidth="427.0" style="-fx-background-color: fafafa;">
+                <AnchorPane fx:id="panelIzquierdo" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
                         <ImageView fitHeight="231.0" fitWidth="454.0" layoutY="576.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -33,7 +30,7 @@
                         
                         <ToggleButton fx:id="btnUsuario" graphicTextGap="10" mnemonicParsing="false" onAction="#onBtnUsuarioClicked" prefHeight="101.0" prefWidth="453.0" text="Docente" textFill="#111f63">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/gente2.png" />
                                  </image>
@@ -46,7 +43,7 @@
 
                         <ToggleButton fx:id="btnFormatoPropuesta" graphicTextGap="10" layoutY="102.0" mnemonicParsing="false" onAction="#onBtnFormatoDocenteClicked" prefHeight="101.0" prefWidth="453.0" text="Formato de Propuesta">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/carpeta2.png" />
                                  </image>
@@ -59,7 +56,7 @@
 
                         <ToggleButton fx:id="btnAnteproyecto" graphicTextGap="10" layoutY="204.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto">
                            <graphic>
-                              <ImageView fitHeight="24.0" fitWidth="24.0" preserveRatio="true">
+                              <ImageView fitHeight="51.0" fitWidth="51.0" preserveRatio="true">
                                  <image>
                                     <Image url="@images/birrete2.png" />
                                  </image>
@@ -73,8 +70,8 @@
                   </AnchorPane>
 
                 <!-- Panel derecho -->
-                <AnchorPane prefHeight="486.0" prefWidth="582.0">
-                     <children>
+                <AnchorPane fx:id="panelDerecho" minHeight="0.0" minWidth="0.0" prefHeight="686.0" prefWidth="1075.0">
+                    <children>
                         <Label layoutX="50.0" layoutY="30.0" text="GESTIÓN DE MI PROPUESTA">
                            <font>
                               <Font name="System Bold" size="44.0" />
@@ -186,13 +183,11 @@
               </items>
             </SplitPane>
 
-            <ImageView fitHeight="45.0" fitWidth="88.0" layoutX="64.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@images/logo.png" />
-               </image>
-            </ImageView>
-            <Button layoutX="1398.0" layoutY="15.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
-         </children>
-      </Pane>
+      <ImageView fx:id="imgLogo" fitHeight="85.0" fitWidth="160.0" layoutX="60.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/logo.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="1370.0" layoutY="40.0" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14; -fx-border-color: white; -fx-border-width: 1; -fx-border-radius: 5;" text="Cerrar Sesión" />
    </children>
 </AnchorPane>
