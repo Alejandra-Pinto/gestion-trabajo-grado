@@ -29,7 +29,7 @@ public class UserServiceTest {
     public void testRegistrarUsuarioValido() throws Exception {
         System.out.println("registrarUsuarioValido");
         User nuevoUsuario = new User("Pedro", "Perez", "3216549870", "Ingeniería de Sistemas",
-                                     "pedro5@unicauca.edu.co", "@Pedro123!", "STUDENT") {
+                                     "pedro6@unicauca.edu.co", "@Pedro123!", "STUDENT") {
             @Override
             public void showDashboard() {}
         };
@@ -156,12 +156,12 @@ public class UserServiceTest {
         UserService instance = new UserService(repository);
 
         User estudiante = new User("Carlos", "Ruiz", "3201112233", "Ingeniería de Sistemas",
-                                   "carlos3@unicauca.edu.co", "Carlos123!", "STUDENT") {
+                                   "carlos4@unicauca.edu.co", "Carlos123!", "STUDENT") {
             @Override
             public void showDashboard() {}
         };
         User profesor = new User("Ana", "Torres", "3211112233", "Ingeniería de Sistemas",
-                                  "ana3@unicauca.edu.co", "Ana123!", "TEACHER") {
+                                  "ana4@unicauca.edu.co", "Ana123!", "TEACHER") {
             @Override
             public void showDashboard() {}
         };
@@ -171,8 +171,8 @@ public class UserServiceTest {
 
         List<User> estudiantes = instance.listarPorRol("STUDENT");
 
-        assertTrue(estudiantes.stream().anyMatch(u -> u.getEmail().equals("carlos3@unicauca.edu.co")));
-        assertTrue(estudiantes.stream().noneMatch(u -> u.getEmail().equals("ana3@unicauca.edu.co")));
+        assertTrue(estudiantes.stream().anyMatch(u -> u.getEmail().equals("carlos4@unicauca.edu.co")));
+        assertTrue(estudiantes.stream().noneMatch(u -> u.getEmail().equals("ana4@unicauca.edu.co")));
     }
 
     @Test

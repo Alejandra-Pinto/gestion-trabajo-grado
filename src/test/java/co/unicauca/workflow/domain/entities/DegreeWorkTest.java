@@ -69,28 +69,28 @@ class DegreeWorkTest {
     void testSetTituloProyectoInvalid() {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
                 degreeWork.setTituloProyecto("   "));
-        assertEquals("El título del proyecto no puede estar vacío", ex.getMessage());
+        assertEquals("El título del proyecto no puede estar vacío.", ex.getMessage());
     }
 
     @Test
     void testSetObjetivoGeneralInvalid() {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
                 degreeWork.setObjetivoGeneral(""));
-        assertEquals("El objetivo general no puede estar vacío", ex.getMessage());
+        assertEquals("El objetivo general no puede estar vacío.", ex.getMessage());
     }
 
     @Test
     void testSetArchivoPdfInvalid() {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
                 degreeWork.setArchivoPdf("documento.txt"));
-        assertEquals("El archivo debe ser un PDF válido", ex.getMessage());
+        assertEquals("El archivo debe ser un PDF válido.", ex.getMessage());
     }
 
     @Test
     void testSetFechaFuturaInvalid() {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
                 degreeWork.setFechaActual(LocalDate.now().plusDays(1)));
-        assertEquals("La fecha no puede ser futura", ex.getMessage());
+        assertEquals("La fecha no puede ser futura ni nula.", ex.getMessage());
     }
 
     @Test

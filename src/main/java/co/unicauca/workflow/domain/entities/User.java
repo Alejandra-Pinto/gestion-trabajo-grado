@@ -29,7 +29,7 @@ public abstract class User {
 
     public User(){}
 
-    // 🔹 Métodos getters/setters con validaciones
+    // Métodos getters/setters con validaciones
     public String getFirstName() {
         return firstName;
     }
@@ -85,9 +85,9 @@ public abstract class User {
     }
     public void setPassword(String password) {
         if (password == null || password.length() < 6) {
-            throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres.");
+            System.out.println("Contraseña insegura. Debe tener al menos 6 caracteres, un número, un caracter especial y una mayúscula.");
         }
-        this.password = password; // 🔒 Aquí normalmente se cifraría
+        this.password = password; // Aquí normalmente se cifraría
     }
 
     public String getRole() {
