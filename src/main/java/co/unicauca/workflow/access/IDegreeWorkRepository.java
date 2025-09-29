@@ -19,5 +19,7 @@ public interface IDegreeWorkRepository {
 
     List<DegreeWork> listByTeacher(String teacherEmail);
     List<DegreeWork> listByStudentAndModalidad(String studentEmail, Modalidad modalidad);
+    DegreeWork findLatestByStudentAndModalidad(String studentEmail, Modalidad modalidad);
+
 
 }

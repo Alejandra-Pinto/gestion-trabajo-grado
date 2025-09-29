@@ -27,14 +27,19 @@ public class DegreeWorkService extends Subject {
         return repository.listAllDegreeWork(); 
     }
 
-    // Nuevo método para listar por docente
+    // método para listar por docente
     public List<DegreeWork> listarDegreeWorksPorDocente(String teacherEmail) {
         return repository.listByTeacher(teacherEmail);
     }
+    
+    public DegreeWork obtenerUltimoPorEstudianteYModalidad(String studentEmail, Modalidad modalidad) {
+        return repository.findLatestByStudentAndModalidad(studentEmail, modalidad);
+    }
+
 
     // Actualizar un formato
     public boolean actualizarFormato(DegreeWork formato) {
-        // Aplicar lógica de estados antes de actualizar
+        
         aplicarLogicaEstados(formato);
         boolean updated = repository.update(formato);
         if (updated) {
@@ -57,7 +62,7 @@ public class DegreeWorkService extends Subject {
             if (nuevoEstado == EstadoFormatoA.NO_ACEPTADO) {
                 formato.incrementNoAprobadoCount();
             }
-            aplicarLogicaEstados(formato); // Verificar si pasa a RECHAZADO
+            aplicarLogicaEstados(formato); // Verificar si pasa a rechazado
             boolean updated = repository.update(formato);
             if (updated) {
                 this.notifyAllObserves(); 
@@ -92,7 +97,7 @@ public class DegreeWorkService extends Subject {
         aplicarLogicaEstados(formato); // Verificar si pasa a RECHAZADO
         boolean updated = repository.update(formato);
         if (updated) {
-            this.notifyAllObserves(); // 🔔 notificar
+            this.notifyAllObserves(); // notificar
         }
         return updated;
     }
@@ -102,10 +107,10 @@ public class DegreeWorkService extends Subject {
         DegreeWork formato = repository.findById(id);
         if (formato != null) {
             formato.setEstado(EstadoFormatoA.RECHAZADO);
-            aplicarLogicaEstados(formato); // Asegura consistencia
+            aplicarLogicaEstados(formato); 
             boolean updated = repository.update(formato);
             if (updated) {
-                this.notifyAllObserves(); // 🔔 notificar
+                this.notifyAllObserves();
             }
             return updated;
         }
@@ -120,15 +125,15 @@ public class DegreeWorkService extends Subject {
         }
 
         formato.setCorrecciones(correcciones);
-        aplicarLogicaEstados(formato); // Verificar estado tras correcciones
+        aplicarLogicaEstados(formato); 
         boolean updated = repository.update(formato);
         if (updated) {
-            this.notifyAllObserves(); // notificar cambios a observadores
+            this.notifyAllObserves(); 
         }
         return updated;
     }
 
-    // Método auxiliar para aplicar la lógica de estados
+    
     public void aplicarLogicaEstados(DegreeWork formato) {
         if (formato.getEstado() == EstadoFormatoA.NO_ACEPTADO || 
             formato.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION || 

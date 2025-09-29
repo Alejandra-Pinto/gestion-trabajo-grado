@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -62,7 +63,6 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
     @FXML
     private TextField txtArchivoAdjunto;
 
-    // Para la carta de aceptación
     @FXML
     private Label lblCartaAceptacion;
     @FXML
@@ -90,10 +90,24 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
         List<User> estudiantes = userService.listarPorRol("STUDENT");
         List<User> profesores = userService.listarPorRol("TEACHER");
 
-        cbEstudiante.getItems().setAll(estudiantes.stream().map(User::getEmail).toList());
+        // filtrar estudiantes que no tengan proyectos vigentes
+        List<User> estudiantesHabilitados = new ArrayList<>();
+        for (User est : estudiantes) {
+            if (puedeProponer(est.getEmail())) {
+                estudiantesHabilitados.add(est);
+            }
+        }
+
+        cbEstudiante.getItems().setAll(estudiantesHabilitados.stream().map(User::getEmail).toList());
         cbDirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
         cbCodirector.getItems().setAll(profesores.stream().map(User::getEmail).toList());
 
+        
+        cbEstudiante.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                actualizarModalidadesDisponibles(newVal);
+            }
+        });
 
         cbModalidad.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("PRACTICA_PROFESIONAL".equals(newVal)) {
@@ -106,6 +120,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             }
         });
     }
+
 
     public void setUsuario(User usuario) {
         this.usuarioActual = usuario;
@@ -142,6 +157,46 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             hbCartaAceptacion.setVisible(true);
         }
     }
+    
+    private boolean puedeProponer(String emailEstudiante) {
+        for (Modalidad modalidad : Modalidad.values()) {
+            DegreeWork ultimo = service.obtenerUltimoPorEstudianteYModalidad(emailEstudiante, modalidad);
+            if (ultimo != null && ultimo.getEstado() != EstadoFormatoA.RECHAZADO) {
+                
+                return false;
+            }
+        }
+        return true; 
+    }
+
+
+    
+    private void actualizarModalidadesDisponibles(String emailEstudiante) {
+        cbModalidad.getItems().clear();
+
+        
+        List<String> modalidades = Arrays.stream(Modalidad.values())
+                .map(Enum::name)
+                .collect(Collectors.toList());
+
+        for (Modalidad modalidad : Modalidad.values()) {
+            DegreeWork ultimo = service.obtenerUltimoPorEstudianteYModalidad(emailEstudiante, modalidad);
+
+            if (ultimo != null) {
+                if (ultimo.getEstado() == EstadoFormatoA.RECHAZADO) {
+                    
+                    modalidades.remove(modalidad.name());
+                } else {
+                    
+                    modalidades.clear();
+                    break;
+                }
+            }
+        }
+
+        cbModalidad.getItems().addAll(modalidades);
+    }
+    
 
     @FXML
     private void onAdjuntarDocumento(ActionEvent event) {
@@ -245,7 +300,7 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                 formato.setCartaAceptacionEmpresa(txtCartaAceptacion.getText());
             }
 
-            // 🔹 Consultar versiones previas del estudiante con esa modalidad
+            
             List<DegreeWork> trabajosPrevios = service.listarPorEstudianteYModalidad(
                     estudiante.getEmail(),
                     Modalidad.valueOf(cbModalidad.getValue())

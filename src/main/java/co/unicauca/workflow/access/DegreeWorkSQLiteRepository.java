@@ -148,6 +148,27 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         return list;
     }
 
+    
+    @Override
+    public DegreeWork findLatestByStudentAndModalidad(String studentEmail, Modalidad modalidad) {
+        DegreeWork formato = null;
+        String sql = "SELECT * FROM degree_work "
+                + "WHERE id_estudiante = ? AND modalidad = ? "
+                + "ORDER BY id DESC LIMIT 1";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentEmail);
+            pstmt.setString(2, modalidad.name());
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                formato = buildFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error obteniendo último DegreeWork: " + e.getMessage());
+        }
+        return formato;
+    }
+
+
 
 
     @Override
