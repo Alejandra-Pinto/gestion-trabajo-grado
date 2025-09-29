@@ -47,14 +47,7 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         } catch (SQLException e) {
             System.out.println("Error creando tabla: " + e.getMessage());
         }
-        /*
-        String addColumnSql = "ALTER TABLE degree_work ADD COLUMN no_aprobado_count INTEGER DEFAULT 0;";
-        try (Statement stmt = conn.createStatement()) {
-            stmt.execute(addColumnSql);
-        } catch (SQLException e) {
-            System.out.println("Error añadiendo columna: " + e.getMessage());
-        }
-        */
+        
     }
 
     @Override
@@ -137,6 +130,25 @@ public class DegreeWorkSQLiteRepository implements IDegreeWorkRepository {
         }
         return list;
     }
+    
+    @Override
+    public List<DegreeWork> listByStudentAndModalidad(String studentEmail, Modalidad modalidad) {
+        List<DegreeWork> list = new ArrayList<>();
+        String sql = "SELECT * FROM degree_work WHERE id_estudiante = ? AND modalidad = ? ORDER BY id";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, studentEmail);
+            pstmt.setString(2, modalidad.name());
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                list.add(buildFromResultSet(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error listando DegreeWork por estudiante y modalidad: " + e.getMessage());
+        }
+        return list;
+    }
+
+
 
     @Override
     public boolean update(DegreeWork formato) {

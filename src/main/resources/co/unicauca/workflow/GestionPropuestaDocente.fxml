@@ -42,7 +42,7 @@
                               </ImageView>
                            </graphic>
                         </ToggleButton>
-                        <ToggleButton fx:id="btnAnteproyectoDocente" graphicTextGap="20" layoutX="3.0" layoutY="206.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Docente" visible="false" onAction="#onBtnAnteproyectoDocenteClicked">
+                        <ToggleButton fx:id="btnAnteproyectoDocente" graphicTextGap="20" layoutX="3.0" layoutY="206.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="453.0" text="Anteproyecto Docente" visible="false">
                            <font>
                               <Font size="16.0" />
                            </font>

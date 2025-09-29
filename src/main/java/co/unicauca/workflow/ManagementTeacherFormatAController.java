@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,7 +20,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.application.HostServices;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,7 +28,7 @@ import javafx.stage.Stage;
 
 public class ManagementTeacherFormatAController implements Initializable, Hostable {
     private HostServices hostServices;
-    private List<DegreeWork> formatos; // Lista de formatos para mostrar
+    
 
     @Override
     public void setHostServices(HostServices hs) {
@@ -249,46 +247,46 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
                 formato.setCartaAceptacionEmpresa(txtCartaAceptacion.getText());
             }
 
-            // Si es una re-subida, mantener el estado actual o resetear a PRIMERA_EVALUACION
-            if (formatoActual != null) {
-                // 🔹 Re-subida → mantiene ID y contador
-                formato.setId(formatoActual.getId());
+            // 🔹 Consultar versiones previas del estudiante con esa modalidad
+            List<DegreeWork> trabajosPrevios = service.listarPorEstudianteYModalidad(
+                    estudiante.getEmail(),
+                    Modalidad.valueOf(cbModalidad.getValue())
+            );
 
-                // Acumular intentos si ya había NO_APROBADO
-                if (formatoActual.getEstado() == EstadoFormatoA.NO_ACEPTADO) {
-                    formato.setNoAprobadoCount(formatoActual.getNoAprobadoCount() + 1);
+            int intentos = trabajosPrevios.size();
+            EstadoFormatoA nuevoEstado;
 
-                    // Si ya alcanzó 3 intentos fallidos → RECHAZADO
-                    if (formato.getNoAprobadoCount() >= 3) {
-                        formato.setEstado(EstadoFormatoA.RECHAZADO);
-                    } else {
-                        formato.setEstado(EstadoFormatoA.NO_ACEPTADO); // sigue en no aprobado
-                    }
-                } else {
-                    // Si es una nueva evaluación, resetear estado pero conservar contador
-                    formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
-                    formato.setNoAprobadoCount(formatoActual.getNoAprobadoCount());
-                }
-
-            } else {
-                // 🔹 Nuevo formato
-                formato.setEstado(EstadoFormatoA.PRIMERA_EVALUACION);
+            if (intentos == 0) {
+                nuevoEstado = EstadoFormatoA.PRIMERA_EVALUACION;
                 formato.setNoAprobadoCount(0);
+            } else if (intentos == 1) {
+                nuevoEstado = EstadoFormatoA.SEGUNDA_EVALUACION;
+                formato.setNoAprobadoCount(trabajosPrevios.get(intentos - 1).getNoAprobadoCount() + 1);
+            } else if (intentos == 2) {
+                nuevoEstado = EstadoFormatoA.TERCERA_EVALUACION;
+                formato.setNoAprobadoCount(trabajosPrevios.get(intentos - 1).getNoAprobadoCount() + 1);
+            } else {
+                mostrarAlerta("Límite alcanzado", "El estudiante ya realizó 3 intentos. No se pueden registrar más re-subidas.", Alert.AlertType.WARNING);
+                return;
             }
 
-            boolean creado = service.actualizarFormato(formato); // Usar actualizar para re-subida
+            formato.setEstado(nuevoEstado);
+
+            // 🔹 Guardar SIEMPRE como nuevo registro (NO update)
+            boolean creado = service.registrarFormato(formato);
 
             if (creado) {
-                mostrarAlerta("Éxito", "Formato A " + (formatoActual != null ? "actualizado" : "registrado") + " correctamente", Alert.AlertType.CONFIRMATION);
+                mostrarAlerta("Éxito", "Formato A registrado correctamente en " + nuevoEstado, Alert.AlertType.CONFIRMATION);
                 limpiarCampos();
             } else {
-                mostrarAlerta("Error", "No se pudo " + (formatoActual != null ? "actualizar" : "registrar") + " el Formato A", Alert.AlertType.ERROR);
+                mostrarAlerta("Error", "No se pudo registrar el Formato A", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
             e.printStackTrace();
             mostrarAlerta("Error inesperado", "Ocurrió un error: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
 
     @FXML
     private void onAdjuntarCarta(ActionEvent event) {
@@ -454,4 +452,13 @@ public class ManagementTeacherFormatAController implements Initializable, Hostab
             mostrarAlerta("Error", "Error al cargar: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+    
+    public void deshabilitarCamposFijos() {
+        cbEstudiante.setDisable(true);
+        cbModalidad.setDisable(true);
+        dpFechaActual.setDisable(true);
+        cbDirector.setDisable(true);
+        cbCodirector.setDisable(true);
+    }
+
 }

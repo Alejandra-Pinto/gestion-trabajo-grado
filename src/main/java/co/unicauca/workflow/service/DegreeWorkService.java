@@ -134,10 +134,14 @@ public class DegreeWorkService extends Subject {
             formato.getEstado() == EstadoFormatoA.PRIMERA_EVALUACION || 
             formato.getEstado() == EstadoFormatoA.SEGUNDA_EVALUACION || 
             formato.getEstado() == EstadoFormatoA.TERCERA_EVALUACION) {
-            if (formato.getNoAprobadoCount() >= 3) {
+            if (formato.getNoAprobadoCount() > 3) {
                 formato.setEstado(EstadoFormatoA.RECHAZADO);
-                formato.setNoAprobadoCount(0); // Resetear contador tras rechazo
             }
         }
     }
+    
+    public List<DegreeWork> listarPorEstudianteYModalidad(String studentEmail, Modalidad modalidad) {
+        return repository.listByStudentAndModalidad(studentEmail, modalidad);
+    }
+
 }

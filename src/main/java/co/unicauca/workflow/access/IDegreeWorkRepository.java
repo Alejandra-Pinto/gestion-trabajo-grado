@@ -1,6 +1,7 @@
 package co.unicauca.workflow.access;
 
 import co.unicauca.workflow.domain.entities.DegreeWork;
+import co.unicauca.workflow.domain.entities.Modalidad;
 import java.util.List;
 
 public interface IDegreeWorkRepository {
@@ -17,4 +18,6 @@ public interface IDegreeWorkRepository {
     DegreeWork findLatestByStudent(String studentEmail);
 
     List<DegreeWork> listByTeacher(String teacherEmail);
+    List<DegreeWork> listByStudentAndModalidad(String studentEmail, Modalidad modalidad);
+
 }

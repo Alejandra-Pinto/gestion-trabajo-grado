@@ -40,7 +40,8 @@ public class TeacherReviewFormatAController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicialización vacía por ahora, se manejará en setUsuarioYFormato
+        txtCorrecciones.setEditable(false); // No permitir editar
+        txtCorrecciones.setWrapText(true);// verlo mejor
     }
 
     public void setUsuarioYFormato(User usuario, DegreeWork formato) {
@@ -206,6 +207,9 @@ public class TeacherReviewFormatAController implements Initializable {
             Parent root = loader.load();
 
             Object controller = loader.getController();
+            
+            
+
             if (controller != null) {
                 try {
                     System.out.println("Intentando setUsuario en: " + controller.getClass().getSimpleName());
@@ -236,6 +240,12 @@ public class TeacherReviewFormatAController implements Initializable {
             Parent root = loader.load();
 
             Object controller = loader.getController();
+            
+            if (controller instanceof ManagementTeacherFormatAController) {
+                ((ManagementTeacherFormatAController) controller).setFormato(formatoActual);
+                ((ManagementTeacherFormatAController) controller).deshabilitarCamposFijos(); // Deshabilitar campos
+            }
+            
             if (controller != null) {
                 try {
                     System.out.println("Intentando setUsuario en: " + controller.getClass().getSimpleName());
